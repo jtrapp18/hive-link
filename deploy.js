@@ -10,7 +10,6 @@ const serverDirPath = path.join(__dirname, 'server');
 // Copy build output and other necessary files
 console.log('Copying files...');
 fs.cpSync(clientDistPath, serverClientPath, { recursive: true });
-fs.copyFileSync(path.join(__dirname, '.gitignore'), path.join(serverDirPath, '.gitignore'));
 fs.copyFileSync(path.join(__dirname, 'Dockerfile'), path.join(serverDirPath, 'Dockerfile'));
 fs.copyFileSync(path.join(__dirname, 'requirements.txt'), path.join(serverDirPath, 'requirements.txt'));
 
