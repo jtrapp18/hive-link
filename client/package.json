@@ -7,8 +7,10 @@
     "dev": "vite",
     "start": "node server.js",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist",
+    "deploy": "npm run build && npm run setup-prod-branch && npm run push-prod",
     "build": "vite build",
+    "setup-prod-branch": "git fetch origin && git checkout --orphan prod && git rm -rf .",
+    "push-prod": "cp -r dist/* ../server/client && git add . && git commit -m 'Deploy React app' && git push origin prod --force",
     "lint": "eslint .",
     "preview": "vite preview"
   },
