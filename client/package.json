@@ -9,8 +9,8 @@
     "predeploy": "npm run build",
     "deploy": "npm run build && npm run setup-prod-branch && npm run push-prod",
     "build": "vite build",
-    "setup-prod-branch": "git fetch origin && git checkout --orphan prod && git rm -rf .",
-    "push-prod": "cp -r dist/* ../server/client && git add . && git commit -m 'Deploy React app' && git push origin prod --force",
+    "setup-prod-branch": "git fetch origin && git checkout --orphan prod",
+    "push-prod": "cp -r dist/* ../server/client && cp .gitignore Dockerfile requirements.txt ../server/ && git add .gitignore Dockerfile requirements.txt ../server/client && git commit -m 'Deploy React app' && git push origin prod",
     "lint": "eslint .",
     "preview": "vite preview"
   },
