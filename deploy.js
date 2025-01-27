@@ -2,14 +2,10 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-// Define paths
+// Paths to the necessary directories
 const clientDistPath = path.join(__dirname, 'client', 'dist');
 const serverClientPath = path.join(__dirname, 'server', 'client');
 const serverDirPath = path.join(__dirname, 'server');
-
-// Run build in the client directory
-console.log('Building client...');
-execSync('cd client && npm install && npm run build', { stdio: 'inherit' });
 
 // Copy build output and other necessary files
 console.log('Copying files...');
@@ -18,10 +14,18 @@ fs.copyFileSync(path.join(__dirname, '.gitignore'), path.join(serverDirPath, '.g
 fs.copyFileSync(path.join(__dirname, 'Dockerfile'), path.join(serverDirPath, 'Dockerfile'));
 fs.copyFileSync(path.join(__dirname, 'requirements.txt'), path.join(serverDirPath, 'requirements.txt'));
 
+// Create the prod branch if it doesn't exist
+console.log('Creating prod branch if it does not exist...');
+execSync('git fetch origin', { stdio: 'inherit' });
+try {
+  execSync('git checkout prod', { stdio: 'inherit' });
+} catch (error) {
+  // If the branch does not exist, create it from main
+  execSync('git checkout -b prod main', { stdio: 'inherit' });
+}
+
 // Commit and push to prod branch
 console.log('Committing changes...');
 execSync('git add .', { stdio: 'inherit' });
 execSync('git commit -m "Deploy React app"', { stdio: 'inherit' });
 execSync('git push origin prod', { stdio: 'inherit' });
-
-console.log('Deployment complete!');
