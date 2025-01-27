@@ -25,6 +25,6 @@ try {
 
 // Commit and push to prod branch
 console.log('Committing changes...');
-execSync('git add .', { stdio: 'inherit' });
+execSync('git add Dockerfile requirements.txt server client/dist', { stdio: 'inherit' });
 execSync('git commit -m "Deploy React app"', { stdio: 'inherit' });
 execSync('git push origin prod', { stdio: 'inherit' });
