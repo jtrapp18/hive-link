@@ -1,0 +1,58 @@
+{
+  "hash": "150ba32d",
+  "configHash": "dd17bf44",
+  "lockfileHash": "35d97b71",
+  "browserHash": "f84235be",
+  "optimized": {
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "e77e5b60",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "9bc8061d",
+      "needsInterop": true
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.js",
+      "file": "react-router-dom.js",
+      "fileHash": "afc8af52",
+      "needsInterop": false
+    },
+    "react-headroom": {
+      "src": "../../node_modules/react-headroom/dist/index.js",
+      "file": "react-headroom.js",
+      "fileHash": "2a6c0ef7",
+      "needsInterop": true
+    },
+    "styled-components": {
+      "src": "../../node_modules/styled-components/dist/styled-components.browser.esm.js",
+      "file": "styled-components.js",
+      "fileHash": "4b545d26",
+      "needsInterop": false
+    },
+    "semantic-ui-react": {
+      "src": "../../node_modules/semantic-ui-react/dist/es/index.js",
+      "file": "semantic-ui-react.js",
+      "fileHash": "0be85641",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-BLG6QWMW": {
+      "file": "chunk-BLG6QWMW.js"
+    },
+    "chunk-OJMNJ562": {
+      "file": "chunk-OJMNJ562.js"
+    },
+    "chunk-LV7LEDEA": {
+      "file": "chunk-LV7LEDEA.js"
+    },
+    "chunk-JRE55LYH": {
+      "file": "chunk-JRE55LYH.js"
+    }
+  }
+}

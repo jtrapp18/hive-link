@@ -1,0 +1,217 @@
+:root {
+  /* --green: #0b7c21; */
+  --green: #4E7839;
+  --chocolate: #542E28;
+  --dark-chocolate: #432A28;
+  --cookie: #EDD0A3;
+  --brown: #6B4226;
+  --dark-purple: #301934;
+  --light-green: #9DC183;
+  --light-peach: #fae9d8;
+  /* --dark-green: #06402B; */
+  --dark-green: #334F26;
+  --light-gray: #c5cbc2;
+  --gray: #d1d1d1; 
+  --yellow: #FFFDD0;
+  --background: white;
+  --font-color-1: var(--chocolate);
+  --font-color-2: var(--dark-chocolate);
+  /* --striped: repeating-linear-gradient(-45deg, var(--light-gray),var(--light-gray) 2px, white 2px, white 10px); */
+  --striped: repeating-linear-gradient(-45deg, white, white 3px, var(--light-peach) 3px, var(--light-peach) 6px);
+  --padding-top: 75px;
+  --height-header: clamp(1rem, 10vw, 6rem);
+  --size-body: calc(100vh - var(--height-header) - 4px);
+  /* --size-body: 100vh; */
+  --default-font-size: clamp(0.8rem, 1.7vw, .9rem);
+  --shadow: 0px 4px 8px rgba(0, 0, 0, 0.7);
+  --title-font: 'RubikDoodleShadow';
+  --default-font: 'YuseiMagic';
+}
+
+/* 'YuseiMagic';
+'TitanOne';
+'Atma';
+'RubikSprayPaint';
+'RubikDoodleShadow'; */
+
+#root {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.no-scroll {
+  overflow-y: hidden;
+}
+
+div.star-ratings{
+  display: flex;  
+}
+
+@font-face {
+  font-family: 'RubikMoonrocks';
+  src: url('/fonts/RubikMoonrocks-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'YuseiMagic';
+  src: url('/fonts/YuseiMagic-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'TitanOne';
+  src: url('/fonts/TitanOne-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Atma';
+  src: url('/fonts/Atma-Bold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'RubikSprayPaint';
+  src: url('/fonts/RubikSprayPaint-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'RubikDoodleShadow';
+  src: url('/fonts/RubikDoodleShadow-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2 {
+  font-family: var(--title-font), sans-serif;
+}
+
+h1, h2, h3 {
+  color: var(--font-color-1);
+}
+
+h1 {
+  font-size: clamp(1.4rem, 3.5vw, 2rem);
+}
+
+h2 {
+  color: black;
+  font-size: clamp(1.3rem, 2vw, 1.9rem);
+}
+
+h3 {
+  font-size: clamp(1.2rem, 1.8vw, 1.8rem);
+  font-family: var(--default-font)
+}
+
+p, label, i, li, a, button, span, option, select, input, textarea {
+  font-size: var(--default-font-size);
+  font-family: var(--default-font);
+  color: var(--font-color-2);
+}
+
+span {
+  display: block;
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .logo:hover {
+    animation: logo-spin infinite 10s linear;
+  }
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes pauseShow {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideRight {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideLeft {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes pop {
+  0% {
+      transform: scale(1);
+  }
+  50% {
+      transform: scale(1);
+      color: var(--green);
+  }
+  100% {
+      transform: scale(1);
+  }
+}
+
+@keyframes fade {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .2;
+  }
+  100% {
+    opacity: 1;
+  }
+}
