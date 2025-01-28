@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
+from experience_study import FateStudy, PriorStudy, PredictStudy
 from models import Queen, Hive, Inspection, User
 from config import app, db, api
 from datetime import datetime
 # from flask_migrate import Migrate
-from flask import request, jsonify, session, make_response, render_template
+from flask import request, session
 from flask_restful import  Resource
 
 @app.route('/')
@@ -110,13 +111,13 @@ class UserById(Resource):
     def get(self, user_id):
         user = User.query.get(user_id)
         if not user:
-            return make_response(jsonify({'error': 'User not found'}), 404)
-        return make_response(jsonify(user.to_dict()), 200)
+            return {'error': 'User not found'}, 404
+        return user.to_dict(), 200
     
     def patch(self, user_id):
         user = User.query.get(user_id)
         if not user:
-            return make_response(jsonify({'error': 'User not found'}), 404)
+            return {'error': 'User not found'}, 404
         
         data = request.get_json()
 
@@ -124,14 +125,12 @@ class UserById(Resource):
             setattr(user, attr, data.get(attr))
 
         db.session.commit()
-        return make_response(jsonify(user.to_dict()), 200)
+        return user.to_dict(), 200
     
 class Hives(Resource):
     def get(self):
-        # user_id = session['user_id']
-        # hives = [hive.to_dict() for hive in Hive.query.filter_by(user_id=user_id)]
         hives = [hive.to_dict() for hive in Hive.query.all()]
-        return make_response(jsonify(hives), 200)
+        return hives, 200
 
     def post(self):
         try:
@@ -152,37 +151,43 @@ class Hives(Resource):
             db.session.commit()
 
             # Return the created hive as a response
-            return make_response(jsonify(new_hive.to_dict()), 201)
+            return new_hive.to_dict(), 201
         except Exception as e:
             db.session.rollback()
             return {'error': f'An error occurred: {str(e)}'}, 500
 
+class HivesByUser(Resource):
+    def get(self):
+        user_id = session['user_id']
+        hives = [hive.to_dict() for hive in Hive.query.filter_by(user_id=user_id)]
+        return hives, 200
+    
 class HiveById(Resource):
     def get(self, hive_id):
         hive = Hive.query.get(hive_id)
         if not hive:
-            return make_response(jsonify({'error': 'Hive not found'}), 404)
-        return make_response(jsonify(hive.to_dict()), 200)
+            return {'error': 'Hive not found'}, 404
+        return hive.to_dict(), 200
 
     def patch(self, hive_id):
         hive = Hive.query.get(hive_id)
         if not hive:
-            return make_response(jsonify({'error': 'Hive not found'}), 404)
+            return {'error': 'Hive not found'}, 404
         data = request.get_json()
 
         for attr in data:
             setattr(hive, attr, data.get(attr))
 
         db.session.commit()
-        return make_response(jsonify(hive.to_dict()), 200)
+        return hive.to_dict(), 200
 
     def delete(self, hive_id):
         hive = Hive.query.get(hive_id)
         if not hive:
-            return make_response(jsonify({'error': 'Hive not found'}), 404)
+            return {'error': 'Hive not found'}, 404
         db.session.delete(hive)
         db.session.commit()
-        return make_response('', 204)
+        return {}, 204
 
 class Inspections(Resource):
     def post(self):
@@ -220,7 +225,7 @@ class Inspections(Resource):
             db.session.commit()
 
             # Return the created inspection as a response
-            return make_response(jsonify(new_inspection.to_dict()), 201)
+            return new_inspection.to_dict(), 201
         except Exception as e:
             db.session.rollback()
             return {'error': f'An error occurred: {str(e)}'}, 500
@@ -229,22 +234,22 @@ class InspectionById(Resource):
     def patch(self, inspection_id):
         inspection = Inspection.query.get(inspection_id)
         if not inspection:
-            return make_response(jsonify({'error': 'Inspection not found'}), 404)
+            return {'error': 'Inspection not found'}, 404
         data = request.get_json()
 
         for attr in data:
             setattr(inspection, attr, data.get(attr))
 
         db.session.commit()
-        return make_response(jsonify(inspection.to_dict()), 200)
+        return inspection.to_dict(), 200
 
     def delete(self, inspection_id):
         inspection = Inspection.query.get(inspection_id)
         if not inspection:
-            return make_response(jsonify({'error': 'Inspection not found'}), 404)
+            return {'error': 'Inspection not found'}, 404
         db.session.delete(inspection)
         db.session.commit()
-        return make_response('', 204)
+        return {}, 204
 
 class Queens(Resource):
     def post(self):
@@ -267,7 +272,7 @@ class Queens(Resource):
             db.session.commit()
 
             # Return the created queen as a response
-            return make_response(jsonify(new_queen.to_dict()), 201)
+            return new_queen.to_dict(), 201
         except Exception as e:
             db.session.rollback()
             return {'error': f'An error occurred: {str(e)}'}, 500
@@ -276,22 +281,22 @@ class QueenById(Resource):
     def patch(self, queen_id):
         queen = Queen.query.get(queen_id)
         if not queen:
-            return make_response(jsonify({'error': 'Queen not found'}), 404)
+            return {'error': 'Queen not found'}, 404
         data = request.get_json()
 
         for attr in data:
             setattr(queen, attr, data.get(attr))
 
         db.session.commit()
-        return make_response(jsonify(queen.to_dict()), 200)
+        return queen.to_dict(), 200
 
     def delete(self, queen_id):
         queen = Queen.query.get(queen_id)
         if not queen:
-            return make_response(jsonify({'error': 'Queen not found'}), 404)
+            return {'error': 'Queen not found'}, 404
         db.session.delete(queen)
         db.session.commit()
-        return make_response('', 204)
+        return {}, 204
 
 api.add_resource(ClearSession, '/clear', endpoint='clear')
 api.add_resource(Signup, '/signup', endpoint='signup')
@@ -300,11 +305,15 @@ api.add_resource(Login, '/login')
 api.add_resource(Logout, '/logout')
 api.add_resource(UserById, '/users/<int:user_id>')
 api.add_resource(Hives, '/hives', endpoint='hives')
+api.add_resource(HivesByUser, '/user_hives', endpoint='user_hives')
 api.add_resource(HiveById, '/hives/<int:hive_id>')
 api.add_resource(Inspections, '/inspections', endpoint='inspections')
 api.add_resource(InspectionById, '/inspections/<int:inspection_id>')
 api.add_resource(Queens, '/queens', endpoint='queens')
 api.add_resource(QueenById, '/queens/<int:queen_id>')
+api.add_resource(FateStudy, '/fate_study', endpoint='fate_study')
+api.add_resource(PriorStudy, '/prior_study', endpoint='prior_study')
+api.add_resource(PredictStudy, '/predict_study', endpoint='predict_study')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
