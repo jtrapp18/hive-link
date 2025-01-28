@@ -1,4 +1,6 @@
+from datetime import datetime, date
 from sqlalchemy import Column, Integer, String, Date, Float
+from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.orm import validates
 from config import db
 
@@ -12,7 +14,9 @@ class Hive(db.Model, SerializerMixin):
     location_lat = db.Column(db.Float, nullable=False)  # Latitude of the hive
     location_long = db.Column(db.Float, nullable=False)  # Longitude of the hive
 
-    user = db.relationship('User', back_populates='hives')  # Add back_populates on the User model too
+    user = db.relationship('User', back_populates='hives')
+    queens = db.relationship('Queen', back_populates='hive', cascade='all, delete-orphan')
+    inspections = db.relationship('Inspection', back_populates='hive', cascade='all, delete-orphan') 
 
     # serialize_rules = ('-location_lat', '-location_long')  # Prevent latitude and longitude from being serialized
 
@@ -35,19 +39,19 @@ class Hive(db.Model, SerializerMixin):
         if value is None:
             raise ValueError('Date added is required.')
         
-        # Check if the date is a valid date object or string
-        try:
-            if isinstance(value, str):
-                # You can specify the date format if needed (e.g. 'YYYY-MM-DD')
+        # Check if the value is a valid date object
+        if isinstance(value, str):
+            try:
+                # Ensure that the string matches the expected date format
                 datetime.strptime(value, '%Y-%m-%d')  # Adjust format as needed
-            elif isinstance(value, datetime):
-                # If the value is already a datetime object, it's valid
-                pass
-            else:
-                raise ValueError('Invalid date format. Must be a string or datetime object.')
-        except ValueError:
-            raise ValueError(f"Invalid date format for {key}. Must be a valid date.")
-
+            except ValueError:
+                raise ValueError(f"Invalid date format for {key}. Must be a valid date.")
+        elif isinstance(value, datetime) or isinstance(value, date):
+            # If the value is a datetime or date object, it's valid
+            pass
+        else:
+            raise ValueError('Invalid date format. Must be a string or datetime object.')
+        
         return value
 
     @validates('location_lat')

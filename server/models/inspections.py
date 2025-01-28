@@ -1,4 +1,8 @@
+import enum
+from datetime import datetime, date
+from sqlalchemy import Enum
 from sqlalchemy.orm import validates
+from sqlalchemy_serializer import SerializerMixin
 from config import db
 
 class CountCategory(enum.Enum):
@@ -40,11 +44,33 @@ class Inspection(db.Model, SerializerMixin):
     def __repr__(self):
         return f'<Inspection {self.id}, Hive ID: {self.hive_id}, Queen ID: {self.queen_id}, Date: {self.date_checked}>'
 
-    @validates('local_bloom', 'activity_surrounding', 'egg_count', 'larvae_count', 'capped_brood', 'stability_in_hive', 'stores')
+    @validates('date_checked')
+    def validate_date_checked(self, key, value):
+        """Validates that the date_checked field is not null and is a valid date."""
+        if value is None:
+            raise ValueError('Date added is required.')
+        
+        # Check if the value is a valid date object
+        if isinstance(value, str):
+            try:
+                # Ensure that the string matches the expected date format
+                datetime.strptime(value, '%Y-%m-%d')  # Adjust format as needed
+            except ValueError:
+                raise ValueError(f"Invalid date format for {key}. Must be a valid date.")
+        elif isinstance(value, datetime) or isinstance(value, date):
+            # If the value is a datetime or date object, it's valid
+            pass
+        else:
+            raise ValueError('Invalid date format. Must be a string or datetime object.')
+        
+        return value
+
+    @validates('local_bloom', 'activity_surrounding_hive', 'egg_count', 'larvae_count', 'capped_brood', 'stability_in_hive', 'stores')
     def validate_count_category(self, key, value):
         """Validates that the count categories are one of the valid options."""
         valid_categories = [CountCategory.LOW, CountCategory.MEDIUM, CountCategory.HIGH]
-        if value not in valid_categories:
+        # Convert value to uppercase to match database enum values
+        if value.upper() not in [category.name for category in valid_categories]:
             raise ValueError(f"{key} must be one of {', '.join([category.value for category in valid_categories])}.")
         return value
     

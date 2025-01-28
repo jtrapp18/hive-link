@@ -17,7 +17,7 @@ class User(db.Model, SerializerMixin):
     phone_number = db.Column(db.String, nullable=True)
     email = db.Column(db.String, nullable=False, unique=True)
 
-    hives = db.relationship('Hive', back_populates='user')  # Ensure 'user' in Hive is matched here
+    hives = db.relationship('Hive', back_populates='user', cascade='all, delete-orphan')
     
     @hybrid_property
     def password_hash(self):

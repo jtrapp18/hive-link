@@ -1,4 +1,5 @@
 from sqlalchemy.orm import validates
+from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.hybrid import hybrid_property
 from datetime import date
 from config import db
