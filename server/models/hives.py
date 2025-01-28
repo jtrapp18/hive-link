@@ -18,7 +18,7 @@ class Hive(db.Model, SerializerMixin):
     queens = db.relationship('Queen', back_populates='hive', cascade='all, delete-orphan')
     inspections = db.relationship('Inspection', back_populates='hive', cascade='all, delete-orphan') 
 
-    # serialize_rules = ('-location_lat', '-location_long')  # Prevent latitude and longitude from being serialized
+    serialize_rules = ('-user', '-queens.hive', '-inspections.hive')
 
     def __repr__(self):
         return f'<Hive {self.id}, Date Added: {self.date_added}, Material: {self.material}>'

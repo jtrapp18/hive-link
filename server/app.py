@@ -14,7 +14,8 @@ def index():
 @app.before_request
 def check_if_logged_in():
     if not session.get('user_id') \
-    and request.endpoint in ['hives', 'inspections', 'queens']:
+    and request.endpoint in ['spongebob']:
+    # and request.endpoint in ['hives', 'inspections', 'queens']:
         return {'error': 'Unauthorized'}, 401
     
 class ClearSession(Resource):
@@ -127,8 +128,9 @@ class UserById(Resource):
     
 class Hives(Resource):
     def get(self):
-        user_id = session['user_id']
-        hives = [hive.to_dict() for hive in Hive.query.filter_by(user_id=user_id)]
+        # user_id = session['user_id']
+        # hives = [hive.to_dict() for hive in Hive.query.filter_by(user_id=user_id)]
+        hives = [hive.to_dict() for hive in Hive.query.all()]
         return make_response(jsonify(hives), 200)
 
     def post(self):
@@ -183,10 +185,6 @@ class HiveById(Resource):
         return make_response('', 204)
 
 class Inspections(Resource):
-    def get(self):
-        inspections = [inspection.to_dict() for inspection in Inspection.query.all()]
-        return make_response(jsonify(inspections), 200)
-
     def post(self):
         try:
             # Get data from the request
@@ -228,12 +226,6 @@ class Inspections(Resource):
             return {'error': f'An error occurred: {str(e)}'}, 500
 
 class InspectionById(Resource):
-    def get(self, inspection_id):
-        inspection = Inspection.query.get(inspection_id)
-        if not inspection:
-            return make_response(jsonify({'error': 'Inspection not found'}), 404)
-        return make_response(jsonify(inspection.to_dict()), 200)
-
     def patch(self, inspection_id):
         inspection = Inspection.query.get(inspection_id)
         if not inspection:
@@ -255,10 +247,6 @@ class InspectionById(Resource):
         return make_response('', 204)
 
 class Queens(Resource):
-    def get(self):
-        queens = [queen.to_dict() for queen in Queen.query.all()]
-        return make_response(jsonify(queens), 200)
-
     def post(self):
         try:
             # Get data from the request
@@ -285,12 +273,6 @@ class Queens(Resource):
             return {'error': f'An error occurred: {str(e)}'}, 500
 
 class QueenById(Resource):
-    def get(self, queen_id):
-        queen = Queen.query.get(queen_id)
-        if not queen:
-            return make_response(jsonify({'error': 'Queen not found'}), 404)
-        return make_response(jsonify(queen.to_dict()), 200)
-
     def patch(self, queen_id):
         queen = Queen.query.get(queen_id)
         if not queen:
@@ -311,18 +293,18 @@ class QueenById(Resource):
         db.session.commit()
         return make_response('', 204)
 
-api.add_resource(ClearSession, '/api/clear', endpoint='clear')
-api.add_resource(Signup, '/api/signup', endpoint='signup')
-api.add_resource(CheckSession, '/api/check_session')
-api.add_resource(Login, '/api/login')
-api.add_resource(Logout, '/api/logout')
-api.add_resource(UserById, '/api/users/<int:user_id>')
-api.add_resource(Hives, '/api/hives', endpoint='hives')
-api.add_resource(HiveById, '/api/hives/<int:hive_id>')
-api.add_resource(Inspections, '/api/inspections', endpoint='inspections')
-api.add_resource(InspectionById, '/api/inspections/<int:inspection_id>')
-api.add_resource(Queens, '/api/queens', endpoint='queens')
-api.add_resource(QueenById, '/api/queens/<int:queen_id>')
+api.add_resource(ClearSession, '/clear', endpoint='clear')
+api.add_resource(Signup, '/signup', endpoint='signup')
+api.add_resource(CheckSession, '/check_session')
+api.add_resource(Login, '/login')
+api.add_resource(Logout, '/logout')
+api.add_resource(UserById, '/users/<int:user_id>')
+api.add_resource(Hives, '/hives', endpoint='hives')
+api.add_resource(HiveById, '/hives/<int:hive_id>')
+api.add_resource(Inspections, '/inspections', endpoint='inspections')
+api.add_resource(InspectionById, '/inspections/<int:inspection_id>')
+api.add_resource(Queens, '/queens', endpoint='queens')
+api.add_resource(QueenById, '/queens/<int:queen_id>')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
