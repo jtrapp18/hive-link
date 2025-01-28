@@ -1,15 +1,11 @@
 #!/usr/bin/env python3
 
-from models import CartItem, Cookie, Favorite, Order, User, Review
+from models import Queen, Hive, Inspection, User
 from config import app, db, api
 from datetime import datetime
 # from flask_migrate import Migrate
 from flask import request, jsonify, session, make_response, render_template
 from flask_restful import  Resource
-# import os
-
-# BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-# DATABASE = os.environ.get("DB_URI", f"sqlite:///{os.path.join(BASE_DIR, 'app.db')}")
 
 @app.route('/')
 def index():
@@ -18,7 +14,7 @@ def index():
 @app.before_request
 def check_if_logged_in():
     if not session.get('user_id') \
-    and request.endpoint in ['orders', 'cart_items']:
+    and request.endpoint in ['hives', 'inspections', 'queens']:
         return {'error': 'Unauthorized'}, 401
     
 class ClearSession(Resource):
@@ -108,224 +104,6 @@ class Logout(Resource):
         session['user_id'] = None
         return {}, 204
 
-class Orders(Resource):
-
-    def get(self):
-        user_id = session['user_id']
-
-        orders = [order.to_dict() for order in Order.query.filter_by(user_id=user_id)]
-        return make_response(jsonify(orders), 200)
-    
-    def post(self):
-        try:
-            # Get data from the request
-            data = request.get_json()
-
-            # Create new order
-            new_order = Order(
-                purchase_complete=data['purchase_complete'],
-                user_id=data['user_id']
-            )
-
-            # Add the new order to the database and commit
-            db.session.add(new_order)
-            db.session.commit()
-
-            # Return the created order as a response
-            return make_response(jsonify(new_order.to_dict()), 201)
-        except Exception as e:
-            # Rollback any changes made during the transaction if an error occurs
-            db.session.rollback()
-            return {'error': f'An error occurred: {str(e)}'}, 500
-
-class OrderById(Resource):
-    def get(self, order_id):
-        order = Order.query.filter_by(id=order_id).first()
-        if not order:
-            return make_response(jsonify({'error': 'Order not found'}), 404)
-        return make_response(jsonify(order.to_dict()), 200)
-    
-    def patch(self, order_id):
-        order = Order.query.get(order_id)
-        if not order:
-            return make_response(jsonify({'error': 'Order not found'}), 404)
-        data = request.get_json()
-
-        for attr in data:
-            if (attr == 'order_date') and (data[attr]=='today'):
-                setattr(order, attr, datetime.now().date())
-            # elif (attr == 'purchase_complete') and (data[attr]==1):
-            #     setattr(order, attr, True)
-            else:
-                setattr(order, attr, data.get(attr))
-
-        datetime.now().date()
-
-        db.session.commit()
-        return make_response(jsonify(order.to_dict()), 200)
-    
-    def delete(self, order_id):
-        order = Order.query.get(order_id)
-        if not order:
-            return make_response(jsonify({'error': 'Order not found'}), 404)
-        db.session.delete(order)
-        db.session.commit()
-        return make_response('', 204)
-
-class Cookies(Resource):
-
-    def get(self):
-        cookies = [cookie.to_dict() for cookie in Cookie.query.all()]
-        return make_response(jsonify(cookies), 200)
-        
-class CookieById(Resource):
-
-    def get(self, cookie_id):
-        cookie = Cookie.query.get(cookie_id)
-        if not cookie:
-            return make_response(jsonify({'error': 'Cookie not found'}), 404)
-        return make_response(jsonify(cookie.to_dict()), 200)
-
-class CartItems(Resource):
-
-    def get(self):
-        cart_items = [cart_item.to_dict() for cart_item in CartItem.query.all()]
-        return make_response(jsonify(cart_items), 200)
-    
-    def post(self):
-
-        try:
-            # Get data from the request
-            data = request.get_json()
-
-            # Create new cart item
-            new_cart_item = CartItem(
-                order_id=data['order_id'],
-                cookie_id=data['cookie_id']
-            )
-
-            # Add the new cart item to the database and commit
-            db.session.add(new_cart_item)
-            db.session.commit()
-
-            # Return the created cart item as a response
-            return make_response(jsonify(new_cart_item.to_dict()), 201)
-        except Exception as e:
-            # Rollback any changes made during the transaction if an error occurs
-            db.session.rollback()
-            return {'error': f'An error occurred: {str(e)}'}, 500
-    
-
-class CartItemById(Resource):
-
-    def patch(self, item_id):
-        cart_item = CartItem.query.filter_by(id=item_id).first()
-        if not cart_item:
-            return make_response(jsonify({'error': 'Cart item not found'}), 404)
-        data = request.get_json()
-        cart_item.num_cookies = data.get('num_cookies', cart_item.num_cookies)
-        db.session.commit()
-        return make_response(jsonify(cart_item.to_dict()), 200)
-    
-    def delete(self, item_id):
-        cart_item = CartItem.query.get(item_id)
-        if not cart_item:
-            return make_response(jsonify({'error': 'Cart item not found'}), 404)
-        
-        db.session.delete(cart_item)
-        db.session.commit()
-        return make_response({}, 204)
-
-class Favorites(Resource):
-    def post(self):
-        try:
-            # Get data from the request
-            data = request.get_json()
-
-            # Create new favorite
-            new_favorite = Favorite(
-                user_id=data['user_id'],
-                cookie_id=data['cookie_id']
-            )
-
-            # Add the new favorite to the database and commit
-            db.session.add(new_favorite)
-            db.session.commit()
-
-            # Return the created favorite as a response
-            return make_response(jsonify(new_favorite.to_dict()), 201)
-        except Exception as e:
-            # Rollback any changes made during the transaction if an error occurs
-            db.session.rollback()
-            return {'error': f'An error occurred: {str(e)}'}, 500
-
-class FavoriteById(Resource):
-
-    def delete(self, favorite_id):
-        favorite = Favorite.query.get(favorite_id)
-        if not favorite:
-            return make_response(jsonify({'error': 'Favorite not found'}), 404)
-        db.session.delete(favorite)
-        db.session.commit()
-        return make_response('', 204)
-             
-class Reviews(Resource):
-    def post(self):
-
-        try:
-            # Get data from the request
-            data = request.get_json()
-
-            # Create new review
-            new_review = Review(
-                rating=data['rating'],
-                review_title=data['review_title'],
-                review_body=data['review_body'],
-                user_id=data['user_id'],
-                cookie_id=data['cookie_id']
-            )
-
-            # Add the new review to the database and commit
-            db.session.add(new_review)
-            db.session.commit()
-
-            # Return the created review as a response
-            return make_response(jsonify(new_review.to_dict()), 201)
-        except Exception as e:
-            # Rollback any changes made during the transaction if an error occurs
-            db.session.rollback()
-            return {'error': f'An error occurred: {str(e)}'}, 500
-
-
-class ReviewsByCookie(Resource):
-
-    def get(self, cookie_id):
-        reviews = [review.to_dict() for review in Review.query.filter_by(cookie_id=cookie_id).all()]
-        return make_response(jsonify(reviews), 200)
-
-class ReviewById(Resource):
-
-    def patch(self, item_id):
-        review = Review.query.get(item_id)
-        if not review:
-            return make_response(jsonify({'error': 'Review not found'}), 404)
-        
-        data = request.get_json()
-
-        for attr in data:
-            setattr(review, attr, data.get(attr))
-
-        db.session.commit()
-        return make_response(jsonify(review.to_dict()), 200)
-
-    def delete(self, item_id):
-        review = Review.query.get(item_id)
-        if not review:
-            return make_response(jsonify({'error': 'Review not found'}), 404)
-        db.session.delete(review)
-        db.session.commit()
-        return make_response('', 204)
-
 class UserById(Resource):
 
     def get(self, user_id):
@@ -346,23 +124,205 @@ class UserById(Resource):
 
         db.session.commit()
         return make_response(jsonify(user.to_dict()), 200)
+    
+class Hives(Resource):
+    def get(self):
+        user_id = session['user_id']
+        hives = [hive.to_dict() for hive in Hive.query.filter_by(user_id=user_id)]
+        return make_response(jsonify(hives), 200)
+
+    def post(self):
+        try:
+            # Get data from the request
+            data = request.get_json()
+
+            # Create new hive
+            new_hive = Hive(
+                user_id=data['user_id'],  # Link the hive to the user
+                date_added=data['date_added'],
+                material=data['material'],
+                location_lat=data['location_lat'],
+                location_long=data['location_long']
+            )
+
+            # Add the new hive to the database and commit
+            db.session.add(new_hive)
+            db.session.commit()
+
+            # Return the created hive as a response
+            return make_response(jsonify(new_hive.to_dict()), 201)
+        except Exception as e:
+            db.session.rollback()
+            return {'error': f'An error occurred: {str(e)}'}, 500
+
+class HiveById(Resource):
+    def get(self, hive_id):
+        hive = Hive.query.get(hive_id)
+        if not hive:
+            return make_response(jsonify({'error': 'Hive not found'}), 404)
+        return make_response(jsonify(hive.to_dict()), 200)
+
+    def patch(self, hive_id):
+        hive = Hive.query.get(hive_id)
+        if not hive:
+            return make_response(jsonify({'error': 'Hive not found'}), 404)
+        data = request.get_json()
+
+        for attr in data:
+            setattr(hive, attr, data.get(attr))
+
+        db.session.commit()
+        return make_response(jsonify(hive.to_dict()), 200)
+
+    def delete(self, hive_id):
+        hive = Hive.query.get(hive_id)
+        if not hive:
+            return make_response(jsonify({'error': 'Hive not found'}), 404)
+        db.session.delete(hive)
+        db.session.commit()
+        return make_response('', 204)
+
+class Inspections(Resource):
+    def get(self):
+        inspections = [inspection.to_dict() for inspection in Inspection.query.all()]
+        return make_response(jsonify(inspections), 200)
+
+    def post(self):
+        try:
+            # Get data from the request
+            data = request.get_json()
+
+            # Create new inspection
+            new_inspection = Inspection(
+                hive_id=data['hive_id'],  # Link the inspection to a hive
+                date_checked=data['date_checked'],
+                temp=data.get('temp'),
+                activity_surrounding_hive=data.get('activity_surrounding_hive'),
+                super_count=data.get('super_count'),
+                hive_body_count=data.get('hive_body_count'),
+                egg_count=data.get('egg_count'),
+                larvae_count=data.get('larvae_count'),
+                capped_brood=data.get('capped_brood'),
+                twisted_larvae=data.get('twisted_larvae'),
+                pests_surrounding=data.get('pests_surrounding'),
+                stability_in_hive=data.get('stability_in_hive'),
+                feeding=data.get('feeding'),
+                treatment=data.get('treatment'),
+                stores=data.get('stores'),
+                fate=data.get('fate'),
+                local_bloom=data.get('local_bloom'),
+                weather_conditions=data.get('weather_conditions'),
+                humidity=data.get('humidity'),
+                chalkbrood_presence=data.get('chalkbrood_presence'),
+                varroa_mites=data.get('varroa_mites')
+            )
+
+            # Add the new inspection to the database and commit
+            db.session.add(new_inspection)
+            db.session.commit()
+
+            # Return the created inspection as a response
+            return make_response(jsonify(new_inspection.to_dict()), 201)
+        except Exception as e:
+            db.session.rollback()
+            return {'error': f'An error occurred: {str(e)}'}, 500
+
+class InspectionById(Resource):
+    def get(self, inspection_id):
+        inspection = Inspection.query.get(inspection_id)
+        if not inspection:
+            return make_response(jsonify({'error': 'Inspection not found'}), 404)
+        return make_response(jsonify(inspection.to_dict()), 200)
+
+    def patch(self, inspection_id):
+        inspection = Inspection.query.get(inspection_id)
+        if not inspection:
+            return make_response(jsonify({'error': 'Inspection not found'}), 404)
+        data = request.get_json()
+
+        for attr in data:
+            setattr(inspection, attr, data.get(attr))
+
+        db.session.commit()
+        return make_response(jsonify(inspection.to_dict()), 200)
+
+    def delete(self, inspection_id):
+        inspection = Inspection.query.get(inspection_id)
+        if not inspection:
+            return make_response(jsonify({'error': 'Inspection not found'}), 404)
+        db.session.delete(inspection)
+        db.session.commit()
+        return make_response('', 204)
+
+class Queens(Resource):
+    def get(self):
+        queens = [queen.to_dict() for queen in Queen.query.all()]
+        return make_response(jsonify(queens), 200)
+
+    def post(self):
+        try:
+            # Get data from the request
+            data = request.get_json()
+
+            # Create new queen
+            new_queen = Queen(
+                hive_id=data['hive_id'],  # Link the queen to a hive
+                status=data['status'],
+                origin=data['origin'],
+                species=data['species'],
+                date_introduced=data['date_introduced'],
+                replacement_cause=data.get('replacement_cause')  # Optional field
+            )
+
+            # Add the new queen to the database and commit
+            db.session.add(new_queen)
+            db.session.commit()
+
+            # Return the created queen as a response
+            return make_response(jsonify(new_queen.to_dict()), 201)
+        except Exception as e:
+            db.session.rollback()
+            return {'error': f'An error occurred: {str(e)}'}, 500
+
+class QueenById(Resource):
+    def get(self, queen_id):
+        queen = Queen.query.get(queen_id)
+        if not queen:
+            return make_response(jsonify({'error': 'Queen not found'}), 404)
+        return make_response(jsonify(queen.to_dict()), 200)
+
+    def patch(self, queen_id):
+        queen = Queen.query.get(queen_id)
+        if not queen:
+            return make_response(jsonify({'error': 'Queen not found'}), 404)
+        data = request.get_json()
+
+        for attr in data:
+            setattr(queen, attr, data.get(attr))
+
+        db.session.commit()
+        return make_response(jsonify(queen.to_dict()), 200)
+
+    def delete(self, queen_id):
+        queen = Queen.query.get(queen_id)
+        if not queen:
+            return make_response(jsonify({'error': 'Queen not found'}), 404)
+        db.session.delete(queen)
+        db.session.commit()
+        return make_response('', 204)
 
 api.add_resource(ClearSession, '/api/clear', endpoint='clear')
 api.add_resource(Signup, '/api/signup', endpoint='signup')
 api.add_resource(CheckSession, '/api/check_session')
 api.add_resource(Login, '/api/login')
 api.add_resource(Logout, '/api/logout')
-api.add_resource(Orders, '/api/orders', endpoint='orders')
-api.add_resource(OrderById, '/api/orders/<int:order_id>')
-api.add_resource(Cookies, '/api/cookies')
-api.add_resource(CookieById, '/api/cookies/<int:cookie_id>')
-api.add_resource(CartItems, '/api/cart_items', endpoint='cart_items')
-api.add_resource(CartItemById, '/api/cart_items/<int:item_id>')
-api.add_resource(Favorites, '/api/favorites')
-api.add_resource(FavoriteById, '/api/favorites/<int:favorite_id>')
-api.add_resource(Reviews, '/api/reviews')  
-api.add_resource(ReviewsByCookie, '/api/reviews/cookie/<int:cookie_id>')  
 api.add_resource(UserById, '/api/users/<int:user_id>')
+api.add_resource(Hives, '/api/hives', endpoint='hives')
+api.add_resource(HiveById, '/api/hives/<int:hive_id>')
+api.add_resource(Inspections, '/api/inspections', endpoint='inspections')
+api.add_resource(InspectionById, '/api/inspections/<int:inspection_id>')
+api.add_resource(Queens, '/api/queens', endpoint='queens')
+api.add_resource(QueenById, '/api/queens/<int:queen_id>')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

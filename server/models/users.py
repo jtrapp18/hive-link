@@ -14,22 +14,10 @@ class User(db.Model, SerializerMixin):
     _password_hash = db.Column(db.String, nullable=False)
     first_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String, nullable=False)
-    address = db.Column(db.String, nullable=True)
     phone_number = db.Column(db.String, nullable=True)
     email = db.Column(db.String, nullable=False, unique=True)
 
-    favorites = db.relationship(
-        'Favorite', back_populates='user', cascade='all, delete-orphan')
-    
-    orders = db.relationship(
-        'Order', back_populates='user', cascade='all, delete-orphan')
-
-    reviews = db.relationship(
-        'Review', back_populates='user', cascade='all, delete-orphan')
-    
-    serialize_rules = ('-favorites.user', '-favorites.cookie', '-order.cart_items', 
-                       '-order.user', '-cookie.cart_items', '-cookie.favorites', 
-                       '-cookie.reviews', '-reviews.cookie', '-reviews.user')
+    hives = db.relationship('Hive', back_populates='user')  # Ensure 'user' in Hive is matched here
     
     @hybrid_property
     def password_hash(self):

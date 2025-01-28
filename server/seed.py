@@ -2,14 +2,10 @@
 
 from random import randint, choice as rc, random
 from sqlalchemy import text
-
 from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
 from faker import Faker
-
 from config import db, app
-from models import CartItem, Cookie, Favorite, Order, User, Review
-from cookie_data import cookie_data
+from models import Hive, Inspection, CountCategory, Queen, User
 
 fake = Faker()
 
@@ -17,42 +13,17 @@ with app.app_context():
 
     print("Deleting all records...")
 
-    Favorite.query.delete()
-    Review.query.delete()
-    CartItem.query.delete()
-    Order.query.delete()
-    Cookie.query.delete()
-    User.query.delete()
-
-    fake = Faker()
-
-    print("Creating cookies...")
-
-    # Using raw SQL to insert data
-    for cookie in cookie_data:
-        db.session.execute(
-            text("INSERT INTO cookies (name, image, price, is_vegan, is_gluten_free, has_nuts, frosting) "
-                 "VALUES (:name, :image, :price, :is_vegan, :is_gluten_free, :has_nuts, :frosting)"),
-            cookie
-        )
-
-    cookies = Cookie.query.all()
+    Inspection.query.delete()
+    Queen.query.delete()
+    Hive.query.delete()
 
     print("Creating users...")
 
-    # make sure users have unique usernames
     users = []
-    usernames = []
-
-    for i in range(20):
-
-        first_name=fake.first_name()
-        last_name=fake.last_name()
-        username=f'{first_name}.{last_name}{randint(1,20)}'
-
-        while username in usernames:
-            username = fake.first_name()
-        usernames.append(username)
+    for i in range(5):
+        first_name = fake.first_name()
+        last_name = fake.last_name()
+        username = f'{first_name}.{last_name}{randint(1, 20)}'
 
         user = User(
             username=username,
@@ -62,7 +33,6 @@ with app.app_context():
             phone_number=str(randint(1000000000, 9999999999)),
             email=f'{username}@gmail.com'
         )
-
         user.password_hash = user.username + 'password'
 
         users.append(user)
@@ -70,95 +40,74 @@ with app.app_context():
     db.session.add_all(users)
     db.session.commit()
 
-    print("Creating favorites...")
+    print("Creating hives...")
 
-    favorites = []
-
+    hives = []
     for user in users:
-        for cookie in cookies:
-            if random()>.7:
-                favorite = Favorite(
-                    user_id=user.id,
-                    cookie_id=cookie.id
-                )
-                
-                favorites.append(favorite)
+        num_hives = randint(1, 4)  # Each user will have between 1 and 4 hives
+        for _ in range(num_hives):
+            hive = Hive(
+                user_id=user.id,
+                date_added=datetime.now().date(),
+                material=rc(['Wood', 'Polystyrene', 'Other']),
+                location_lat=round(random() * 180 - 90, 6),
+                location_long=round(random() * 360 - 180, 6)
+            )
+            hives.append(hive)
 
-    db.session.add_all(favorites)
+    db.session.add_all(hives)
     db.session.commit()
 
-    print("Creating orders...")
+    print("Creating inspections...")
 
-    orders = []
+    inspections = []
+    for hive in hives:
+        num_inspections = randint(1, 5)  # Each hive will have between 1 and 5 inspections
+        for _ in range(num_inspections):
+            inspection = Inspection(
+                hive_id=hive.id,
+                inspection_date=datetime.now().date(),
+                temp=round(randint(10, 35) + random(), 1),
+                activity_surrounding_hive=rc(['None', 'Heavy', 'Moderate', 'Low']),
+                super_count=randint(0, 3),
+                hive_body_count=randint(1, 3),
+                egg_count=rc([CountCategory.Low, CountCategory.Medium, CountCategory.High]),
+                larvae_count=rc([CountCategory.Low, CountCategory.Medium, CountCategory.High]),
+                capped_brood=rc([CountCategory.Low, CountCategory.Medium, CountCategory.High]),
+                twisted_larvae=rc([True, False]),
+                pests_surrounding=rc(['None', 'Mites', 'Beetles']),
+                stability_in_hive=rc([CountCategory.Low, CountCategory.Medium, CountCategory.High]),
+                feeding=rc(['Sugar Syrup', 'Pollen Patties', 'None']),
+                treatment=rc(['Oxalic Acid', 'Formic Acid', 'None']),
+                stores=rc([CountCategory.Low, CountCategory.Medium, CountCategory.High]),
+                fate=rc(['Alive', 'Died', 'Unknown']),
+                local_bloom=rc(['None', 'Spring', 'Summer', 'Autumn']),
+                weather_conditions=rc(['Sunny', 'Cloudy', 'Rainy', 'Windy']),
+                humidity=round(randint(40, 90) + random(), 1),
+                chalkbrood_presence=rc([True, False]),
+                varroa_mites=rc([True, False])
+            )
+            inspections.append(inspection)
 
-    for user in users:
-        unpurchased_order = Order(
-            order_date=None,
-            delivery_date=None,
-            purchase_complete=False,
-            order_total=0,
-            user_id=user.id
-        )
-        
-        orders.append(unpurchased_order)
-
-        order_date = datetime.now().date() - timedelta(11 * 365)
-        for i in range(randint(1, 6)):
-            if i > 0:
-                delivery_date = order_date + timedelta(randint(1, 14))
-
-                purchased_order = Order(
-                    order_date=order_date,
-                    delivery_date=delivery_date,
-                    purchase_complete=True,
-                    order_total=0,
-                    user_id=user.id
-                )
-
-                order_date += timedelta(randint(1 * 365, 2 * 365))
-            
-                orders.append(purchased_order)
-
-    db.session.add_all(orders)
+    db.session.add_all(inspections)
     db.session.commit()
 
-    print("Creating cart items...")
+    print("Creating queens...")
 
-    cart_items = []
+    queens = []
+    for hive in hives:
+        if random() > 0.3:  # Random chance of having a queen for the hive
+            queen = Queen(
+                hive_id=hive.id,
+                status=rc(['Active', 'Inactive']),
+                origin=rc(['Local Breeder', 'Imported']),
+                species=rc(['Italian', 'Carniolan', 'Buckfast', 'Other']),
+                date_introduced=datetime.now().date() - timedelta(randint(30, 365)),
+                replacement_cause=rc(['Failed queen', 'Hive split', 'Other'])
+            )
+            queens.append(queen)
 
-    for order in orders:
-        for cookie in cookies:
-            if random()>.8:
-                cart_item = CartItem(
-                    num_cookies=randint(1, 10),
-                    order_id=order.id,
-                    cookie_id=cookie.id
-                )
-                
-                cart_items.append(cart_item)
-
-    db.session.add_all(cart_items)
-    db.session.commit()
-
-    print("Creating reviews...")
-
-    reviews = []
-
-    for order in orders:
-        if order.purchase_complete:
-            for cart_item in order.cart_items:
-                if random()>.6:
-                    review = Review(
-                        rating=randint(1, 5),
-                        user_id=order.user_id,
-                        cookie_id=cart_item.cookie_id,
-                        review_title="Review Title",
-                        review_body="This cookie was good"
-                    )
-                    
-                    reviews.append(review)
-
-    db.session.add_all(reviews)
+    db.session.add_all(queens)
     db.session.commit()
 
     print("Seeding Complete.")
