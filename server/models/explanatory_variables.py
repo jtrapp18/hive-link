@@ -1,6 +1,6 @@
 from config import db
 
-class ExplanatoryVariable(db.Model, SerializerMixin):
+class ExplanatoryVariable(db.Model):
     __tablename__ = 'explanatory_variables'
     
     id = db.Column(db.Integer, primary_key=True)

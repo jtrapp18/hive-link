@@ -3,24 +3,47 @@
 import os
 import joblib
 import pandas as pd
+import uuid
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network import MLPClassifier
 
-from models import Hive, ExplanatoryVariable
+from models import Hive, ExplanatoryVariable, ModelHistory
 from config import app, db, api
 from datetime import datetime
 from flask_restful import  Resource
 
-def add_predicted_values(explanatory_variables, data, model):
-    result_data = data.copy()
+def binarize_data(data):
+    categorical_columns = data.select_dtypes(include=['object']).columns
     
-    # Separate features and target
-    X = data[explanatory_variables]
-    
-    # Get predictions from the trained model
+    # One-hot encoding categorical columns, dropping the first category to avoid multicollinearity
+    binarized_data = pd.get_dummies(data, columns=categorical_columns, drop_first=True)
+
+    return binarized_data
+
+def add_predicted_values(explanatory_variables, data, model, scaler=None):
+
+    result_data = binarize_data(data)
+
+    missing_vars = [var for var in explanatory_variables if var not in data.columns]
+    if missing_vars:
+        raise ValueError(f"Missing explanatory variables: {missing_vars}")
+
+    expected_columns = set(explanatory_variables)
+    actual_columns = set(result_data.columns)
+    missing_columns = expected_columns - actual_columns
+    if missing_columns:
+        raise ValueError(f"Missing columns after binarization: {missing_columns}")
+
+    if scaler:
+        # Scale the features if a scaler is provided
+        numerical_columns = data.select_dtypes(include=['float64', 'int64']).columns
+        result_data[numerical_columns] = scaler.transform(data[numerical_columns])
+
+    # Select features and make predictions
+    X = result_data[explanatory_variables]
     result_data['predictions'] = model.predict(X)
-    
+
     return result_data
 
 class ExperienceStudy:
@@ -35,7 +58,11 @@ class ExperienceStudy:
             explanatory_variables: self.explanatory_variables
         }
 
-    def normalize_data(self, hives):
+    def normalize_data(self):
+
+        if not all(key in hive for hive in self.hives for key in ['inspections', 'date_added']):
+            raise ValueError("Hives are missing required keys.")
+
         df = pd.json_normalize(
             self.hives, 
             record_path='inspections', 
@@ -45,55 +72,53 @@ class ExperienceStudy:
 
         return df
     
-    def bifurcate_data(self, normalized_data):
+    def bifurcate_data(self, normalized_data, test_size=0.3):
+
         # Splitting the data into train and test sets (30% test, 70% train)
-        train_data, test_data = train_test_split(normalized_data, test_size=0.3, random_state=42)
+        train_data, test_data = train_test_split(normalized_data, test_size=test_size, random_state=42)
         
-        # Create a column 'set' indicating whether data is from train (0) or test (1)
-        train_data['train'] = 1
-        test_data['train'] = 0
-        
-        # Concatenate back to get the full bifurcated data
-        bifurcated_data = pd.concat([train_data, test_data])
-        
-        # Normalize the data (example: z-score normalization)
+        return train_data, test_data
+    
+    def find_scaler(self, train_data):
+        numerical_columns = train_data.select_dtypes(include=['float64', 'int64']).columns
+
+        # Initialize scaler and fit on training data only
         scaler = StandardScaler()
-        numerical_columns = bifurcated_data.select_dtypes(include=['float64', 'int64']).columns
+        scaler.fit(train_data[numerical_columns])
+
+        # Scale both train and test data
+        train_data[numerical_columns] = scaler.transform(train_data[numerical_columns])
+
+        self.joblib_data['scaler'] = scaler
         
-        # Fit and transform the scaler on the training data only
-        train_data[numerical_columns] = scaler.fit_transform(train_data[numerical_columns])
-        
-        # Transform the test data using the same scaler (to avoid data leakage)
-        test_data[numerical_columns] = scaler.transform(test_data[numerical_columns])
-        
-        return bifurcated_data
+        return scaler
     
-    def binarize_data(self, bifurcated_data):
-        # One-hot encoding of categorical variables (e.g., using pd.get_dummies)
-        categorical_columns = bifurcated_data.select_dtypes(include=['object']).columns
-        binarized_data = pd.get_dummies(bifurcated_data, columns=categorical_columns, drop_first=True)
+    def run_experience_study(self, train_data, scaler):
+        binarized_data = binarize_data(train_data)
+
+        train_data_scaled = scaler.transform(binarized_data)
+        train_data_scaled_df = pd.DataFrame(train_data_scaled, columns=binarized_data.columns)
+
+        # Features and target
+        X = train_data_scaled_df[self.explanatory_variables]
+        y = train_data_scaled_df[self.target_variable]
         
-        return binarized_data
-    
-    def run_experience_study(self, binarized_data):
-        # Splitting the data into features (X) and target variable (y)
-        X = binarized_data[self.explanatory_variables]
-        y = binarized_data[self.target_variable]  # Target variable
-        
-        # Train a neural network model
+        # Train the neural network
         model = MLPClassifier(hidden_layer_sizes=(100,), max_iter=500, random_state=42)
+
+        app.logger.info("Training the neural network model...")
         model.fit(X, y)
+        app.logger.info("Model training completed.")
         
-        # Save the trained model to a file using joblib
-        self.joblib_data['run_date'] = datetime.now()
-        self.joblib_data['model'] = model
-        
-        return model
-    
+        # Save important objects to joblib data
+        self.joblib_data.update({
+            'run_date': datetime.now(),
+            'model': model
+        })
 
-class RunStudy(Resource):
+class FateStudy(Resource):
 
-    def create_model(self):
+    def create_model(self, joblib_loc):
         explanatory_variables = [explanatory_variable.variable_name for explanatory_variable in ExplanatoryVariable.query.filter_by(is_explanatory=True)]
         hives = [hive.to_dict() for hive in Hive.query.all()]
 
@@ -103,46 +128,84 @@ class RunStudy(Resource):
             hives=hives
             )
 
-        normalized_data = fate_study.normalize_data(hives)
-        bifurcated_data = fate_study.bifurcate_data(normalized_data)
-        binarized_data = fate_study.binarize_data(bifurcated_data)
-        model = fate_study.run_experience_study(binarized_data)
+        # Data processing
+        normalized_data = fate_study.normalize_data()
+        train_data, test_data = fate_study.bifurcate_data(normalized_data)   
 
-        test_data = bifurcated_data.loc[bifurcated_data['train']==0]
-        test_results = add_predicted_values(explanatory_variables, test_data, model)
+        # Calculate scalar
+        scaler = fate_study.find_scaler(train_data)
+
+        # Fit model
+        model = fate_study.run_experience_study(train_data, scaler)        
+
+        test_results = add_predicted_values(explanatory_variables, test_data, model, scaler)
         fate_study.joblib_data['test_results'] = test_results
 
-        joblib.dump(fate_study.joblib_data, 'experience_study_model.joblib')
+        try:
+            joblib.dump(fate_study.joblib_data, joblib_loc)
+        except Exception as e:
+            app.logger.error(f"Error while saving model: {e}")
+            raise
 
         return model, test_results
 
-    def post(self):
+    def get(self):
         # Define the path where the model will be saved
-        model_path = 'experience_study_model.joblib'
+        model = ModelHistory.query.filter_by(end_date=None).first()
 
-        # Check if the model already exists
-        if os.path.exists(model_path):
+        if not model:
+            return {'error': 'No model found.'}, 404
+
+        try:
             # If the model exists, load it from the file
-            joblib_data = joblib.load(model_path)
-
+            joblib_data = joblib.load(model.joblib_loc)
             test_results = joblib_data['test_results']
 
-            message = "Model loaded from file."
-            status_code = 200  # HTTP status for success
-        else:
+            return test_results.to_dict(), 200
+        
+        except Exception as e:
+            app.logger.error(f"Error while fetching the model from {model.joblib_loc}: {e}")
+            return {'error': 'An error occurred while fetching the model.'}, 500
+    
+    def post(self):
+        joblib_loc = f'fate_study_{uuid.uuid4().hex}.joblib'
+
+        try:
             # If the model does not exist, create it
-            model, result_data = self.create_model()
-            message = "Model trained and saved to file."
-            status_code = 201  # HTTP status for resource creation
+            self.create_model(joblib_loc)
 
-        # Return a response to the user
-        response = {
-            'message': message,
-            'data': test_results.to_dict(),  # Assuming result_data is a pandas DataFrame; convert to dict if needed
-            'status_code': status_code
-        }
+            # Save metadata for new model to database
+            new_study = ModelHistory(
+                joblib_loc = joblib_loc
+            )
 
-        return response, status_code
+            # Add the new study to the database and commit
+            db.session.add(new_study)
+            db.session.commit()
+
+            return new_study.to_dict(), 201
+
+        except Exception as e:
+            app.logger.error(f"Error while training the model: {e}")
+            return {'error': str(e)}, 500
+
+
+class PriorStudy(Resource):
+
+    def patch(self):
+        model = ModelHistory.query.filter_by(end_date=None).first()
+
+        if not model:
+            return {'error': 'No prior study found'}, 404
+        
+        if model.end_date is not None:
+            return {'error': 'This study is already closed.'}, 400
+
+        setattr(model, 'end_date', datetime.now().date())
+
+        db.session.commit()
+
+        return model.to_dict(), 200
 
 
         
