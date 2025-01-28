@@ -189,7 +189,6 @@ class FateStudy(Resource):
             app.logger.error(f"Error while training the model: {e}")
             return {'error': str(e)}, 500
 
-
 class PriorStudy(Resource):
 
     def patch(self):
@@ -207,6 +206,37 @@ class PriorStudy(Resource):
 
         return model.to_dict(), 200
 
+class PredictStudy(Resource):
 
+    def post(self):
+        # Get the input data from the request
+        input_data = request.get_json()
+
+        if 'data' not in input_data:
+            return {'error': 'No input data provided.'}, 400
         
+        # Convert input data to a DataFrame with one row (the input data will be a dict)
+        input_df = pd.DataFrame([input_data])
 
+        # Fetch the latest model (you can adjust this depending on your logic for "active" model)
+        model_record = ModelHistory.query.filter_by(end_date=None).first()
+
+        if not model_record:
+            return {'error': 'No active model found.'}, 404
+
+        try:
+            # Load the model, scaler, and explanatory variables from the joblib file
+            joblib_data = joblib.load(model_record.joblib_loc)
+            model = joblib_data['model']
+            scaler = joblib_data['scaler']
+            explanatory_variables = joblib_data['explanatory_variables']
+            
+            # Make predictions using the active model
+            predicted_values = add_predicted_values(explanatory_variables, input_df, model, scaler)
+
+            # Return the predictions
+            return {'predictions': predicted_values['predictions'].to_dict()}, 200
+
+        except Exception as e:
+            app.logger.error(f"Error while making predictions: {e}")
+            return {'error': 'An error occurred while processing the prediction request.'}, 500
