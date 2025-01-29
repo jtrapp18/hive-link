@@ -2,11 +2,14 @@ import Carousel from 'react-bootstrap/Carousel';
 import styled from 'styled-components';
 
 const StyledMain = styled.main`
+  height: var(--size-body);
+  padding: 0;
+  margin: 0;
 
-h1 {
-    font-size: 12vh;
-    color: var(--honey);
-  }
+  h1 {
+      font-size: 12vh;
+      color: var(--honey);
+    }
 
   img {
     height: 70%;
