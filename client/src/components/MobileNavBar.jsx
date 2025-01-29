@@ -62,7 +62,7 @@ const HamburgerButton = styled.button`
   background: transparent;
   border: none;
   cursor: pointer;
-  padding-right: 30px;
+  padding-right: 10vw;
   transition: transform 1s ease;
 
   span {

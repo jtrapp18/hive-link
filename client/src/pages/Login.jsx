@@ -28,7 +28,6 @@ const StyledMain = styled.main`
       width: 100%;
     }
   }
-
 `
 
 function Login() {

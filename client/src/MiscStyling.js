@@ -7,6 +7,7 @@ const StyledMenuItem = css`
   position: relative;
   padding: 0px 10px 0px 10px;
   cursor: pointer;
+  margin: 0 5px 0 5px;
 `;
 
 const StyledNavigation = css`

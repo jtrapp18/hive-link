@@ -7,6 +7,7 @@ import styled from "styled-components";
 const StyledAccountIcon = styled.div`
   ${StyledMenuItem}
   position: relative;
+  z-index: 1000;
 `
 
 

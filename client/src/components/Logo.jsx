@@ -6,10 +6,10 @@ const LogoContainer = styled.div`
   height: 100%;
   display: flex;
   align-items: center;
-  margin-left: 20px;
+  padding: 0 0 0 3vw;
 
   img {
-    height: clamp(2rem, 6vw, 4rem);
+    height: clamp(2rem, 7vw, 4.2rem);
   }
 `
 

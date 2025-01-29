@@ -10,9 +10,6 @@ function Error({ children }) {
 }
 
 const Wrapper = styled.div`
-  color: red;
-  background-color: mistyrose;
-  border-radius: 6px;
   display: flex;
   padding: 8px;
   align-items: center;
@@ -21,17 +18,19 @@ const Wrapper = styled.div`
 `;
 
 const Alert = styled.span`
-  background-color: white;
+  border: 1px solid red;
   height: 30px;
   width: 30px;
   border-radius: 50%;
   font-weight: bold;
   display: grid;
   place-content: center;
+  color: red;
 `;
 
 const Message = styled.p`
   margin: 0;
+  color: red;
 `;
 
 export default Error;

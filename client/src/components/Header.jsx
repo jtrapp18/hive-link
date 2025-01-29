@@ -24,6 +24,12 @@ const StyledHeader = styled(Headroom)`
       color: var(--light-green);
     }
   }
+
+  #honeycomb {
+    height: 100%;
+    position: absolute;
+    right: 0;
+  }
 `
 
 const Header = () => {
@@ -35,6 +41,10 @@ const Header = () => {
           {user && <span id='logged-in'>{`Logged in as ${user.username}`}</span>}
           <Logo />
           {isMobile ? <MobileNavBar /> : <NavBar />}
+          <img 
+            id='honeycomb'
+            src='images/honeycomb_side.png'
+          />
         </StyledHeader>
     );
 }

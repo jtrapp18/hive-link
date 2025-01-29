@@ -197,6 +197,7 @@ label {
 
 textarea, input {
   background: var(--yellow);
+  color: black;
 }
 
 textarea:hover, input:hover {

@@ -12,7 +12,7 @@ const LinkContainer = styled.div`
   top: 50px;
   left: 0;
   z-index: 1000;
-  width: 110%;
+  width: 100%;
   text-decoration: none;
   text-align: right;
   background: var(--yellow);
@@ -60,7 +60,6 @@ const StyledNavLink = styled(NavLink)`
   &.active {
     text-decoration: overline;
     text-decoration-thickness: 2px;
-    color: var(--chocolate);
   }
 
   &:hover {
