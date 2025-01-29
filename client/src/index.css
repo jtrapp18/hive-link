@@ -208,10 +208,10 @@ main {
   align-items: center;
 
   /* Background image */
-  background-image: url('/images/grid_left.png'); /* Update with your image path */
-  background-size: auto 40vh; /* Ensures the image covers the whole element */
-  background-position: top left; /* Centers the image */
-  background-repeat: no-repeat; /* Prevents tiling */
+  background-image: url('/images/grid_left.png');
+  background-size: auto 40vh;
+  background-position: top left;
+  background-repeat: no-repeat;
 }
 
 @keyframes logo-spin {

@@ -2,6 +2,7 @@ from datetime import datetime, date
 from sqlalchemy import Column, Integer, String, Date, Float
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.orm import validates
+from sqlalchemy.ext.associationproxy import association_proxy
 from config import db
 
 class Hive(db.Model, SerializerMixin):
@@ -16,9 +17,12 @@ class Hive(db.Model, SerializerMixin):
 
     user = db.relationship('User', back_populates='hives')
     queens = db.relationship('Queen', back_populates='hive', cascade='all, delete-orphan')
-    inspections = db.relationship('Inspection', back_populates='hive', cascade='all, delete-orphan') 
 
-    serialize_rules = ('-user', '-queens.hive', '-inspections.hive')
+    # Association proxy to get inspections for this hive through queens
+    inspections = association_proxy('queens', 'inspection',
+                                 creator=lambda inspection_obj: Queen(inspection=inspection_obj))
+
+    serialize_rules = ('-user', '-queens.hive', '-queens.inspections.queen', '-inspections.queen')
 
     def __repr__(self):
         return f'<Hive {self.id}, Date Added: {self.date_added}, Material: {self.material}>'

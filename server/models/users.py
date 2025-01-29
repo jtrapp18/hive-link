@@ -16,8 +16,11 @@ class User(db.Model, SerializerMixin):
     last_name = db.Column(db.String, nullable=False)
     phone_number = db.Column(db.String, nullable=True)
     email = db.Column(db.String, nullable=False, unique=True)
+    zipcode = db.Column(db.String, nullable=False)
 
     hives = db.relationship('Hive', back_populates='user', cascade='all, delete-orphan')
+    events = db.relationship('Event', back_populates='user', cascade='all, delete-orphan')
+    signups = db.relationship('Signup', back_populates='user', cascade='all, delete-orphan')
     
     @hybrid_property
     def password_hash(self):
@@ -86,3 +89,9 @@ class User(db.Model, SerializerMixin):
             if not re.match(phone_regex, value):
                 raise ValueError("Phone number must be in a valid format.")
         return value
+    
+    @validates('zipcode')
+    def validate_zipcode(self, key, value):
+        if isinstance(value, str) and value.isdigit() and len(value) in [5, 9]:  # Adjust length based on your postal code format
+            return value
+        raise ValueError("Invalid zipcode format")

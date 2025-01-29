@@ -14,7 +14,7 @@ class Inspection(db.Model, SerializerMixin):
     __tablename__ = 'inspections'
 
     id = db.Column(db.Integer, primary_key=True)
-    hive_id = db.Column(db.Integer, db.ForeignKey('hives.id'), nullable=False)
+    queen_id = db.Column(db.Integer, db.ForeignKey('queens.id'), nullable=False)
     date_checked = db.Column(db.Date, nullable=False)
     temp = db.Column(db.Float, nullable=True)
     activity_surrounding_hive = db.Column(db.String(50), nullable=True)
@@ -36,7 +36,7 @@ class Inspection(db.Model, SerializerMixin):
     chalkbrood_presence = db.Column(db.Boolean, nullable=True)
     varroa_mites = db.Column(db.Boolean, nullable=True)
 
-    hive = db.relationship('Hive', back_populates='inspections')
+    queen = db.relationship('Queen', back_populates='inspections')
 
     # serialize_rules = ('-activity_surrounding', '-pests_surrounding', '-feeding', '-treatment', 
                     #    '-stores', '-fate', '-local_bloom', '-weather_conditions', '-chalkbrood_presence', '-varroa_mites')

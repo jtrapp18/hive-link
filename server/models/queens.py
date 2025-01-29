@@ -14,8 +14,9 @@ class Queen(db.Model, SerializerMixin):
     species = db.Column(db.String(50), nullable=False)
     date_introduced = db.Column(db.Date, nullable=False)
     replacement_cause = db.Column(db.String(100), nullable=True)
-
+ 
     hive = db.relationship('Hive', back_populates='queens')
+    inspections = db.relationship('Inspection', back_populates='queen', cascade='all, delete-orphan')  
 
     # serialize_rules = ('-status', '-origin', '-type', '-date_introduced', '-replacement_cause')
 

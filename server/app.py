@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from experience_study import FateStudy, PriorStudy, PredictStudy
-from models import Queen, Hive, Inspection, User
+from models import Queen, Hive, Inspection, User, Event, Signup
 from config import app, db, api
 from datetime import datetime
 # from flask_migrate import Migrate
@@ -27,7 +27,7 @@ class ClearSession(Resource):
 
         return {}, 204
 
-class Signup(Resource):
+class AccountSignup(Resource):
     def post(self):
         try:
             json = request.get_json()
@@ -53,7 +53,8 @@ class Signup(Resource):
                 username=json['username'],
                 first_name=json['first_name'],
                 last_name=json['last_name'],
-                email=json['email']
+                email=json['email'],
+                zipcode=json['zipcode']
                 )
             
             user.password_hash = json['password']
@@ -155,7 +156,7 @@ class Hives(Resource):
         except Exception as e:
             db.session.rollback()
             return {'error': f'An error occurred: {str(e)}'}, 500
-
+        
 class HivesByUser(Resource):
     def get(self):
         user_id = session['user_id']
@@ -297,9 +298,98 @@ class QueenById(Resource):
         db.session.delete(queen)
         db.session.commit()
         return {}, 204
+    
+class Events(Resource):
+    def get(self):
+        events = [event.to_dict() for event in Event.query.all()]
+        return events, 200
 
+    def post(self):
+        try:
+            # Get data from the request
+            data = request.get_json()
+
+            # Create new hive
+            new_event = Event(
+                user_id=data['user_id'],  # Link the hive to the user
+                title=data['title'],
+                event_date=data['event_date'],
+                descr=data['descr'],
+                zipcode=data['zipcode']
+            )
+
+            # Add the new hive to the database and commit
+            db.session.add(new_event)
+            db.session.commit()
+
+            # Return the created hive as a response
+            return new_event.to_dict(), 201
+        except Exception as e:
+            db.session.rollback()
+            return {'error': f'An error occurred: {str(e)}'}, 500
+    
+class EventById(Resource):
+    def get(self, event_id):
+        event = Event.query.get(event_id)
+        if not event:
+            return {'error': 'Hive not found'}, 404
+        return event.to_dict(), 200
+
+    def patch(self, event_id):
+        event = Event.query.get(event_id)
+        if not event:
+            return {'error': 'Event not found'}, 404
+        data = request.get_json()
+
+        for attr in data:
+            setattr(event, attr, data.get(attr))
+
+        db.session.commit()
+        return event.to_dict(), 200
+
+    def delete(self, event_id):
+        event = Event.query.get(event_id)
+        if not event:
+            return {'error': 'Event not found'}, 404
+        db.session.delete(event)
+        db.session.commit()
+        return {}, 204
+    
+class Signups(Resource):
+
+    def post(self):
+        try:
+            # Get data from the request
+            data = request.get_json()
+
+            # Create new hive
+            new_signup = Signup(
+                user_id=data['user_id'],  # Link the hive to the user
+                event_id=data['event_id']
+            )
+
+            # Add the new hive to the database and commit
+            db.session.add(new_signup)
+            db.session.commit()
+
+            # Return the created hive as a response
+            return new_signup.to_dict(), 201
+        except Exception as e:
+            db.session.rollback()
+            return {'error': f'An error occurred: {str(e)}'}, 500
+    
+class SignupById(Resource):
+
+    def delete(self, signup_id):
+        signup = Signup.query.get(signup_id)
+        if not signup:
+            return {'error': 'Signup not found'}, 404
+        db.session.delete(signup)
+        db.session.commit()
+        return {}, 204
+    
 api.add_resource(ClearSession, '/clear', endpoint='clear')
-api.add_resource(Signup, '/signup', endpoint='signup')
+api.add_resource(AccountSignup, '/account_signup', endpoint='account_signup')
 api.add_resource(CheckSession, '/check_session')
 api.add_resource(Login, '/login')
 api.add_resource(Logout, '/logout')
@@ -314,6 +404,10 @@ api.add_resource(QueenById, '/queens/<int:queen_id>')
 api.add_resource(FateStudy, '/fate_study', endpoint='fate_study')
 api.add_resource(PriorStudy, '/prior_study', endpoint='prior_study')
 api.add_resource(PredictStudy, '/predict_study', endpoint='predict_study')
+api.add_resource(Events, '/events', endpoint='events')
+api.add_resource(EventById, '/events/<int:event_id>')
+api.add_resource(Signups, '/hives', endpoint='signups')
+api.add_resource(SignupById, '/hives/<int:signup_id>')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

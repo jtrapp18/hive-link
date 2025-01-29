@@ -30,6 +30,11 @@ function Home() {
     <StyledMain>
         <h1>Hive Link</h1>
         <h3>Collaboration is the Heart of the Hive.</h3>
+        {/* "Stronger Together, Like the Hive."
+        "Working Together, Thriving Together."
+        "In Unity, the Hive Thrives."
+        "Collaboration Fuels the Hive."
+        "Like Bees, We Flourish Together." */}
         {/* <h3>Together, We Strengthen the Hive.</h3> */}
         <img
             src="/images/bee_analysis.jpeg" // Provide the relative or absolute path to the image

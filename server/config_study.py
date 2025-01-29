@@ -1,8 +1,5 @@
-from config import db
+from config import db, app
 from models import ExplanatoryVariable
-
-ExplanatoryVariable.query.delete()
-db.session.commit()
 
 explanatory_variables = {
     "explanatory_variables": [
@@ -22,16 +19,25 @@ explanatory_variables = {
     ]
 }
 
-# Add explanatory variables to the database
-for var in explanatory_variables['explanatory_variables']:
-    explanatory_variable = ExplanatoryVariable(
-        variable_name=var['variable_name'],
-        data_type=var['data_type'],
-        is_explanatory=var['is_explanatory'],
-        description=var['description'],
-        source_table=var['source_table']
-    )
-    db.session.add(explanatory_variable)
+with app.app_context():
 
-db.session.commit()
-print("Explanatory variables seeded successfully.")
+    print("Deleting current table...")
+
+    ExplanatoryVariable.query.delete()
+    db.session.commit()
+
+    print("Adding exploratory variables...")
+
+    # Add explanatory variables to the database
+    for var in explanatory_variables['explanatory_variables']:
+        explanatory_variable = ExplanatoryVariable(
+            variable_name=var['variable_name'],
+            data_type=var['data_type'],
+            is_explanatory=var['is_explanatory'],
+            description=var['description'],
+            source_table=var['source_table']
+        )
+        db.session.add(explanatory_variable)
+
+    db.session.commit()
+    print("Explanatory variables seeded successfully.")
