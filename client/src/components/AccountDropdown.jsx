@@ -101,11 +101,11 @@ const AccountDropdown = ({isMenuOpen, setIsMenuOpen}) => {
           Account Details
         </StyledNavLink>
         <StyledNavLink
-          to="/order_history"
+          to="/hives"
           className="nav-link"
           onClick={handleClick}
         >
-          Order History
+          Manage Hives
         </StyledNavLink>
         <StyledNavLink
             to="/login"

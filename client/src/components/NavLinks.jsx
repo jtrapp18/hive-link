@@ -25,24 +25,11 @@ function NavLinks({ handleClick }) {
   return (
     <>
       <StyledNavLink
-        to="/menu"
+        to="/analysis"
         className="nav-link"
         onClick={handleClick}
       >
-        Menu
-      </StyledNavLink>
-      <StyledNavLink
-        to="/cart"
-        className="nav-link"
-        onClick={handleClick}
-      >
-        <FaShoppingCart />
-        {/* Cart bubble showing item count */}
-        {cartOrder && cartOrder.cartItems && (
-          <Badge bg="danger" style={{ position: 'absolute', top: '-5px', right: '-10px' }}>
-            {cartOrder.cartItems.length}
-          </Badge>
-        )}
+        Analysis
       </StyledNavLink>
       <StyledAccountIcon
         className="nav-link"

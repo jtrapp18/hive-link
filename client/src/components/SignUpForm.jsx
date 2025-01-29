@@ -3,6 +3,7 @@ import { postJSONToDb } from '../helper';
 import styled from "styled-components";
 import { UserContext } from '../context/userProvider';
 import { useFormik } from 'formik';
+import * as yup from 'yup';  // Import yup
 import Error from "./Error";
 
 const FormField = styled.div`
@@ -10,6 +11,31 @@ const FormField = styled.div`
     margin-bottom: 12px;
   }
 `;
+
+const validationSchema = yup.object({
+  firstName: yup.string().required('First Name is required'),
+  lastName: yup.string(),
+  username: yup
+    .string()
+    .required('Username is required')
+    .min(3, 'Username must be at least 3 characters'),
+  email: yup
+    .string()
+    .required('Email is required')
+    .email('Email address is invalid'),
+  password: yup
+    .string()
+    .required('Password is required')
+    .min(8, 'Password must be at least 8 characters long')
+    .matches(/[A-Z]/, 'Password must include at least one uppercase letter')
+    .matches(/[a-z]/, 'Password must include at least one lowercase letter')
+    .matches(/\d/, 'Password must include at least one number')
+    .matches(/[!@#$%^&*(),.?":{}|<>]/, 'Password must include at least one special character'),
+  password_confirmation: yup
+    .string()
+    .required('Password confirmation is required')
+    .oneOf([yup.ref('password'), null], 'Passwords must match'),
+});
 
 function SignUpForm({ setShowConfirm }) {
   const { setUser } = useContext(UserContext);
@@ -23,6 +49,7 @@ function SignUpForm({ setShowConfirm }) {
       password: "",
       password_confirmation: "",
     },
+    validationSchema,  // Use the validation schema here
     onSubmit: async (values, { setErrors }) => {
       const body = {
         firstName: values.firstName,
@@ -32,76 +59,25 @@ function SignUpForm({ setShowConfirm }) {
         password: values.password,
         password_confirmation: values.password_confirmation,
       };
-  
+
       try {
         const newUser = await postJSONToDb("signup", body);
         if (newUser) {
-            postJSONToDb("orders", {userId: newUser.id, purchaseComplete: 0, orderTotal: 0});
-            setUser(newUser);
-            setShowConfirm(true);
+          setUser(newUser);
+          setShowConfirm(true);
         }
       } catch (error) {
-          const errors = {};
+        const errors = {};
 
-          if (error.message.toLowerCase().includes('username'))  {
-            errors.username = 'Username already taken.';
-          } 
-          if (error.message.toLowerCase().includes('email'))  {
-            errors.email = 'Email already registered.';
-          }
-
-          setErrors(errors)
-      }
-    },
-    validate: (values) => {
-      const errors = {};
-
-      // First Name validation
-      if (!values.firstName) {
-        errors.firstName = 'First Name is required';
-      }
-
-      // Username validation
-      if (!values.username) {
-        errors.username = 'Username is required';
-      } else if (values.username.length < 3) {
-        errors.username = 'Username must be at least 3 characters';
-      }
-
-      // Email validation
-      if (!values.email) {
-        errors.email = 'Email is required';
-      } else if (!/\S+@\S+\.\S+/.test(values.email)) {
-        errors.email = 'Email address is invalid';
-      }
-
-      // Password validation
-      if (!values.password) {
-        errors.password = 'Password is required';
-      } else {
-        if (values.password.length < 8) {
-          errors.password = 'Password must be at least 8 characters long';
+        if (error.message.toLowerCase().includes('username')) {
+          errors.username = 'Username already taken.';
         }
-        if (!/[A-Z]/.test(values.password)) {
-          errors.password = 'Password must include at least one uppercase letter';
+        if (error.message.toLowerCase().includes('email')) {
+          errors.email = 'Email already registered.';
         }
-        if (!/[a-z]/.test(values.password)) {
-          errors.password = 'Password must include at least one lowercase letter';
-        }
-        if (!/\d/.test(values.password)) {
-          errors.password = 'Password must include at least one number';
-        }
-        if (!/[!@#$%^&*(),.?":{}|<>]/.test(values.password)) {
-          errors.password = 'Password must include at least one special character';
-        }
-      }
 
-      // Password confirmation validation
-      if (values.password !== values.password_confirmation) {
-        errors.password_confirmation = 'Passwords must match';
+        setErrors(errors);
       }
-
-      return errors;
     }
   });
 

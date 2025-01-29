@@ -22,7 +22,7 @@ function Logo() {
           to="/"
           className="home"
         >
-          <img src={`images/cookie-store-logo.png`} alt="home"/>
+          <img src={`images/bee_logo.png`} alt="home"/>
         </StyledNavLink>
       </LogoContainer>
   );

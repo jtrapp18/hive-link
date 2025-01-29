@@ -51,7 +51,7 @@ function Home() {
       <Carousel>
         <Carousel.Item>
           <Image
-              src="/images/cookies_falling.png" // Provide the relative or absolute path to the image
+              src="/images/bee_analysis.png" // Provide the relative or absolute path to the image
               alt="First slide"
           />
           <Carousel.Caption>

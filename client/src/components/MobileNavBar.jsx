@@ -145,25 +145,11 @@ const MobileNavBar = () => {
           Home
         </StyledNavLink>
         <StyledNavLink
-          to="/menu"
+          to="/analysis"
           className="nav-link"
           onClick={handleClick}
         >
-          Menu
-        </StyledNavLink>
-        <StyledNavLink
-          to="/cart"
-          className="nav-link"
-          onClick={handleClick}
-        >
-          Cart
-        </StyledNavLink>
-        <StyledNavLink
-          to="/order_history"
-          className="nav-link"
-          onClick={handleClick}
-        >
-          Order History
+          Analysis
         </StyledNavLink>
         <StyledNavLink
           to="/account_details"
@@ -171,6 +157,13 @@ const MobileNavBar = () => {
           onClick={handleClick}
         >
           Account Details
+        </StyledNavLink>
+        <StyledNavLink
+          to="/hives"
+          className="nav-link"
+          onClick={handleClick}
+        >
+          Manage Hives
         </StyledNavLink>
         <StyledNavLink
           to="/login"

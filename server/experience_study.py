@@ -92,6 +92,23 @@ class ExperienceStudy:
         self.joblib_data['scaler'] = scaler
         
         return scaler
+
+    def create_mite_risk_level(self, data):
+        # Here you can define how to categorize mite risk level based on data
+        # Example: Create 'mite_risk_level' based on mite count and hive health
+        conditions = []
+
+        # Example thresholds for mite risk levels (these would depend on your data)
+        conditions.append((data['mite_count'] < 10, 'Low'))
+        conditions.append((data['mite_count'] >= 10 and data['mite_count'] < 50, 'Medium'))
+        conditions.append((data['mite_count'] >= 50, 'High'))
+
+        # Apply conditions to determine mite risk level
+        data['mite_risk_level'] = 'Low'  # Default value
+        for condition, risk_level in conditions:
+            data.loc[condition, 'mite_risk_level'] = risk_level
+        
+        return data['mite_risk_level']  # This will be your target variable
     
     def run_experience_study(self, train_data, scaler):
         binarized_data = binarize_data(train_data)
@@ -101,7 +118,8 @@ class ExperienceStudy:
 
         # Features and target
         X = train_data_scaled_df[self.explanatory_variables]
-        y = train_data_scaled_df[self.target_variable]
+        # y = train_data_scaled_df[self.target_variable]
+        y = self.create_mite_risk_level(train_data)
         
         # Train the neural network
         model = MLPClassifier(hidden_layer_sizes=(100,), max_iter=500, random_state=42)

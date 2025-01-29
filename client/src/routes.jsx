@@ -1,14 +1,12 @@
 // routes.js
 import App from "./App";
 import Home from "./pages/Home";
-import Menu from "./pages/Menu";
-import CookieListing from "./pages/CookieListing";
+import Hives from "./pages/Hives";
+import HiveDetails from "./pages/HiveDetails";
 import AccountDetails from "./pages/AccountDetails";
-import Cart from "./pages/Cart";
-import OrderHistory from "./pages/OrderHistory";
 import ErrorPage from "./pages/ErrorPage";
 import Login from './pages/Login';
-import Checkout from "./pages/Checkout";
+import Analysis from './pages/Analysis'
 
 const routes = [
   {
@@ -25,29 +23,21 @@ const routes = [
         element: <Login />,
       },
       {
-        path: "menu",
-        element: <Menu />,
+        path: "analysis",
+        element: <Analysis />,
       },
       {
-        path: "menu/:id",
-        element: <CookieListing />,
+        path: "hives",
+        element: <Hives />,
+      },
+      {
+        path: "hive/:id",
+        element: <HiveDetails />,
       },
       {
         path: "account_details",
         element: <AccountDetails />,
-      },
-      {
-        path: "cart",
-        element: <Cart />,
-      },
-      {
-        path: "order_history",
-        element: <OrderHistory />,
-      },
-      {
-        path: "checkout",
-        element: <Checkout />,
-      },
+      }
     ],
   },
 ];
