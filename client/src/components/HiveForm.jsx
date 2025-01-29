@@ -70,6 +70,8 @@ const HiveForm = ({ hive }) => {
     <div>
       {!isSubmitted ? (
         <StyledForm onSubmit={formik.handleSubmit}>
+          <h3>{hive ? "Hive Details" : "Add New Hive"}</h3>
+          <br />
           <div className="form-input">
             <label htmlFor="dateAdded">Date Added</label>
             <input

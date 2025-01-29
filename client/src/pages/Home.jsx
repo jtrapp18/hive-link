@@ -12,6 +12,10 @@ const StyledMain = styled.main`
       color: var(--honey);
     }
 
+  h3 {
+    color: var(--yellow);
+  }
+
   img {
     height: 70%;
     width: 100%;
@@ -25,6 +29,8 @@ function Home() {
   return (
     <StyledMain>
         <h1>Hive Link</h1>
+        <h3>Collaboration is the Heart of the Hive.</h3>
+        {/* <h3>Together, We Strengthen the Hive.</h3> */}
         <img
             src="/images/bee_analysis.jpeg" // Provide the relative or absolute path to the image
             alt="First slide"

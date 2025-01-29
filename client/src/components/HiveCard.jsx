@@ -15,7 +15,7 @@ const StyledHiveCard = styled.article`
     margin-bottom: 10px;
     box-shadow: var(--shadow);
 
-    .btn-container {
+    .label-container {
         height: 15%;
         padding-top: 2%;
         border-top: 3px double var(--honey);
@@ -39,16 +39,15 @@ const StyledHiveCard = styled.article`
             h3 {
                 font-size: clamp(1.2rem, 1.8vw, 1.8rem);
             }
+            
+            span {
+                color: var(--honey);
+            }
 
             img {
                 width: 60%;
             }
-
-            .hive-info {
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-            }
+        }
     }
 `
 
@@ -66,15 +65,14 @@ const HiveCard = ({ id,  dateAdded, material, locationLat, locationLong, queens,
                 className="main-hive"
                 onClick={handleClick}
             >
-                <section>
+                <section className='img-section'>
                     <img
                         src='images/hive.png'
                         alt='bee hive'
                     />
                 </section>
-                <section>
-                    <div className="hive-info">
-                        <h3>{`Hive ID:${id}`}</h3>
+                <section className='info-section'>
+                    <div>
                         <label>Material:</label>
                         <p>{material}</p>
                         <label>Added:</label>
@@ -86,25 +84,8 @@ const HiveCard = ({ id,  dateAdded, material, locationLat, locationLong, queens,
                     </div>
                 </section>  
             </div>
-            <div className="btn-container">
-                <NavLink
-                    to={`/inspections/${id}`}
-                    className="nav-link"
-                >
-                    <button onClick={()=>setActiveTab('inspections')}>Inspections</button>     
-                </NavLink>
-                <NavLink
-                    to={`/queens/${id}`}
-                    className="nav-link"
-                >
-                    <button onClick={()=>setActiveTab('queens')}>Queens</button>    
-                </NavLink>
-                <NavLink
-                    to={`/hive/${id}`}
-                    className="nav-link"
-                >
-                    <button onClick={()=>setActiveTab('edit_details')}>Edit Details</button>    
-                </NavLink>
+            <div className="label-container">
+                <span>{`Hive ID: ${id}`}</span>
             </div>
         </StyledHiveCard>
     );
