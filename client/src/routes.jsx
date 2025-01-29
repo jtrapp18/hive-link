@@ -7,6 +7,8 @@ import AccountDetails from "./pages/AccountDetails";
 import ErrorPage from "./pages/ErrorPage";
 import Login from './pages/Login';
 import Analysis from './pages/Analysis'
+import HiveInspections from "./pages/HiveInspections";
+import HiveQueens from './pages/HiveQueens'
 
 const routes = [
   {
@@ -33,6 +35,14 @@ const routes = [
       {
         path: "hive/:id",
         element: <HiveDetails />,
+      },
+      {
+        path: "inspections/:id",
+        element: <HiveInspections />,
+      },
+      {
+        path: "queens/:id",
+        element: <HiveQueens />,
       },
       {
         path: "account_details",

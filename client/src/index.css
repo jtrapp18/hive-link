@@ -195,17 +195,19 @@ label {
   font-family: 'Mogra';
 }
 
-textarea, input {
-  background: var(--yellow);
-  color: black;
-}
-
-textarea:hover, input:hover {
-  background: var(--honey);
-}
-
 span {
   display: block;
+}
+
+main {
+  min-height: var(--size-body);
+  padding: 20px;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
 }
 
 @keyframes logo-spin {

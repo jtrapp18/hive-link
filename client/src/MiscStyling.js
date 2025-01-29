@@ -45,5 +45,40 @@ const StyledMain = styled.main`
   }
 `;
 
+const StyledForm = styled.form`
+  width: 500px;
+  max-width: 90vw;
+  padding: 50px;
+  border: 3px double var(--yellow);
 
-export { StyledMenuItem, StyledNavLink, StyledLink, StyledMain }
+  h1 {
+    padding: 5px;
+    border-radius: 200px;
+    text-align: center;
+  }
+
+  input, textarea, select {
+    width: 100%;
+    background: var(--yellow);
+    color: black;
+    padding: 5px;
+  }
+
+  textarea:hover, input:hover, select:hover {
+    background: var(--honey);
+  }
+
+  div:not(:last-child) {
+    margin-bottom: 12px;
+  }
+`
+
+const CardContainer = styled.div`
+  width: 100%;
+  display: grid;
+  gap: 10px;
+  max-width: 100vw;
+  justify-items: center;
+`
+
+export { StyledMenuItem, StyledNavLink, StyledLink, StyledMain, StyledForm, CardContainer }

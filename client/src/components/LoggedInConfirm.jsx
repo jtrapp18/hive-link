@@ -6,9 +6,11 @@ import { NavLink } from "react-router-dom";
 
 const StyledDiv = styled.div`
   max-width: 90vw;
-  background: var(--cookie);
   padding: 50px;
-  border: 3px double var(--dark-chocolate);
+
+  img {
+    max-height: 30vh;
+  }
 `
 
 function LoggedInConfirm({setShowConfirm}) {
@@ -23,8 +25,17 @@ function LoggedInConfirm({setShowConfirm}) {
 
   return (
     <StyledDiv>
-      <h1>{`Hello, ${user.first_name}!`}</h1>
       <p>{`Logged in as ${user.username}`}</p>
+      <h1>{`Hello, ${user.firstName}!`}</h1>
+      <NavLink
+          to="/"
+          className="nav-link"
+        >
+          <img
+            src='images/welcome_bee.png'
+            alt='welcome bee'
+          />        
+        </NavLink>
       <NavLink
           to="/login"
           className="nav-link"

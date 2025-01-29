@@ -2,14 +2,8 @@ import Carousel from 'react-bootstrap/Carousel';
 import styled from 'styled-components';
 
 const StyledMain = styled.main`
-  height: var(--size-body);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: black;
 
-  h1 {
+h1 {
     font-size: 12vh;
     color: var(--honey);
   }

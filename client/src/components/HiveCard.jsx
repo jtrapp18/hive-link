@@ -5,8 +5,8 @@ import { deleteJSONFromDb, postJSONToDb } from "../helper";
 import { useOutletContext } from "react-router-dom";
 import { UserContext } from '../context/userProvider';
 import Button from 'react-bootstrap/Button';
-import { FaCartPlus, FaRegHeart } from 'react-icons/fa';
 import NotLoggedInToast from './NotLoggedInToast';
+import { NavLink } from 'react-router-dom';
 
 const StyledHiveCard = styled.article`
     width: 100%;
@@ -14,13 +14,11 @@ const StyledHiveCard = styled.article`
     padding: 10px;
     margin-bottom: 10px;
     box-shadow: var(--shadow);
-    border-radius: 10px;  
-    background: var(--light-green);
 
     .btn-container {
         height: 15%;
         padding-top: 2%;
-        border-top: 3px double var(--dark-chocolate);
+        border-top: 3px double var(--honey);
         justify-content: end;
         display: flex;
     }
@@ -42,6 +40,10 @@ const StyledHiveCard = styled.article`
                 font-size: clamp(1.2rem, 1.8vw, 1.8rem);
             }
 
+            img {
+                width: 60%;
+            }
+
             .hive-info {
                 display: flex;
                 flex-direction: column;
@@ -50,7 +52,7 @@ const StyledHiveCard = styled.article`
     }
 `
 
-const HiveCard = ({ id,  dateAdded, material, locationLat, locationLong, queens, inspections}) => {
+const HiveCard = ({ id,  dateAdded, material, locationLat, locationLong, queens, inspections, setActiveTab}) => {
     const navigate = useNavigate();
     const { user } = useContext(UserContext);
 
@@ -65,22 +67,45 @@ const HiveCard = ({ id,  dateAdded, material, locationLat, locationLong, queens,
                 onClick={handleClick}
             >
                 <section>
+                    <img
+                        src='images/hive.png'
+                        alt='bee hive'
+                    />
+                </section>
+                <section>
                     <div className="hive-info">
-                        <h2>{id}</h2>
+                        <h3>{`Hive ID:${id}`}</h3>
+                        <label>Material:</label>
                         <p>{material}</p>
+                        <label>Added:</label>
                         <p>{dateAdded}</p>
+                        <label>Latitude:</label>
                         <p>{locationLat}</p>
+                        <label>Longitude:</label>
                         <p>{locationLong}</p>
                     </div>
-                </section>    
+                </section>  
             </div>
-            {cartItems &&
-                <div className="btn-container">
-                    <Button variant="outline-danger">Add Inspection</Button>
-                    <Button variant="outline-danger">Add Queen</Button>
-                    <Button variant="outline-danger">Edit Details</Button>
-                </div>
-            }    
+            <div className="btn-container">
+                <NavLink
+                    to={`/inspections/${id}`}
+                    className="nav-link"
+                >
+                    <button onClick={()=>setActiveTab('inspections')}>Inspections</button>     
+                </NavLink>
+                <NavLink
+                    to={`/queens/${id}`}
+                    className="nav-link"
+                >
+                    <button onClick={()=>setActiveTab('queens')}>Queens</button>    
+                </NavLink>
+                <NavLink
+                    to={`/hive/${id}`}
+                    className="nav-link"
+                >
+                    <button onClick={()=>setActiveTab('edit_details')}>Edit Details</button>    
+                </NavLink>
+            </div>
         </StyledHiveCard>
     );
 }

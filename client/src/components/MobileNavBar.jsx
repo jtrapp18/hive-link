@@ -8,12 +8,10 @@ import { userLogout } from "../helper";
 // Styled components
 
 const StyledDiv = styled.div`
-    // justify-content: right;
     height: var(--height-header);
     position: relative;
     background: white;
     display: flex;
-    align-items: center;
 `
 const LinkContainer = styled.div`
   position: fixed;
@@ -33,7 +31,7 @@ const LinkContainer = styled.div`
   transition: transform 0.3s ease-in-out; /* Smooth fold-out animation */
 
   a {
-    height: 10vh;
+    height: 15vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -64,6 +62,11 @@ const HamburgerButton = styled.button`
   cursor: pointer;
   padding-right: 10vw;
   transition: transform 1s ease;
+  z-index: 1000;
+
+  &:hover {
+    background: None;
+  }
 
   span {
     font-size: clamp(2rem, 4vw, 3rem);

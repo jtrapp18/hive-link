@@ -4,6 +4,7 @@ import { UserContext } from '../context/userProvider';
 import { useFormik } from "formik";
 import * as Yup from "yup"; // Validation library
 import { patchJSONToDb, postJSONToDb } from '../helper';
+import Error from "./Error";
 
 const QueenFormContainer = styled.div`
   border: 1px solid black;
@@ -127,7 +128,7 @@ const QueenForm = ({ queen, hiveId }) => {
               <option value="clipped" label="Clipped" />
             </select>
             {formik.touched.status && formik.errors.status && (
-              <div className="error">{formik.errors.status}</div>
+              <Error>{formik.errors.status}</Error>
             )}
           </div>
 
@@ -146,7 +147,7 @@ const QueenForm = ({ queen, hiveId }) => {
               <option value="original" label="Original" />
             </select>
             {formik.touched.origin && formik.errors.origin && (
-              <div className="error">{formik.errors.origin}</div>
+              <Error>{formik.errors.origin}</Error>
             )}
           </div>
 
@@ -169,7 +170,7 @@ const QueenForm = ({ queen, hiveId }) => {
               <option value="Other" label="Other" />
             </select>
             {formik.touched.species && formik.errors.species && (
-              <div className="error">{formik.errors.species}</div>
+              <Error>{formik.errors.species}</Error>
             )}
           </div>
 
@@ -184,7 +185,7 @@ const QueenForm = ({ queen, hiveId }) => {
               onBlur={formik.handleBlur}
             />
             {formik.touched.dateIntroduced && formik.errors.dateIntroduced && (
-              <div className="error">{formik.errors.dateIntroduced}</div>
+              <Error>{formik.errors.dateIntroduced}</Error>
             )}
           </div>
 
@@ -203,7 +204,7 @@ const QueenForm = ({ queen, hiveId }) => {
               <option value="n/a" label="N/A" />
             </select>
             {formik.touched.replacementCause && formik.errors.replacementCause && (
-              <div className="error">{formik.errors.replacementCause}</div>
+              <Error>{formik.errors.replacementCause}</Error>
             )}
           </div>
 

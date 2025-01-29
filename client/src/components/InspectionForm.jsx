@@ -5,6 +5,7 @@ import { UserContext } from '../context/userProvider';
 import HiveCard from './HiveCard';
 import { useFormik } from 'formik';
 import * as Yup from 'yup'; // Import yup for validation
+import Error from "./Error";
 
 const InspectionContainer = styled.div`
   // position: fixed;
@@ -66,18 +67,18 @@ const InspectionContainer = styled.div`
   }
 `;
 
-const InspectionForm = ({ hive }) => {
+const InspectionForm = ({ inspection }) => {
   const { user } = useContext(UserContext);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const initialValues = hive
+  const initialValues = inspection
     ? {
-        dateChecked: hive.dateChecked || "",
-        temp: hive.origin || "",
-        activitySurroundingHive: hive.activitySurroundingHive || "",
-        eggCount: hive.eggCount || "",
-        larvaeCount: hive.larvaeCount || "",
-        superCount: hive.superCount || ""
+        dateChecked: inspection.dateChecked || "",
+        temp: inspection.origin || "",
+        activitySurroundingHive: inspection.activitySurroundingHive || "",
+        eggCount: inspection.eggCount || "",
+        larvaeCount: inspection.larvaeCount || "",
+        superCount: inspection.superCount || ""
       }
     : {
         dateChecked: '',
@@ -90,11 +91,11 @@ const InspectionForm = ({ hive }) => {
 
   const submitToDB = hive
     ? (body) =>
-        patchJSONToDb("hives", hive.id, body)
+        patchJSONToDb("inspections", inspection.id, body)
           .then(() => setIsSubmitted(true))
           .catch((err) => console.error(err))
     : (body) =>
-        postJSONToDb("hives", body)
+        postJSONToDb("inspections", body)
           .then(() => setIsSubmitted(true))
           .catch((err) => console.error(err));
 
@@ -142,7 +143,7 @@ const InspectionForm = ({ hive }) => {
                   onBlur={formik.handleBlur}
                 />
                 {formik.touched.dateChecked && formik.errors.dateChecked && (
-                  <div>{formik.errors.dateChecked}</div>
+                  <Error>{formik.errors.dateChecked}</Error>
                 )}
               </div>
               <div className="form-input">
@@ -156,7 +157,7 @@ const InspectionForm = ({ hive }) => {
                   onBlur={formik.handleBlur}
                 />
                 {formik.touched.temp && formik.errors.temp && (
-                  <div>{formik.errors.temp}</div>
+                  <Error>{formik.errors.temp}</Error>
                 )}
               </div>
               {/* Add more form inputs based on other inspection attributes */}
@@ -171,11 +172,11 @@ const InspectionForm = ({ hive }) => {
                   onBlur={formik.handleBlur}
                 />
                 {formik.touched.activitySurroundingHive && formik.errors.activitySurroundingHive && (
-                  <div>{formik.errors.activitySurroundingHive}</div>
+                  <Error>{formik.errors.activitySurroundingHive}</Error>
                 )}
               </div>
               <div>
-                <button type="submit">Submit Inspection</button>
+                <button type="submit">{inspection ? "Update Inspection" : "Add Inspection"}</button>
               </div>
             </form>
           </>

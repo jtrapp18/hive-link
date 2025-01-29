@@ -19,9 +19,9 @@ const StyledHeader = styled(Headroom)`
 
     #logged-in {
       position: absolute;
-      right: 30px;
-      top: 10px;
-      color: var(--light-green);
+      right: 10vw;
+      top: 0;
+      color: var(--honey);
     }
   }
 
@@ -38,13 +38,13 @@ const Header = () => {
     
     return (
         <StyledHeader>
-          {user && <span id='logged-in'>{`Logged in as ${user.username}`}</span>}
           <Logo />
           {isMobile ? <MobileNavBar /> : <NavBar />}
           <img 
             id='honeycomb'
             src='images/honeycomb_side.png'
           />
+          {user && <span id='logged-in'>{`Logged in as ${user.username}`}</span>}
         </StyledHeader>
     );
 }

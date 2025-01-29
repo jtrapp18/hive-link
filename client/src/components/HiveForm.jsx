@@ -4,45 +4,8 @@ import { UserContext } from '../context/userProvider';
 import { useFormik } from "formik";
 import * as Yup from "yup"; // Validation library
 import { patchJSONToDb, postJSONToDb } from '../helper';
-
-const HiveFormContainer = styled.div`
-  border: 1px solid black;
-  background: var(--gray);
-  padding: 20px;
-  width: 80%;
-  margin: auto;
-  .form-input {
-    margin-bottom: 12px;
-    display: flex;
-    flex-direction: column;
-    label {
-      font-weight: bold;
-    }
-    input, select {
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    input:hover, select:hover {
-      background: var(--yellow);
-    }
-    .error {
-      color: red;
-      font-size: 0.8em;
-    }
-  }
-  button {
-    padding: 10px 20px;
-    background-color: var(--green);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    &:hover {
-      background-color: var(--dark-green);
-    }
-  }
-`;
+import Error from "./Error";
+import {StyledForm} from '../MiscStyling'
 
 const HiveForm = ({ hive }) => {
   const { user } = useContext(UserContext);
@@ -96,7 +59,7 @@ const HiveForm = ({ hive }) => {
     onSubmit: (values) => {
       const body = {
         ...values,
-        user_id: user.id,
+        userId: user.id,
       };
 
       submitToDB(body);
@@ -104,9 +67,9 @@ const HiveForm = ({ hive }) => {
   });
 
   return (
-    <HiveFormContainer>
+    <div>
       {!isSubmitted ? (
-        <form onSubmit={formik.handleSubmit}>
+        <StyledForm onSubmit={formik.handleSubmit}>
           <div className="form-input">
             <label htmlFor="dateAdded">Date Added</label>
             <input
@@ -118,7 +81,7 @@ const HiveForm = ({ hive }) => {
               onBlur={formik.handleBlur}
             />
             {formik.touched.dateAdded && formik.errors.dateAdded && (
-              <div className="error">{formik.errors.dateAdded}</div>
+              <Error>{formik.errors.dateAdded}</Error>
             )}
           </div>
 
@@ -137,7 +100,7 @@ const HiveForm = ({ hive }) => {
               <option value="Other" label="Other" />
             </select>
             {formik.touched.material && formik.errors.material && (
-              <div className="error">{formik.errors.material}</div>
+              <Error>{formik.errors.material}</Error>
             )}
           </div>
 
@@ -152,7 +115,7 @@ const HiveForm = ({ hive }) => {
               onBlur={formik.handleBlur}
             />
             {formik.touched.locationLat && formik.errors.locationLat && (
-              <div className="error">{formik.errors.locationLat}</div>
+              <Error>{formik.errors.locationLat}</Error>
             )}
           </div>
 
@@ -167,18 +130,18 @@ const HiveForm = ({ hive }) => {
               onBlur={formik.handleBlur}
             />
             {formik.touched.locationLong && formik.errors.locationLong && (
-              <div className="error">{formik.errors.locationLong}</div>
+              <Error>{formik.errors.locationLong}</Error>
             )}
           </div>
 
-          <button type="submit">Add Hive</button>
-        </form>
+          <button type="submit">{hive ? "Update Hive" : "Add Hive"}</button>
+        </StyledForm>
       ) : (
         <div>
           <h3>Hive successfully added!</h3>
         </div>
       )}
-    </HiveFormContainer>
+    </div>
   );
 };
 

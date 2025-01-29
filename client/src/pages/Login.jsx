@@ -1,43 +1,16 @@
 import React, {useState} from 'react';
 import LoginForm from '../components/LoginForm'
 import SignupForm from '../components/SignUpForm'
-import styled from 'styled-components';
 import LoggedInConfirm from '../components/LoggedInConfirm';
-
-const StyledMain = styled.main`
-  min-height: var(--size-body);
-  padding: 20px;
-  margin: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  form {
-    width: 500px;
-    max-width: 90vw;
-    padding: 50px;
-    border: 3px double var(--yellow);
-
-    h1 {
-      padding: 5px;
-      border-radius: 200px;
-      text-align: center;
-    }
-
-    input {
-      width: 100%;
-    }
-  }
-`
 
 function Login() {
   const [showSignUp, setShowSignUp] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  if (showConfirm) return <StyledMain><LoggedInConfirm setShowConfirm={setShowConfirm}/></StyledMain>
+  if (showConfirm) return <main><LoggedInConfirm setShowConfirm={setShowConfirm}/></main>
 
   return (
-    <StyledMain>
+    <main>
       
       {!showSignUp &&
         <>
@@ -61,7 +34,7 @@ function Login() {
           </button>
         </>
       }
-    </StyledMain>
+    </main>
   );
 }
 

@@ -5,54 +5,30 @@ import {useOutletContext} from "react-router-dom";
 import HiveCard from '../components/HiveCard';
 import {UserContext} from '../context/userProvider'
 import Login from './Login';
-
-const StyledMain = styled.main`
-  min-height: var(--size-body);
-  padding: 2vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  .filter-container {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    // overflow: scroll;
-  }
-}
-`
-
-const CardContainer = styled.div`
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-  gap: 10px;
-  max-width: 100vw;
-  justify-items: center;
-`
+import Error from '../components/Error';
+import { CardContainer } from '../MiscStyling';
 
 const Hives = () => {
   const { user } = useContext(UserContext);
   const { isMobile } = useContext(WindowWidthContext);
   const { hives } = useOutletContext();
 
-  if (!user) return <Login />
+  if (!user) return <><Error>Must be logged in to view hives</Error><Login /></>
 
   const userHives = hives.filter((hive) => hive.userId === user.id)
 
   return (
-      <StyledMain>
+      <main>
+        <h1>My Hives</h1>
         <CardContainer>
           {userHives.map(hive=>
             <HiveCard
                 key={hive.id}
-                {...hive} 
+                {...hive}
             />
           )}
         </CardContainer>
-      </StyledMain>
+      </main>
     );
   };
   

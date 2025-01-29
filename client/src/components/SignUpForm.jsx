@@ -1,10 +1,11 @@
 import React, { useContext } from "react";
-import { postJSONToDb } from '../helper';
+import { snakeToCamel, postJSONToDb } from '../helper';
 import styled from "styled-components";
 import { UserContext } from '../context/userProvider';
 import { useFormik } from 'formik';
 import * as yup from 'yup';  // Import yup
 import Error from "./Error";
+import { StyledForm } from "../MiscStyling";
 
 const FormField = styled.div`
   &:not(:last-child) {
@@ -61,11 +62,12 @@ function SignUpForm({ setShowConfirm }) {
       };
 
       try {
-        const newUser = await postJSONToDb("signup", body);
-        if (newUser) {
-          setUser(newUser);
+        postJSONToDb("login", body)
+        .then((user) => {
+          const userTransformed = snakeToCamel(user);
+          setUser(userTransformed);
           setShowConfirm(true);
-        }
+        });
       } catch (error) {
         const errors = {};
 
@@ -82,7 +84,7 @@ function SignUpForm({ setShowConfirm }) {
   });
 
   return (
-    <form onSubmit={formik.handleSubmit}>
+    <StyledForm onSubmit={formik.handleSubmit}>
       <h1>Sign Up</h1>
       <FormField>
         <label htmlFor="firstName">First Name</label>
@@ -171,7 +173,7 @@ function SignUpForm({ setShowConfirm }) {
       <FormField>
         <button type="submit">Sign Up</button>
       </FormField>
-    </form>
+    </StyledForm>
   );
 }
 
