@@ -5,6 +5,7 @@ const StyledMain = styled.main`
   height: var(--size-body);
   padding: 0;
   margin: 0;
+  background-image: None;
 
   h1 {
       font-size: 12vh;
