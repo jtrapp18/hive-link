@@ -4,7 +4,7 @@ import {UserContext} from '../context/userProvider'
 import { patchJSONToDb } from "../helper";
 import styled from "styled-components";
 import Button from 'react-bootstrap/Button';
-import Error from "../components/Error";
+import Error from "../styles/Error";
 import { StyledForm } from "../MiscStyling";
 
 const StyledDiv = styled.div`

@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { UserContext } from '../context/userProvider';
 import { useFormik } from 'formik';
 import * as yup from 'yup';  // Import yup
-import Error from "./Error";
+import Error from "../styles/Error";
 import { StyledForm } from "../MiscStyling";
 
 const FormField = styled.div`

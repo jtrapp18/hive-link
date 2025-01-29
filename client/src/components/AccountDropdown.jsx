@@ -9,7 +9,8 @@ import { userLogout } from "../helper";
 
 const LinkContainer = styled.div`
   position: absolute;
-  top: var(--height-header);
+  // top: var(--height-header);
+  top: 0px;
   left: 0;
   z-index: 1000;
   width: 100%;

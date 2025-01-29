@@ -17,6 +17,20 @@ function NavLinks({ handleClick }) {
   return (
     <>
       <StyledNavLink
+        to="/about"
+        className="nav-link"
+        onClick={handleClick}
+      >
+        About
+      </StyledNavLink>
+      <StyledNavLink
+        to="/events"
+        className="nav-link"
+        onClick={handleClick}
+      >
+        Events
+      </StyledNavLink>
+      <StyledNavLink
         to="/analysis"
         className="nav-link"
         onClick={handleClick}
@@ -29,11 +43,11 @@ function NavLinks({ handleClick }) {
         onMouseOut={()=>setIsMenuOpen(false)}
       >
         <FaUserAlt />
+        <AccountDropdown 
+          isMenuOpen={isMenuOpen}
+          setIsMenuOpen={setIsMenuOpen}
+        />        
       </StyledAccountIcon>
-      <AccountDropdown 
-        isMenuOpen={isMenuOpen}
-        setIsMenuOpen={setIsMenuOpen}
-      />
     </>
   );
 };

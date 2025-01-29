@@ -24,7 +24,6 @@ function App() {
       const hivesTransformed = snakeToCamel(hives);
       setHives(hivesTransformed);
     });
-
   }, []);
 
   return (

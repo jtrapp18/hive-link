@@ -5,7 +5,7 @@ import { UserContext } from '../context/userProvider';
 import HiveCard from './HiveCard';
 import { useFormik } from 'formik';
 import * as Yup from 'yup'; // Import yup for validation
-import Error from "./Error";
+import Error from "../styles/Error";
 
 const InspectionContainer = styled.div`
   // position: fixed;

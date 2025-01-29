@@ -79,6 +79,27 @@ const CardContainer = styled.div`
   gap: 10px;
   max-width: 100vw;
   justify-items: center;
+
+  hr {
+    width: 100%;
+  }
 `
 
-export { StyledMenuItem, StyledNavLink, StyledLink, StyledMain, StyledForm, CardContainer }
+const BorderGlow = styled.span`
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  padding: 10px;
+
+  /* Radial gradient for glow */
+  background: radial-gradient(
+    circle, 
+    rgba(0, 0, 0, 0) 5%,
+    rgba(0, 0, 0, 0.4) 50%,
+    rgba(0, 0, 0, .7) 100%
+  );
+`
+
+export { StyledMenuItem, StyledNavLink, StyledLink, StyledMain, StyledForm, CardContainer, BorderGlow }

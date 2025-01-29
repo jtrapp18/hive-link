@@ -406,8 +406,8 @@ api.add_resource(PriorStudy, '/prior_study', endpoint='prior_study')
 api.add_resource(PredictStudy, '/predict_study', endpoint='predict_study')
 api.add_resource(Events, '/events', endpoint='events')
 api.add_resource(EventById, '/events/<int:event_id>')
-api.add_resource(Signups, '/hives', endpoint='signups')
-api.add_resource(SignupById, '/hives/<int:signup_id>')
+api.add_resource(Signups, '/signups', endpoint='signups')
+api.add_resource(SignupById, '/signups/<int:signup_id>')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

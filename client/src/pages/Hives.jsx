@@ -5,7 +5,7 @@ import {useOutletContext} from "react-router-dom";
 import HiveCard from '../components/HiveCard';
 import {UserContext} from '../context/userProvider'
 import Login from './Login';
-import Error from '../components/Error';
+import Error from "../styles/Error";
 import { CardContainer } from '../MiscStyling';
 
 const Hives = () => {
