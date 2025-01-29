@@ -1,8 +1,6 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { StyledMenuItem, StyledNavLink } from "../MiscStyling";
-import { UserContext } from '../context/userProvider';
-import { FaShoppingCart, FaUserAlt } from 'react-icons/fa'; // Import icons
-import { Badge } from 'react-bootstrap'; // For cart item count badge
+import { FaUserAlt } from 'react-icons/fa'; // Import icons
 import AccountDropdown from "./AccountDropdown";
 import styled from "styled-components";
 
@@ -13,14 +11,7 @@ const StyledAccountIcon = styled.div`
 
 
 function NavLinks({ handleClick }) {
-  const { cartOrder } = useContext(UserContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
- 
-  // const toggleMenu = () => {
-  //   setIsMenuOpen((prev) => !prev);
-  // };
-
 
   return (
     <>

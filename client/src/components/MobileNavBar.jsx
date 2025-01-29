@@ -24,8 +24,7 @@ const LinkContainer = styled.div`
   width: 100vw;
   text-decoration: none;
   text-align: right;
-  background: white;
-  border-bottom: 3px solid var(--green);
+  background: black;
   display: flex;
   flex-direction: column;
   overflow: hidden; /* Ensures smooth animation */
@@ -34,7 +33,6 @@ const LinkContainer = styled.div`
   transition: transform 0.3s ease-in-out; /* Smooth fold-out animation */
 
   a {
-    // border-top: 1px solid var(--light-green);
     height: 10vh;
     display: flex;
     align-items: center;
@@ -63,13 +61,13 @@ const HamburgerButton = styled.button`
   display: none;
   background: transparent;
   border: none;
-  color: black;
   cursor: pointer;
   padding-right: 30px;
   transition: transform 1s ease;
 
   span {
     font-size: clamp(2rem, 4vw, 3rem);
+    color: black;
   }
 
   @media (max-width: 768px) {

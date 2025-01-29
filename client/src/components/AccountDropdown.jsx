@@ -12,11 +12,12 @@ const LinkContainer = styled.div`
   top: 50px;
   left: 0;
   z-index: 1000;
-  width: 100%;
+  width: 110%;
   text-decoration: none;
   text-align: right;
-  background: var(--cookie);
-  border-bottom: 3px solid var(--dark-chocolate);
+  background: var(--yellow);
+  border: 1px solid black;
+  border-bottom: 3px double black;
   display: flex;
   flex-direction: column;
   overflow: hidden; /* Ensures smooth animation */
@@ -63,8 +64,9 @@ const StyledNavLink = styled(NavLink)`
   }
 
   &:hover {
-    color: var(--cookie);
-    background: var(--green);
+    color: var(--honey);
+    background: black;
+    border: 1px solid var(--honey);
   }
 `
 

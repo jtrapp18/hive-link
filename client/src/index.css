@@ -3,7 +3,7 @@
   --green: #4E7839;
   --chocolate: #542E28;
   --dark-chocolate: #432A28;
-  --cookie: #EDD0A3;
+  --honey: #FFB300;
   --brown: #6B4226;
   --dark-purple: #301934;
   --light-green: #9DC183;
@@ -12,31 +12,40 @@
   --dark-green: #334F26;
   --light-gray: #c5cbc2;
   --gray: #d1d1d1; 
-  --yellow: #FFFDD0;
+  --yellow: #FFCC00;
   --background: white;
-  --font-color-1: var(--chocolate);
-  --font-color-2: var(--dark-chocolate);
+  --font-color-1: var(--honey);
+  --font-color-2: white;
   /* --striped: repeating-linear-gradient(-45deg, var(--light-gray),var(--light-gray) 2px, white 2px, white 10px); */
   --striped: repeating-linear-gradient(-45deg, white, white 3px, var(--light-peach) 3px, var(--light-peach) 6px);
   --padding-top: 75px;
   --height-header: clamp(1rem, 10vw, 6rem);
   --size-body: calc(100vh - var(--height-header) - 4px);
   /* --size-body: 100vh; */
-  --default-font-size: clamp(0.8rem, 1.7vw, .9rem);
+  --default-font-size: clamp(0.9rem, 1.9vw, 1.1rem);
   --shadow: 0px 4px 8px rgba(0, 0, 0, 0.7);
-  --title-font: 'RubikDoodleShadow';
-  --default-font: 'YuseiMagic';
+  --title-font: 'BungeeOutline';
+  --default-font: 'RopaSans';
 }
 
-/* 'YuseiMagic';
-'TitanOne';
-'Atma';
-'RubikSprayPaint';
-'RubikDoodleShadow'; */
+/* BungeeInline
+BungeeOutline
+FrancoisOne
+Mogra
+Nosifer
+RopaSans
+
+RobotoCondensed
+Rubik */
 
 #root {
   overflow-x: hidden;
   overflow-y: auto;
+  background: black;
+  color: white;
+  font-family: var(--default-font);
+  font-size: var(--default-font-size);
+  color: var(--font-color-2);
 }
 
 .no-scroll {
@@ -48,40 +57,94 @@ div.star-ratings{
 }
 
 @font-face {
-  font-family: 'RubikMoonrocks';
-  src: url('/fonts/RubikMoonrocks-Regular.ttf') format('truetype');
+  font-family: 'BungeeInline';
+  src: url('/fonts/BungeeInline-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
+
 @font-face {
-  font-family: 'YuseiMagic';
-  src: url('/fonts/YuseiMagic-Regular.ttf') format('truetype');
+  font-family: 'BungeeOutline';
+  src: url('/fonts/BungeeOutline-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
+
 @font-face {
-  font-family: 'TitanOne';
-  src: url('/fonts/TitanOne-Regular.ttf') format('truetype');
+  font-family: 'Codystar';
+  src: url('/fonts/Codystar-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Codystar';
+  src: url('/fonts/Codystar-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'FrancoisOne';
+  src: url('/fonts/FrancoisOne-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
+
 @font-face {
-  font-family: 'Atma';
-  src: url('/fonts/Atma-Bold.ttf') format('truetype');
+  font-family: 'Mogra';
+  src: url('/fonts/Mogra-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
+
 @font-face {
-  font-family: 'RubikSprayPaint';
-  src: url('/fonts/RubikSprayPaint-Regular.ttf') format('truetype');
+  font-family: 'Nosifer';
+  src: url('/fonts/Nosifer-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
+
 @font-face {
-  font-family: 'RubikDoodleShadow';
-  src: url('/fonts/RubikDoodleShadow-Regular.ttf') format('truetype');
-  font-weight: normal;
+  font-family: 'RobotoCondensed';
+  src: url('/fonts/RobotoCondensed-Italic-VariableFont_wght.ttf') format('truetype');
+  font-style: italic;
+  font-weight: 100 900;
+}
+
+@font-face {
+  font-family: 'RobotoCondensed';
+  src: url('/fonts/RobotoCondensed-VariableFont_wght.ttf') format('truetype');
   font-style: normal;
+  font-weight: 100 900;
+}
+
+@font-face {
+  font-family: 'RopaSans';
+  src: url('/fonts/RopaSans-Italic.ttf') format('truetype');
+  font-style: italic;
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'RopaSans';
+  src: url('/fonts/RopaSans-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Rubik';
+  src: url('/fonts/Rubik-Italic-VariableFont_wght.ttf') format('truetype');
+  font-style: italic;
+  font-weight: 100 900;
+}
+
+@font-face {
+  font-family: 'Rubik';
+  src: url('/fonts/Rubik-VariableFont_wght.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 100 900;
 }
 
 body {
@@ -103,7 +166,6 @@ h1 {
 }
 
 h2 {
-  color: black;
   font-size: clamp(1.3rem, 2vw, 1.9rem);
 }
 
@@ -112,10 +174,33 @@ h3 {
   font-family: var(--default-font)
 }
 
-p, label, i, li, a, button, span, option, select, input, textarea {
+p, label, i, li, a, span, option, select, input, textarea {
   font-size: var(--default-font-size);
-  font-family: var(--default-font);
   color: var(--font-color-2);
+}
+
+button {
+  color: black;
+  background: var(--yellow);
+  font-family: 'Mogra';
+  min-width: 100px;
+}
+
+button:hover {
+  background: var(--honey);
+  font-weight: bold;
+}
+
+label {
+  font-family: 'Mogra';
+}
+
+textarea, input {
+  background: var(--yellow);
+}
+
+textarea:hover, input:hover {
+  background: var(--honey);
 }
 
 span {

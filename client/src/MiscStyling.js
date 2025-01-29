@@ -15,11 +15,11 @@ const StyledNavigation = css`
   &.active {
     text-decoration: overline;
     text-decoration-thickness: 2px;
-    color: var(--green);
+    color: var(--honey);
   }
 
   &:hover {
-    color: var(--cookie);
+    color: var(--yellow);
   }
 `;
 

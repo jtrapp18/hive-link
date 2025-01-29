@@ -15,14 +15,10 @@ const StyledMain = styled.main`
   form {
     width: 500px;
     max-width: 90vw;
-    background: var(--cookie);
     padding: 50px;
-    border: 3px double var(--dark-chocolate);
+    border: 3px double var(--yellow);
 
     h1 {
-      background: var(--dark-chocolate);
-      color: var(--cookie);
-      font-family: 'RubikMoonrocks';
       padding: 5px;
       border-radius: 200px;
       text-align: center;
