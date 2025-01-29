@@ -85,11 +85,10 @@ const MyEvents = () => {
       <main>
         { user &&
           <>
-            <button onClick={()=>setShowNewEvent(true)}>Add Event</button>
             <h1>My Events</h1>
+            <button onClick={()=>setShowNewEvent(true)}>Host a New Event</button>
             <h3>. . . . . </h3>
             <br />
-
             <Events
               role={"Hosting"}
               events={eventsHosting}
