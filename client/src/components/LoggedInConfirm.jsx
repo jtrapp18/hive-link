@@ -3,10 +3,15 @@ import { userLogout } from "../helper";
 import styled from "styled-components";
 import {UserContext} from '../context/userProvider';
 import { NavLink } from "react-router-dom";
+import { Button } from "../MiscStyling"
 
 const StyledDiv = styled.div`
   max-width: 90vw;
   padding: 50px;
+
+  a:hover {
+    font-decoration: underline;
+  }
 
   img {
     max-height: 30vh;
@@ -27,21 +32,22 @@ function LoggedInConfirm({setShowConfirm}) {
     <StyledDiv>
       <p>{`Logged in as ${user.username}`}</p>
       <h1>{`Hello, ${user.firstName}!`}</h1>
+      <img
+          src='images/welcome_bee.png'
+          alt='welcome bee'
+        />
       <NavLink
           to="/"
           className="nav-link"
         >
-          <img
-            src='images/welcome_bee.png'
-            alt='welcome bee'
-          />        
+          continue to site    
         </NavLink>
       <NavLink
           to="/login"
           className="nav-link"
         >
-          <button onClick={handleLogout}>Log Out</button>         
-        </NavLink>
+        <Button onClick={handleLogout}>Log Out</Button>         
+      </NavLink>
     </StyledDiv>
   );
 }

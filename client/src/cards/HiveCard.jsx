@@ -27,6 +27,22 @@ const StyledHiveCard = styled.article`
         justify-content: space-between;
         height: 80%;
         cursor: pointer;
+
+        &:hover {
+            background: #212D40;
+            border-radius: 5px;
+        }
+
+        .info-section {
+            div {
+                display: flex;
+                align-items: center;
+
+                p {
+                    margin: 5%;
+                }
+            }
+        }
         
         section {
             display: flex;
@@ -71,13 +87,19 @@ const HiveCard = ({ id,  dateAdded, material, locationLat, locationLong, queens,
                 </section>
                 <section className='info-section'>
                     <div>
-                        <label>Material:</label>
+                        <label>Material: </label>
                         <p>{material}</p>
-                        <label>Added:</label>
+                    </div>
+                    <div>
+                        <label>Added: </label>
                         <p>{dateAdded}</p>
-                        <label>Latitude:</label>
+                    </div>
+                    <div>
+                        <label>Latitude: </label>
                         <p>{locationLat}</p>
-                        <label>Longitude:</label>
+                    </div>
+                    <div>
+                        <label>Longitude: </label>
                         <p>{locationLong}</p>
                     </div>
                 </section>  

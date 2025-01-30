@@ -11,6 +11,17 @@ import useCrud from '../hooks/useCrud';
 import QueenForm from '../forms/QueenForm'
 import InspectionForm from '../forms/InspectionForm'
 import Loading from './Loading'
+import styled from 'styled-components';
+import { Button, HexagonButton } from '../MiscStyling';
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 50%;
+  // background: var(--yellow);
+  // // align-items: end;
+
+`
 
 const HiveDetails = () => {
   const { id } = useParams(); // Get the ID from the URL
@@ -31,15 +42,15 @@ const HiveDetails = () => {
       <HiveCard
         {...hive}
       />
-      <div className="btn-container">
-        <button onClick={()=>setActiveTab('inspections')}>Inspections</button>     
-        <button onClick={()=>setActiveTab('queens')}>Queens</button>    
-        <button onClick={()=>setActiveHive(hive)}>Edit Details</button>
-      </div>
+      <ButtonContainer>
+        <HexagonButton onClick={()=>setActiveTab('inspections')}>Inspections</HexagonButton>     
+        <HexagonButton onClick={()=>setActiveTab('queens')}>Queens</HexagonButton>    
+        <HexagonButton onClick={()=>setActiveHive(hive)}>Edit Details</HexagonButton>
+      </ButtonContainer>
       <HivePopup />
       {activeTab==='queens' &&
         <CardContainer>
-          <button onClick={()=>setShowNewQueen(true)}>Add Queen to Hive</button>
+          <Button onClick={()=>setShowNewQueen(true)}>Add Queen to Hive</Button>
           <QueenPopup />
           {hive.queens.map(queen=>
               <QueenCard
@@ -53,7 +64,7 @@ const HiveDetails = () => {
       }
       {activeTab==='inspections' &&
         <CardContainer>
-          <button onClick={()=>setShowNewInspection(true)}>Add Hive Inspection</button>
+          <Button onClick={()=>setShowNewInspection(true)}>Add Hive Inspection</Button>
           <InspectionPopup />
           {inspections.map(inspection=>
               <InspectionCard

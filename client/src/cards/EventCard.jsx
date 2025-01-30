@@ -46,7 +46,9 @@ const EventCard = ({ event, btnLabel, handleEventBtn}) => {
             setShowToast(true);
         }
 
-        handleEventBtn(event);
+        else {
+            handleEventBtn(event);
+        }
     }
 
     return (

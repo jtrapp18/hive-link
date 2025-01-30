@@ -34,7 +34,6 @@ const Wrapper = styled.div`
 
   .btn-close:hover {
     color: black;
-    background: none;
   }
 `;
 

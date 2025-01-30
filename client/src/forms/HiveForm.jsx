@@ -5,11 +5,11 @@ import { useFormik } from "formik";
 import * as Yup from "yup"; // Validation library
 import { patchJSONToDb, postJSONToDb } from '../helper';
 import Error from "../styles/Error";
-import { StyledForm, Button } from '../MiscStyling'
+import { StyledForm, StyledSubmit, Button } from '../MiscStyling'
 
 const HiveForm = ({ initObj }) => {
   const { user } = useContext(UserContext);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isEditing, setIsEditing] = useState(!initObj);
 
   const initialValues = initObj
     ? {
@@ -28,11 +28,11 @@ const HiveForm = ({ initObj }) => {
       const submitToDB = initObj
       ? (body) =>
           patchJSONToDb("hives", initObj.id, body)
-            .then(() => setIsSubmitted(true))
+            .then(() => setIsEditing(false))
             .catch((err) => console.error(err))
       : (body) =>
           postJSONToDb("hives", body)
-            .then(() => setIsSubmitted(true))
+            .then(() => setIsEditing(false))
             .catch((err) => console.error(err));
 
   // Validation schema
@@ -68,7 +68,7 @@ const HiveForm = ({ initObj }) => {
 
   return (
     <div>
-      {!isSubmitted ? (
+      {isEditing ? (
         <StyledForm onSubmit={formik.handleSubmit}>
           <h3>{initObj ? "Hive Details" : "Add New Hive"}</h3>
           <br />
@@ -139,9 +139,31 @@ const HiveForm = ({ initObj }) => {
           <Button type="submit">{initObj ? "Update Hive" : "Add Hive"}</Button>
         </StyledForm>
       ) : (
-        <div>
-          <h3>Hive successfully added!</h3>
-        </div>
+        <StyledSubmit>
+            <h1>Hive Details</h1>
+            <div>
+              <label>Date Added:</label>
+              <p>{formik.values.dateAdded}</p>
+            </div>
+            <div>
+              <label>Material:</label>
+              <p>{formik.values.material}</p>
+            </div>
+            <div>
+              <label>Latitude:</label>
+              <p>{formik.values.locationLat}</p>
+            </div>
+            <div>
+              <label>Longitude:</label>
+              <p>{formik.values.locationLong}</p>
+            </div>
+            <Button 
+              type="button" 
+              onClick={() => setIsEditing(true)}
+            >
+                Edit
+            </Button>
+        </StyledSubmit>
       )}
     </div>
   );

@@ -57,7 +57,7 @@ const StyledForm = styled.form`
     text-align: center;
   }
 
-  input, textarea, select {
+  input, textarea, select, option {
     width: 100%;
     background: var(--yellow);
     color: black;
@@ -70,6 +70,32 @@ const StyledForm = styled.form`
 
   div:not(:last-child) {
     margin-bottom: 12px;
+  }
+`
+
+const StyledSubmit = styled.div`
+  width: fit-content;
+  max-width: 90vw;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+
+  h1 {
+    padding: 5px;
+    border-radius: 200px;
+    text-align: center;
+  }
+
+  div {
+    display: flex;
+    border-bottom: 2px dotted gray;
+    justify-content: space-between;
+    margin: 10px 5px 0px 5px;
+    padding: 20px 5px 0px 5px;
+  }
+
+  button {
+    margin-top: 20px;
   }
 `
 
@@ -116,5 +142,44 @@ const Button = styled.button`
   }
 `
 
+const HexagonButton = styled.button`
+  position: relative;
+  width: 100px;
+  height: 58px;
+  background-color: var(--honey);
+  border: none;
+  cursor: pointer;
+  outline: none;
+  font-size: 16px;
+  text-align: center;
+  line-height: 58px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-export { StyledMenuItem, StyledNavLink, StyledLink, StyledMain, StyledForm, CardContainer, BorderGlow, Button }
+  &:hover {
+    font-weight: bold;
+  }
+  
+  &:before,
+  &:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+  }
+
+  &:before {
+    top: -29px;
+    border-bottom: 29px solid var(--honey);
+  }
+
+  &:after {
+    bottom: -29px;
+    border-top: 29px solid var(--honey);
+  }
+`;
+
+export { StyledMenuItem, StyledNavLink, StyledLink, StyledMain, StyledForm, 
+  StyledSubmit, CardContainer, BorderGlow, Button, HexagonButton }
