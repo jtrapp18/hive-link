@@ -3,13 +3,12 @@ import styled from "styled-components";
 import { UserContext } from '../context/userProvider';
 import { useFormik } from "formik";
 import * as Yup from "yup"; // Validation library
-import { patchJSONToDb, postJSONToDb } from '../helper';
 import Error from "../styles/Error";
-import { StyledForm, Button } from '../MiscStyling';
-
-const EventForm = ({ initObj }) => {
+import { StyledForm, StyledSubmit, Button } from '../MiscStyling';
+ 
+const EventForm = ({ initObj, addEvent, updateEvent, cancelEvent }) => {
   const { user } = useContext(UserContext);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isEditing, setIsEditing] = useState(!initObj);
 
   const initialValues = initObj
     ? {
@@ -27,13 +26,9 @@ const EventForm = ({ initObj }) => {
 
   const submitToDB = initObj
     ? (body) =>
-        patchJSONToDb("events", initObj.id, body)
-          .then(() => setIsSubmitted(true))
-          .catch((err) => console.error(err))
+      updateEvent(initObj.id, body)
     : (body) =>
-        postJSONToDb("events", body)
-          .then(() => setIsSubmitted(true))
-          .catch((err) => console.error(err));
+      addEvent(body)
 
   // Validation schema
   const validationSchema = Yup.object({
@@ -56,12 +51,13 @@ const EventForm = ({ initObj }) => {
       };
 
       submitToDB(body);
+      setIsEditing(false);
     }
   });
 
   return (
     <div>
-      {!isSubmitted ? (
+      {isEditing ? (
         <StyledForm onSubmit={formik.handleSubmit}>
           <h3>{initObj ? "Event Details" : "Add New Event"}</h3>
           <br />
@@ -123,14 +119,40 @@ const EventForm = ({ initObj }) => {
               <Error>{formik.errors.zipcode}</Error>
             )}
           </div>
-
           <Button type="submit">{initObj ? "Update Event" : "Add Event"}</Button>
-          <Button type="button">Delete Event</Button>
         </StyledForm>
       ) : (
-        <div>
-          <h3>Event successfully added!</h3>
-        </div>
+        <StyledSubmit>
+            <h1>Event Details</h1>
+            <div>
+              <label>Title:</label>
+              <p>{formik.values.title}</p>
+            </div>
+            <div>
+              <label>Event Date:</label>
+              <p>{formik.values.eventDate}</p>
+            </div>
+            <div>
+              <label>Description:</label>
+              <p>{formik.values.descr}</p>
+            </div>
+            <div>
+              <label>Zipcode:</label>
+              <p>{formik.values.zipcode}</p>
+            </div>
+            <Button 
+              type="button" 
+              onClick={() => setIsEditing(true)}
+            >
+                Edit Event Details
+            </Button>
+            <Button 
+              type="button" 
+              onClick={() => cancelEvent(initObj.id)}
+            >
+                Cancel Event
+            </Button>
+        </StyledSubmit>
       )}
     </div>
   );

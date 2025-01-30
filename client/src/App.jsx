@@ -31,7 +31,8 @@ function App() {
       <Header/>
       <Outlet
           context={{
-            hives
+            hives,
+            setHives
           }}
         />
       <Footer />

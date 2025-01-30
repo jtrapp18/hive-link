@@ -3,7 +3,7 @@ import styled from "styled-components";
 import {UserContext} from '../context/userProvider'
 import NotLoggedInToast from '../components/NotLoggedInToast'
 import { Button } from '../MiscStyling';
-
+ 
 const StyledEventCard = styled.article`
     width: 100%;
     max-width: clamp(300px, 100%, 600px);

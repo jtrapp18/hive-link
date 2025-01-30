@@ -5,16 +5,16 @@ const usePopupForm = (Form) => {
   const [activeItem, setActiveItem] = useState(null);
   const [showNewForm, setShowNewForm] = useState(false);
 
-    const PopupForm = () => (
+    const PopupForm = (props) => (
         <>
             {activeItem && (
                 <Popup onClose={() => setActiveItem(null)}>
-                    <Form initObj={activeItem} />
+                    <Form initObj={activeItem} {...props}/>
                 </Popup>
             )}
             {showNewForm && (
                 <Popup onClose={() => setShowNewForm(false)}>
-                    <Form />
+                    <Form  {...props}/>
                 </Popup>
             )}
       </>

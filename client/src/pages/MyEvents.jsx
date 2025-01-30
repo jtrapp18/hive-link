@@ -2,14 +2,14 @@ import { useContext, useState, useEffect } from 'react';
 import {WindowWidthContext} from "../context/windowSize";
 import {UserContext} from '../context/userProvider'
 import Events from '../components/Events';
-import { getJSON, snakeToCamel, postJSONToDb, deleteJSONFromDb, getNearbyZipcodes } from '../helper';
+import { getJSON, snakeToCamel, postJSONToDb, patchJSONToDb, deleteJSONFromDb, getNearbyZipcodes } from '../helper';
 import { Button } from '../MiscStyling';
 import EventForm from '../forms/EventForm'
 import usePopupForm from '../hooks/usePopupForm'
-import useCrud from '../hooks/useCrud';
+import useCrudStateDB from '../hooks/useCrudStateDB';
 import Loading from './Loading';
 import styled from 'styled-components';
-
+ 
 const SearchContainer = styled.div`
     display: flex;
     flex-direction: column;
@@ -55,7 +55,7 @@ const MyEvents = () => {
   const { isMobile } = useContext(WindowWidthContext);
   const [events, setEvents] = useState([]);
   const {PopupForm, setActiveItem, setShowNewForm} = usePopupForm(EventForm);
-  const {addItem, deleteItem, addToKey} = useCrud(setEvents);
+  const {addItem, updateItem, deleteItem, addToKey} = useCrudStateDB(setEvents, "events");
   const [filterZip, setFilterZip] = useState(!user ? '' : user.zipcode);
   const [filterRadius, setFilterRadius] = useState(5);
   const [nearbyZipcodes, setNearbyZipcodes] = useState([]);
@@ -84,21 +84,6 @@ const MyEvents = () => {
       });
     }
   }
-
-  const addEvent = (event) => {
-    postJSONToDb("events", event)
-    .then(event => {
-      // setEvents(prevEvents => [...prevEvents, event])
-      addItem(event)
-      
-    });
-  };
-  
-  const cancelEvent = (eventId) => {
-    deleteJSONFromDb("events", eventId)
-    // setEvents(prevEvents => prevEvents.filter(event => event.id !== eventId))
-    deleteItem(eventId)
-  };
   
   const signupEvent = (eventId) => {
     const signup = ({
@@ -106,17 +91,7 @@ const MyEvents = () => {
       eventId: eventId
     })
 
-    postJSONToDb("signups", signup)
-    .then(signup => {
-      addToKey(eventId, "signups", signup)
-      // setEvents(prevEvents =>
-      //   prevEvents.map(event =>
-      //     event.id === eventId
-      //       ? { ...event, signups: [...event.signups, signup] }
-      //       : event
-      //   )
-      // )
-    });
+    addToKey(eventId, "signups", signup)
   };
   
   const cancelSignup = (eventId) => {
@@ -169,8 +144,12 @@ const MyEvents = () => {
         { user &&
           <>
             <h1>My Events</h1>
-            <button onClick={()=>setShowNewForm(true)}>Host a New Event</button>
-            <PopupForm />            
+            <Button onClick={()=>setShowNewForm(true)}>Host a New Event</Button>
+            <PopupForm 
+              addEvent={addItem} 
+              cancelEvent={deleteItem} 
+              updateEvent={updateItem}
+            />
             <h3>. . . . . </h3>
             <br />
             <h3>Hosting</h3>
