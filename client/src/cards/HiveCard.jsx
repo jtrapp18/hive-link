@@ -1,68 +1,7 @@
-import { useEffect, useState, useContext } from 'react';
+import { useContext } from 'react';
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import { deleteJSONFromDb, postJSONToDb } from "../helper";
-import { useOutletContext } from "react-router-dom";
 import { UserContext } from '../context/userProvider';
-import { Button } from '../MiscStyling';
-
-const StyledHiveCard = styled.article`
-    width: 100%;
-    max-width: clamp(300px, 100%, 600px);
-    padding: 10px;
-    margin-bottom: 10px;
-
-    .label-container {
-        height: 15%;
-        padding-top: 2%;
-        border-top: 3px double var(--honey);
-        justify-content: end;
-        display: flex;
-    }
-
-    .main-hive {
-        position: relative;
-        display: flex;
-        justify-content: space-between;
-        height: 80%;
-        cursor: pointer;
-
-        &:hover {
-            background: #212D40;
-            border-radius: 5px;
-        }
-
-        .info-section {
-            div {
-                display: flex;
-                align-items: center;
-
-                p {
-                    margin: 5%;
-                }
-            }
-        }
-        
-        section {
-            display: flex;
-            flex-direction: column;
-            padding: 2%;
-            justify-content: center;
-
-            h3 {
-                font-size: clamp(1.2rem, 1.8vw, 1.8rem);
-            }
-            
-            span {
-                color: var(--honey);
-            }
-
-            img {
-                width: 60%;
-            }
-        }
-    }
-`
+import { StyledCard } from '../MiscStyling';
 
 const HiveCard = ({ id,  dateAdded, material, locationLat, locationLong, queens, inspections, setActiveTab}) => {
     const navigate = useNavigate();
@@ -73,9 +12,9 @@ const HiveCard = ({ id,  dateAdded, material, locationLat, locationLong, queens,
     }
 
     return (
-        <StyledHiveCard className="hive-card">
+        <StyledCard className="hive-card">
             <div 
-                className="main-hive"
+                className="main-container"
                 onClick={handleClick}
             >
                 <section className='img-section'>
@@ -103,10 +42,10 @@ const HiveCard = ({ id,  dateAdded, material, locationLat, locationLong, queens,
                     </div>
                 </section>  
             </div>
-            <div className="label-container">
+            <div className="bottom-container">
                 <span>{`Hive ID: ${id}`}</span>
             </div>
-        </StyledHiveCard>
+        </StyledCard>
     );
 }
 

@@ -7,17 +7,9 @@ import * as Yup from 'yup'; // Import yup for validation
 import Error from "../styles/Error";
 import { StyledForm, StyledSubmit, Button } from "../MiscStyling"
 
-const InspectionContainer = styled.div`
-    .submitted-confirm {
-      border-radius: 20px;
-      padding: 20px;
-    }
-  }
-`;
-
 const InspectionForm = ({ initObj }) => {
   const { user } = useContext(UserContext);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(!initObj);
 
   const initialValues = initObj
     ? {
@@ -76,6 +68,7 @@ const InspectionForm = ({ initObj }) => {
     <div>
       {isEditing ? (
         <StyledForm onSubmit={formik.handleSubmit}>
+          <h3>{initObj ? "Update Inspection Details" : "Add New Inspection"}</h3>
           <div className="form-input">
             <label htmlFor="dateChecked">Date of Inspection</label>
             <input
@@ -125,13 +118,37 @@ const InspectionForm = ({ initObj }) => {
         </StyledForm>
       ) : (
         <StyledSubmit>
-          <h3>Thank you for your inspection!</h3>
-          <hr />
-          <div>
-            <label htmlFor="dateChecked">Inspection Date:</label>
-            <p>{formik.values.dateChecked}</p>
-          </div>
-          {/* Display other inspection details here */}
+            <h1>Inspection Details</h1>
+            <div>
+                <label>Date Checked: </label>
+                <p>{formik.values.dateChecked}</p>
+            </div>
+            <div>
+                <label>Temperature: </label>
+                <p>{formik.values.temp}</p>
+            </div>
+            <div>
+                <label>Activity Around Hive: </label>
+                <p>{formik.values.activitySurroundingHive}</p>
+            </div>
+            <div>
+                <label>Egg Count: </label>
+                <p>{formik.values.eggCount}</p>
+            </div>
+            <div>
+                <label>Larvae Count: </label>
+                <p>{formik.values.larvaeCount}</p>
+            </div>
+            <div>
+                <label>Super Count: </label>
+                <p>{formik.values.superCount}</p>
+            </div>
+            <Button 
+              type="button" 
+              onClick={() => setIsEditing(true)}
+            >
+                Edit
+            </Button>
         </StyledSubmit>
       )}
     </div>

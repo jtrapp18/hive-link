@@ -10,7 +10,7 @@ import { StyledForm, StyledSubmit, Button } from "../MiscStyling"
 
 const QueenForm = ({ initObj }) => {
   const { user } = useContext(UserContext);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(!initObj);
   const { id: hiveId } = useParams(); // Get the ID from the URL
 
   console.log('queenobj', initObj)
@@ -79,6 +79,7 @@ const QueenForm = ({ initObj }) => {
     <div>
       {isEditing ? (
         <StyledForm onSubmit={formik.handleSubmit}>
+          <h3>{initObj ? "Update Queen Details" : "Add New Queen"}</h3>
           <div className="form-input">
             <label htmlFor="status">Status</label>
             <select

@@ -183,5 +183,66 @@ const HexagonButton = styled.button`
   }
 `;
 
+const StyledCard = styled.article`
+    width: 100%;
+    max-width: clamp(300px, 100%, 600px);
+    padding: 10px;
+    margin-bottom: 10px;
+
+    .bottom-container {
+        padding-top: 2%;
+        border-top: 3px double var(--honey);
+        justify-content: space-between;
+        display: flex;
+
+        span {
+          color: gray;
+        }
+    }
+
+    .main-container {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        cursor: pointer;
+
+        &:hover {
+            background: #212D40;
+            border-radius: 5px;
+        }
+
+        .info-section {
+            min-width: 40%;
+            div {
+                display: flex;
+                align-items: center;
+
+                p {
+                    margin: 2%;
+                }
+            }
+        }
+        
+        section {
+            display: flex;
+            flex-direction: column;
+            padding: 2%;
+            justify-content: center;
+
+            h3 {
+                font-size: clamp(1.2rem, 1.8vw, 1.8rem);
+            }
+            
+            span {
+                color: var(--honey);
+            }
+
+            img {
+                width: 60%;
+            }
+        }
+    }
+`
+
 export { StyledMenuItem, StyledNavLink, StyledLink, StyledMain, StyledForm, 
-  StyledSubmit, CardContainer, BorderGlow, Button, HexagonButton }
+  StyledSubmit, CardContainer, BorderGlow, Button, HexagonButton, StyledCard }

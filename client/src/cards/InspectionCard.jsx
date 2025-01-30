@@ -2,23 +2,7 @@ import { useEffect, useState, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { UserContext } from '../context/userProvider';
-import { Button } from '../MiscStyling';
-
-const StyledInspectionCard = styled.article`
-    width: 100%;
-    max-width: clamp(300px, 100%, 600px);
-    padding: 10px;
-    margin-bottom: 10px;
-    box-shadow: var(--shadow);
-
-    .btn-container {
-        height: 15%;
-        padding-top: 2%;
-        border-top: 3px double var(--honey);
-        justify-content: end;
-        display: flex;
-    }
-`
+import { StyledCard, Button } from '../MiscStyling';
 
 const InspectionCard = ({ inspection, setActiveInspection}) => {
     const navigate = useNavigate();
@@ -26,21 +10,40 @@ const InspectionCard = ({ inspection, setActiveInspection}) => {
     const { id, queenId, dateChecked, fate, chalkbroodPresence, varroaMites } = inspection
 
     return (
-        <StyledInspectionCard>
+        <StyledCard>
             <div 
-                className="main-queen"
+                className="main-container"
             >
-                <p>{id}</p>
-                <p>{queenId}</p>
-                <p>{dateChecked}</p>     
-                <p>{fate}</p>     
-                <p>{chalkbroodPresence}</p>     
-                <p>{varroaMites}</p>  
+                <section className='img-section'>
+                    <img
+                        src='images/queen_bee.png'
+                        alt='queen bee'
+                    />
+                </section>
+                <section className='info-section'>
+                    <div>
+                        <label>Date: </label>
+                        <p>{dateChecked}</p>
+                    </div>
+                    <div>
+                        <label>Latitude: </label>
+                        <p>{fate}</p>
+                    </div>
+                    <div>
+                        <label>Chalkbrood Seen: </label>
+                        <p>{chalkbroodPresence ? "Yes" : "No"}</p>
+                    </div>
+                    <div>
+                        <label>Varroa Mites Seen: </label>
+                        <p>{varroaMites ? "Yes" : "No"}</p>
+                    </div>
+                </section>  
             </div>
-            <div className="btn-container">
+            <div className="bottom-container">
+                <span>{`Inspection ID: ${id}`}</span>
                 <Button onClick={()=>setActiveInspection(inspection)}>Edit Details</Button>    
             </div>
-        </StyledInspectionCard>
+        </StyledCard>
     );
 }
 
