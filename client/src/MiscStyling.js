@@ -156,6 +156,8 @@ const HexagonButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
+  border-right: 1px solid black;
+  border-left: 1px solid black;
 
   &:hover {
     font-weight: bold;

@@ -5,7 +5,7 @@ import { UserContext } from '../context/userProvider';
 import { useFormik } from 'formik';
 import * as Yup from 'yup'; // Import yup for validation
 import Error from "../styles/Error";
-import { StyledForm, Button } from "../MiscStyling"
+import { StyledForm, StyledSubmit, Button } from "../MiscStyling"
 
 const InspectionContainer = styled.div`
     .submitted-confirm {
@@ -17,7 +17,7 @@ const InspectionContainer = styled.div`
 
 const InspectionForm = ({ initObj }) => {
   const { user } = useContext(UserContext);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const initialValues = initObj
     ? {
@@ -40,11 +40,11 @@ const InspectionForm = ({ initObj }) => {
   const submitToDB = initObj
     ? (body) =>
         patchJSONToDb("inspections", initObj.id, body)
-          .then(() => setIsSubmitted(true))
+          .then(() => setIsEditing(false))
           .catch((err) => console.error(err))
     : (body) =>
         postJSONToDb("inspections", body)
-          .then(() => setIsSubmitted(true))
+          .then(() => setIsEditing(false))
           .catch((err) => console.error(err));
 
   // Yup validation schema
@@ -73,73 +73,68 @@ const InspectionForm = ({ initObj }) => {
   });
 
   return (
-    <InspectionContainer>
-      <div className="main-inspection">
-        {!isSubmitted ? (
-          <>
-            <h1>Inspection</h1>
-            <StyledForm onSubmit={formik.handleSubmit}>
-              <div className="form-input">
-                <label htmlFor="dateChecked">Date of Inspection</label>
-                <input
-                  type="date"
-                  id="dateChecked"
-                  name="dateChecked"
-                  value={formik.values.dateChecked}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-                {formik.touched.dateChecked && formik.errors.dateChecked && (
-                  <Error>{formik.errors.dateChecked}</Error>
-                )}
-              </div>
-              <div className="form-input">
-                <label htmlFor="temp">Temperature</label>
-                <input
-                  type="number"
-                  id="temp"
-                  name="temp"
-                  value={formik.values.temp}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-                {formik.touched.temp && formik.errors.temp && (
-                  <Error>{formik.errors.temp}</Error>
-                )}
-              </div>
-              {/* Add more form inputs based on other inspection attributes */}
-              <div className="form-input">
-                <label htmlFor="activitySurroundingHive">Activity Surrounding Hive</label>
-                <input
-                  type="text"
-                  id="activitySurroundingHive"
-                  name="activitySurroundingHive"
-                  value={formik.values.activitySurroundingHive}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-                {formik.touched.activitySurroundingHive && formik.errors.activitySurroundingHive && (
-                  <Error>{formik.errors.activitySurroundingHive}</Error>
-                )}
-              </div>
-              <div>
-                <Button type="submit">{initObj ? "Update Inspection" : "Add Inspection"}</Button>
-              </div>
-            </StyledForm>
-          </>
-        ) : (
-          <div className="submitted-confirm">
-            <h3>Thank you for your inspection!</h3>
-            <hr />
-            <div>
-              <label htmlFor="dateChecked">Inspection Date:</label>
-              <p>{formik.values.dateChecked}</p>
-            </div>
-            {/* Display other inspection details here */}
+    <div>
+      {isEditing ? (
+        <StyledForm onSubmit={formik.handleSubmit}>
+          <div className="form-input">
+            <label htmlFor="dateChecked">Date of Inspection</label>
+            <input
+              type="date"
+              id="dateChecked"
+              name="dateChecked"
+              value={formik.values.dateChecked}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            {formik.touched.dateChecked && formik.errors.dateChecked && (
+              <Error>{formik.errors.dateChecked}</Error>
+            )}
           </div>
-        )}
-      </div>
-    </InspectionContainer>
+          <div className="form-input">
+            <label htmlFor="temp">Temperature</label>
+            <input
+              type="number"
+              id="temp"
+              name="temp"
+              value={formik.values.temp}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            {formik.touched.temp && formik.errors.temp && (
+              <Error>{formik.errors.temp}</Error>
+            )}
+          </div>
+          {/* Add more form inputs based on other inspection attributes */}
+          <div className="form-input">
+            <label htmlFor="activitySurroundingHive">Activity Surrounding Hive</label>
+            <input
+              type="text"
+              id="activitySurroundingHive"
+              name="activitySurroundingHive"
+              value={formik.values.activitySurroundingHive}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            {formik.touched.activitySurroundingHive && formik.errors.activitySurroundingHive && (
+              <Error>{formik.errors.activitySurroundingHive}</Error>
+            )}
+          </div>
+          <div>
+            <Button type="submit">{initObj ? "Update Inspection" : "Add Inspection"}</Button>
+          </div>
+        </StyledForm>
+      ) : (
+        <StyledSubmit>
+          <h3>Thank you for your inspection!</h3>
+          <hr />
+          <div>
+            <label htmlFor="dateChecked">Inspection Date:</label>
+            <p>{formik.values.dateChecked}</p>
+          </div>
+          {/* Display other inspection details here */}
+        </StyledSubmit>
+      )}
+    </div>
   );
 };
 

@@ -11,7 +11,6 @@ const StyledHiveCard = styled.article`
     max-width: clamp(300px, 100%, 600px);
     padding: 10px;
     margin-bottom: 10px;
-    box-shadow: var(--shadow);
 
     .label-container {
         height: 15%;

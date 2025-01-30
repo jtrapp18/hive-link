@@ -11,10 +11,9 @@ const StyledQueenCard = styled.article`
     max-width: clamp(300px, 100%, 600px);
     padding: 10px;
     margin-bottom: 10px;
-    box-shadow: var(--shadow);
 
     .btn-container {
-        height: 15%;
+        // height: 15%;
         padding-top: 2%;
         border-top: 3px double var(--honey);
         justify-content: end;
@@ -32,16 +31,32 @@ const StyledQueenCard = styled.article`
 const QueenCard = ({ queen, setActiveQueen }) => {
     const navigate = useNavigate();
     const { user } = useContext(UserContext);
-    const { id } = queen
+    const { id, status, origin, species, dateIntroduced, replacementCause } = queen
 
     return (
         <StyledQueenCard>
-            <div 
-                className="main-queen"
-            >
+            <div>
+                <label>Status: </label>
+                <p>{status}</p>
             </div>
-                <p>{id}</p>
+            <div>
+                <label>Origin: </label>
+                <p>{origin}</p>
+            </div>
+            <div>
+                <label>Species: </label>
+                <p>{species}</p>
+            </div>
+            <div>
+                <label>Introduced: </label>
+                <p>{dateIntroduced}</p>
+            </div>
+            <div>
+                <label>Replacement Cause: </label>
+                <p>{replacementCause}</p>
+            </div>
             <div className="btn-container">
+                <span>{`Queen ID: ${id}`}</span>
                 <Button onClick={()=>setActiveQueen(queen)}>Edit Details</Button>
             </div>
         </StyledQueenCard>

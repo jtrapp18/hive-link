@@ -85,16 +85,17 @@ const MyEvents = () => {
     }
   }
   
-  const signupEvent = (eventId) => {
+  const signupEvent = (event) => {
     const signup = ({
       userId: user.id,
-      eventId: eventId
+      eventId: event.id
     })
 
-    addToKey(eventId, "signups", signup)
+    addToKey(event.id, "signups", signup)
   };
   
-  const cancelSignup = (eventId) => {
+  const cancelSignup = (event) => {
+    const eventId = event.id
     deleteJSONFromDb("events", eventId)
 
     setEvents(prevEvents =>
@@ -135,6 +136,7 @@ const MyEvents = () => {
     const clearFilters = () => {
       setNearbyZipcodes([]);
       setIsFiltered(false);
+      setFilterZip('');
     }
 
   if (!events) return <Loading />

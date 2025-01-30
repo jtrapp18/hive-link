@@ -1,15 +1,18 @@
 import React, { useContext, useState } from "react";
-import styled from "styled-components";
 import { UserContext } from '../context/userProvider';
+import {useOutletContext} from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup"; // Validation library
 import { patchJSONToDb, postJSONToDb } from '../helper';
 import Error from "../styles/Error";
 import { StyledForm, StyledSubmit, Button } from '../MiscStyling'
+import useCrudStateDB from '../hooks/useCrudStateDB';
 
 const HiveForm = ({ initObj }) => {
   const { user } = useContext(UserContext);
   const [isEditing, setIsEditing] = useState(!initObj);
+  const { setHives } = useOutletContext();
+  const {addItem, updateItem} = useCrudStateDB(setHives, "hives");
 
   const initialValues = initObj
     ? {
@@ -27,13 +30,9 @@ const HiveForm = ({ initObj }) => {
 
       const submitToDB = initObj
       ? (body) =>
-          patchJSONToDb("hives", initObj.id, body)
-            .then(() => setIsEditing(false))
-            .catch((err) => console.error(err))
+        updateItem(initObj.id, body)
       : (body) =>
-          postJSONToDb("hives", body)
-            .then(() => setIsEditing(false))
-            .catch((err) => console.error(err));
+        addItem(body)
 
   // Validation schema
   const validationSchema = Yup.object({
@@ -63,6 +62,7 @@ const HiveForm = ({ initObj }) => {
       };
 
       submitToDB(body);
+      setIsEditing(false);
     }
   });
 

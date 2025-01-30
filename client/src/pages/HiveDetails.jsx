@@ -7,7 +7,6 @@ import InspectionCard from '../cards/InspectionCard'
 import QueenCard from '../cards/QueenCard'
 import { CardContainer } from '../MiscStyling';
 import usePopupForm from '../hooks/usePopupForm';
-import useCrud from '../hooks/useCrud';
 import QueenForm from '../forms/QueenForm'
 import InspectionForm from '../forms/InspectionForm'
 import Loading from './Loading'
@@ -16,11 +15,18 @@ import { Button, HexagonButton } from '../MiscStyling';
 
 const ButtonContainer = styled.div`
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  width: 50%;
-  // background: var(--yellow);
-  // // align-items: end;
+  padding: 50px;
+`
 
+const HiveCardContainer = styled.article`
+  display: flex;
+  justify-content: center;
+
+  &.shrunken {
+    zoom: .5;
+  }
 `
 
 const HiveDetails = () => {
@@ -28,6 +34,7 @@ const HiveDetails = () => {
   const { hives } = useOutletContext();
   const hive = hives.find((hive) => hive.id === parseInt(id));
   const [activeTab, setActiveTab] = useState(null);
+  const [shrinkCard, setShrinkCard] = useState(false);
   const {PopupForm: HivePopup, setActiveItem: setActiveHive, setShowNewForm: setShowNewHive} = usePopupForm(HiveForm);
   const {PopupForm: QueenPopup, setActiveItem: setActiveQueen, setShowNewForm: setShowNewQueen} = usePopupForm(QueenForm);
   const {PopupForm: InspectionPopup, setActiveItem: setActiveInspection, setShowNewForm: setShowNewInspection} = usePopupForm(InspectionForm);
@@ -36,44 +43,62 @@ const HiveDetails = () => {
 
   const inspections = hive.queens.reduce((inspections, queen) => [...inspections, ...queen.inspections], [])
 
+  const clickEdit = () => {
+    setActiveTab('editDetails');
+    setActiveHive(hive);
+    setShrinkCard(false);
+  }
+
+  const clickOther = (tab) => {
+    setActiveTab(tab);
+    setShrinkCard(true);
+  }
+
   return (
     <main>
       <h1>Hive Details</h1>
-      <HiveCard
-        {...hive}
-      />
+      <HiveCardContainer className={shrinkCard ? "shrunken" : ""}>
+        <HiveCard
+          {...hive}
+        />
+      </HiveCardContainer>
       <ButtonContainer>
-        <HexagonButton onClick={()=>setActiveTab('inspections')}>Inspections</HexagonButton>     
-        <HexagonButton onClick={()=>setActiveTab('queens')}>Queens</HexagonButton>    
-        <HexagonButton onClick={()=>setActiveHive(hive)}>Edit Details</HexagonButton>
+        <HexagonButton onClick={()=>clickOther('inspections')}>Inspections</HexagonButton>     
+        <HexagonButton onClick={()=>clickOther('queens')}>Queens</HexagonButton>    
+        <HexagonButton onClick={clickEdit}>Edit Details</HexagonButton>
       </ButtonContainer>
       <HivePopup />
       {activeTab==='queens' &&
-        <CardContainer>
-          <Button onClick={()=>setShowNewQueen(true)}>Add Queen to Hive</Button>
-          <QueenPopup />
-          {hive.queens.map(queen=>
-              <QueenCard
-                  key={queen.id}
-                  queen={queen}
-                  setActiveQueen={setActiveQueen}
-              />
-              
-          )}
-        </CardContainer>
+        <>
+          <h3>Queens</h3>
+          <CardContainer>
+            <Button onClick={()=>setShowNewQueen(true)}>Add Queen to Hive</Button>
+            <QueenPopup />
+            {hive.queens.map(queen=>
+                <QueenCard
+                    key={queen.id}
+                    queen={queen}
+                    setActiveQueen={setActiveQueen}
+                />
+            )}
+          </CardContainer>
+        </>
       }
       {activeTab==='inspections' &&
-        <CardContainer>
+        <>
+          <h3>Inspections</h3>
           <Button onClick={()=>setShowNewInspection(true)}>Add Hive Inspection</Button>
-          <InspectionPopup />
-          {inspections.map(inspection=>
-              <InspectionCard
-                  key={inspection.id}
-                  inspection={inspection}
-                  setActiveInspection={setActiveInspection}
-              />
-          )}
-        </CardContainer>
+          <CardContainer>
+            <InspectionPopup />
+            {inspections.map(inspection=>
+                <InspectionCard
+                    key={inspection.id}
+                    inspection={inspection}
+                    setActiveInspection={setActiveInspection}
+                />
+            )}
+          </CardContainer>
+        </>
       }
     </main>
   );

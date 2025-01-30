@@ -6,11 +6,11 @@ import { useFormik } from "formik";
 import * as Yup from "yup"; // Validation library
 import { patchJSONToDb, postJSONToDb } from '../helper';
 import Error from "../styles/Error";
-import { StyledForm, Button } from "../MiscStyling"
+import { StyledForm, StyledSubmit, Button } from "../MiscStyling"
 
 const QueenForm = ({ initObj }) => {
   const { user } = useContext(UserContext);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const { id: hiveId } = useParams(); // Get the ID from the URL
 
   console.log('queenobj', initObj)
@@ -34,11 +34,11 @@ const QueenForm = ({ initObj }) => {
   const submitToDB = initObj
     ? (body) =>
         patchJSONToDb("queens", initObj.id, body)
-          .then(() => setIsSubmitted(true))
+          .then(() => setIsEditing(false))
           .catch((err) => console.error(err))
     : (body) =>
         postJSONToDb("queens", body)
-          .then(() => setIsSubmitted(true))
+          .then(() => setIsEditing(false))
           .catch((err) => console.error(err));
 
   // Validation schema matching backend
@@ -77,7 +77,7 @@ const QueenForm = ({ initObj }) => {
 
   return (
     <div>
-      {!isSubmitted ? (
+      {isEditing ? (
         <StyledForm onSubmit={formik.handleSubmit}>
           <div className="form-input">
             <label htmlFor="status">Status</label>
@@ -177,9 +177,35 @@ const QueenForm = ({ initObj }) => {
           <Button type="submit">{initObj ? "Update Queen" : "Add Queen"}</Button>
         </StyledForm>
       ) : (
-        <div>
-          <h3>{initObj ? "Queen successfully updated!" : "Queen successfully added!"}</h3>
-        </div>
+        <StyledSubmit>
+            <h1>Queen Details</h1>
+            <div>
+                <label>Status: </label>
+                <p>{formik.values.status}</p>
+            </div>
+            <div>
+                <label>Origin: </label>
+                <p>{formik.values.origin}</p>
+            </div>
+            <div>
+                <label>Species: </label>
+                <p>{formik.values.species}</p>
+            </div>
+            <div>
+                <label>Introduced: </label>
+                <p>{formik.values.dateIntroduced}</p>
+            </div>
+            <div>
+                <label>Replacement Cause: </label>
+                <p>{formik.values.replacementCause}</p>
+            </div>
+            <Button 
+              type="button" 
+              onClick={() => setIsEditing(true)}
+            >
+                Edit
+            </Button>
+        </StyledSubmit>
       )}
     </div>
   );
