@@ -13,7 +13,7 @@ const StyledMain = styled.main`
     /* Background image */
     background-image: url('/images/connected_hives.jpg');
     background-size: 100% auto;
-    background-position: top;
+    background-position: center;
     background-repeat: no-repeat;
   }
 

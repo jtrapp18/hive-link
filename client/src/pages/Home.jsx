@@ -7,13 +7,21 @@ const StyledMain = styled.main`
   margin: 0;
   background-image: None;
 
-  h1 {
-      font-size: 12vh;
-      color: var(--honey);
-    }
+  div {
+    padding: 2%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 
-  h3 {
-    color: var(--yellow);
+    h1 {
+        font-size: clamp(4.5rem, 5.5vw, 6rem);
+        color: var(--honey);
+      }
+
+    h3 {
+      color: var(--yellow);
+    }  
   }
 
   img {
@@ -28,8 +36,10 @@ const StyledMain = styled.main`
 function Home() {
   return (
     <StyledMain>
-        <h1>Hive Link</h1>
-        <h3>A Beekeeper Network Focused on Building Healthier Hives</h3>
+        <div>
+          <h1>Hive Link</h1>
+          <h3>A Beekeeper Network Focused on Building Healthier Hives</h3>
+        </div>
         {/* "Stronger Together, Like the Hive."
         "Working Together, Thriving Together."
         "In Unity, the Hive Thrives."

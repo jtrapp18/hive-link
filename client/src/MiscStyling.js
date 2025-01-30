@@ -97,8 +97,8 @@ const BorderGlow = styled.span`
   background: radial-gradient(
     circle, 
     rgba(0, 0, 0, 0) 5%,
-    rgba(0, 0, 0, 0.4) 50%,
-    rgba(0, 0, 0, .7) 100%
+    rgba(0, 0, 0, 0.9) 60%,
+    rgba(0, 0, 0, 1) 100%
   );
 `
 
