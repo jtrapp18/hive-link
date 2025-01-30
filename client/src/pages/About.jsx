@@ -46,7 +46,7 @@ function About() {
               Bees are sensitive to a variety of internal and external factors, and as such, recordkeeping is critical to understanding the patterns and needs of the hive. If we can create a network of beekeepers and pool our records together, we will be able to better assess which factors have the highest impact on hive health and use these findings to cultivate happier and healthier hives.
             </p>
             <p>
-              After all, if there is one lesson we can take away from our honeybees, it is that we are stronger when we work together.
+              After all, if there is one lesson we can take away from our honeybees, it is that <strong>we are stronger when we work together.</strong>
             </p>
           </BorderGlow>
         </div>

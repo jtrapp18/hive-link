@@ -29,7 +29,7 @@ function Home() {
   return (
     <StyledMain>
         <h1>Hive Link</h1>
-        <h3>A Beekeeper Network for Building Healthier Hives</h3>
+        <h3>A Beekeeper Network Focused on Building Healthier Hives</h3>
         {/* "Stronger Together, Like the Hive."
         "Working Together, Thriving Together."
         "In Unity, the Hive Thrives."

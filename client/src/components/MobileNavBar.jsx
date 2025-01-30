@@ -31,7 +31,7 @@ const LinkContainer = styled.div`
   transition: transform 0.3s ease-in-out; /* Smooth fold-out animation */
 
   a {
-    height: 15vh;
+    height: 12vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -144,6 +144,13 @@ const MobileNavBar = () => {
           onClick={handleClick}
         >
           Home
+        </StyledNavLink>
+        <StyledNavLink
+          to="/about"
+          className="nav-link"
+          onClick={handleClick}
+        >
+          About
         </StyledNavLink>
         <StyledNavLink
           to="/analysis"

@@ -9,11 +9,10 @@ import { userLogout } from "../helper";
 
 const LinkContainer = styled.div`
   position: absolute;
-  // top: var(--height-header);
-  top: 0px;
-  left: 0;
+  top: 100%;
+  right: 0;
   z-index: 1000;
-  width: 100%;
+  width: 20%;
   text-decoration: none;
   text-align: right;
   background: var(--yellow);
@@ -30,7 +29,8 @@ const LinkContainer = styled.div`
     height: 10vh;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: end;
+    color: black;
     font-size: var(--default-font-size);
   }
 

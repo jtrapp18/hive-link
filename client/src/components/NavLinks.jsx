@@ -10,9 +10,8 @@ const StyledAccountIcon = styled.div`
   z-index: 1000;
 `
 
-
-function NavLinks({ handleClick }) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+function NavLinks({ handleClick, setIsMenuOpen }) {
+  // const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <>
@@ -43,12 +42,12 @@ function NavLinks({ handleClick }) {
         onMouseOut={()=>setIsMenuOpen(false)}
       >
         <FaUserAlt />
-        <AccountDropdown 
+        {/* <AccountDropdown 
           isMenuOpen={isMenuOpen}
           setIsMenuOpen={setIsMenuOpen}
-        />        
-      </StyledAccountIcon>
-    </>
+        /> */}
+      </StyledAccountIcon> 
+  </>
   );
 };
 

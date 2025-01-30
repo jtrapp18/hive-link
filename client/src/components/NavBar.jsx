@@ -1,5 +1,7 @@
+import { useState } from "react";
 import NavLinks from "./NavLinks"
 import styled from "styled-components";
+import AccountDropdown from "./AccountDropdown";
 
 const StyledNavBar = styled.nav`
   width: 100%;
@@ -29,11 +31,19 @@ const LinkContainer = styled.div`
 `
 
 function NavBar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
   return (
     <StyledNavBar>
         <LinkContainer>
-          <NavLinks/>
+          <NavLinks
+            setIsMenuOpen={setIsMenuOpen}
+          />
         </LinkContainer>
+        <AccountDropdown 
+          isMenuOpen={isMenuOpen}
+          setIsMenuOpen={setIsMenuOpen}
+        />
     </StyledNavBar>
   );
 };
