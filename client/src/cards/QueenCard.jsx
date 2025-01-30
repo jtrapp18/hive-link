@@ -1,9 +1,12 @@
 import { useEffect, useState, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { deleteJSONFromDb, postJSONToDb } from "../helper";
+import { useOutletContext } from "react-router-dom";
 import { UserContext } from '../context/userProvider';
+import { Button } from '../MiscStyling';
 
-const StyledInspectionCard = styled.article`
+const StyledQueenCard = styled.article`
     width: 100%;
     max-width: clamp(300px, 100%, 600px);
     padding: 10px;
@@ -17,30 +20,32 @@ const StyledInspectionCard = styled.article`
         justify-content: end;
         display: flex;
     }
+
+    .main-queen {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        height: 80%;
+    }
 `
 
-const InspectionCard = ({ inspection, setActiveInspection}) => {
+const QueenCard = ({ queen, setActiveQueen }) => {
     const navigate = useNavigate();
     const { user } = useContext(UserContext);
-    const { id, queenId, dateChecked, fate, chalkbroodPresence, varroaMites } = inspection
+    const { id } = queen
 
     return (
-        <StyledInspectionCard>
+        <StyledQueenCard>
             <div 
                 className="main-queen"
             >
+            </div>
                 <p>{id}</p>
-                <p>{queenId}</p>
-                <p>{dateChecked}</p>     
-                <p>{fate}</p>     
-                <p>{chalkbroodPresence}</p>     
-                <p>{varroaMites}</p>  
-            </div>
             <div className="btn-container">
-                <button onClick={()=>setActiveInspection(inspection)}>Edit Details</button>    
+                <Button onClick={()=>setActiveQueen(queen)}>Edit Details</Button>
             </div>
-        </StyledInspectionCard>
+        </StyledQueenCard>
     );
 }
 
-export default InspectionCard;
+export default QueenCard;

@@ -2,8 +2,10 @@ import React, {useState} from 'react';
 import LoginForm from '../forms/LoginForm'
 import SignupForm from '../forms/SignUpForm'
 import LoggedInConfirm from '../components/LoggedInConfirm';
+import Error from '../styles/Error';
+import { Button } from '../MiscStyling';
 
-function Login() {
+function Login({errMessage}) {
   const [showSignUp, setShowSignUp] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -14,13 +16,14 @@ function Login() {
       
       {!showSignUp &&
         <>
+          {errMessage && <Error>{errMessage}</Error>}        
           <LoginForm setShowConfirm={setShowConfirm}/>
           <p>Don't have an account?</p>
-          <button
+          <Button
             onClick={()=>setShowSignUp(true)}
           >
             Sign Up
-          </button>
+          </Button>
         </>
       }
       {showSignUp &&

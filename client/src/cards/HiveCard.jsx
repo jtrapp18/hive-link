@@ -4,9 +4,7 @@ import styled from "styled-components";
 import { deleteJSONFromDb, postJSONToDb } from "../helper";
 import { useOutletContext } from "react-router-dom";
 import { UserContext } from '../context/userProvider';
-import Button from 'react-bootstrap/Button';
-import NotLoggedInToast from './NotLoggedInToast';
-import { NavLink } from 'react-router-dom';
+import { Button } from '../MiscStyling';
 
 const StyledHiveCard = styled.article`
     width: 100%;

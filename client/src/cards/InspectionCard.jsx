@@ -1,14 +1,10 @@
 import { useEffect, useState, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { deleteJSONFromDb, postJSONToDb } from "../helper";
-import { useOutletContext } from "react-router-dom";
 import { UserContext } from '../context/userProvider';
-import Button from 'react-bootstrap/Button';
-import NotLoggedInToast from './NotLoggedInToast';
-import { NavLink } from 'react-router-dom';
+import { Button } from '../MiscStyling';
 
-const StyledQueenCard = styled.article`
+const StyledInspectionCard = styled.article`
     width: 100%;
     max-width: clamp(300px, 100%, 600px);
     padding: 10px;
@@ -22,32 +18,30 @@ const StyledQueenCard = styled.article`
         justify-content: end;
         display: flex;
     }
-
-    .main-queen {
-        position: relative;
-        display: flex;
-        justify-content: space-between;
-        height: 80%;
-    }
 `
 
-const QueenCard = ({ queen, setActiveQueen }) => {
+const InspectionCard = ({ inspection, setActiveInspection}) => {
     const navigate = useNavigate();
     const { user } = useContext(UserContext);
-    const { id } = queen
+    const { id, queenId, dateChecked, fate, chalkbroodPresence, varroaMites } = inspection
 
     return (
-        <StyledQueenCard>
+        <StyledInspectionCard>
             <div 
                 className="main-queen"
             >
-            </div>
                 <p>{id}</p>
-            <div className="btn-container">
-                <button onClick={()=>setActiveQueen(queen)}>Edit Details</button>
+                <p>{queenId}</p>
+                <p>{dateChecked}</p>     
+                <p>{fate}</p>     
+                <p>{chalkbroodPresence}</p>     
+                <p>{varroaMites}</p>  
             </div>
-        </StyledQueenCard>
+            <div className="btn-container">
+                <Button onClick={()=>setActiveInspection(inspection)}>Edit Details</Button>    
+            </div>
+        </StyledInspectionCard>
     );
 }
 
-export default QueenCard;
+export default InspectionCard;

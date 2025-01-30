@@ -1,7 +1,8 @@
 import { useContext, useState } from 'react';
 import styled from "styled-components";
 import {UserContext} from '../context/userProvider'
-import NotLoggedInToast from './NotLoggedInToast'
+import NotLoggedInToast from '../components/NotLoggedInToast'
+import { Button } from '../MiscStyling';
 
 const StyledEventCard = styled.article`
     width: 100%;
@@ -32,22 +33,20 @@ const StyledEventCard = styled.article`
     }
 `
 
-const EventCard = ({ event, handleEventBtn}) => {
+const EventCard = ({ event, btnLabel, handleEventBtn}) => {
     const { user } = useContext(UserContext);
     const [showToast, setShowToast] = useState(false);
+
+    if (!event) return <p>Loading Card...</p>
+
     const { id,  signups, title, descr, zipcode, eventDate } = event
 
-    const btnMapping = {
-        signupEvent: 'Sign Up',
-        cancelSignup: 'Remove Event',
-    }
-
     const handleClick = () => {
-        handleEventBtn(event);
-
         if (!user) {
             setShowToast(true);
         }
+
+        handleEventBtn(event);
     }
 
     return (
@@ -61,7 +60,7 @@ const EventCard = ({ event, handleEventBtn}) => {
             </div>
             <div className="btn-container">
                 <span>{`${signups.length} Currently Planning to Attend`}</span>
-                <button onClick={handleClick}>{btnMapping[handleEventBtn.name] || "Manage Event"}</button>
+                <Button onClick={handleClick}>{btnLabel}</Button>
                 {showToast && <NotLoggedInToast onClose={()=>setShowToast(false)}/>}
             </div>
         </StyledEventCard>

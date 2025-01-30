@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import os
+import requests
 from experience_study import FateStudy, PriorStudy, PredictStudy
 from models import Queen, Hive, Inspection, User, Event, Signup
 from config import app, db, api
@@ -387,6 +389,30 @@ class SignupById(Resource):
         db.session.delete(signup)
         db.session.commit()
         return {}, 204
+
+class GetNearbyZipcodes(Resource):
+
+    def get(self):
+        print('got response!')
+        API_KEY = os.getenv("ZIPCODE_API_KEY")
+
+        zip_code = request.args.get("zip")
+        radius = request.args.get("radius", 5)
+
+        print(zip_code)
+
+        if not zip_code:
+            return {'error': 'ZIP code is required'}, 400
+
+        url = f'https://www.zipcodeapi.com/rest/{API_KEY}/radius.json/{zip_code}/{radius}/mile'
+        print(url)
+
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return {'error': 'Failed to fetch ZIP codes'}, 500
     
 api.add_resource(ClearSession, '/clear', endpoint='clear')
 api.add_resource(AccountSignup, '/account_signup', endpoint='account_signup')
@@ -408,6 +434,7 @@ api.add_resource(Events, '/events', endpoint='events')
 api.add_resource(EventById, '/events/<int:event_id>')
 api.add_resource(Signups, '/signups', endpoint='signups')
 api.add_resource(SignupById, '/signups/<int:signup_id>')
+api.add_resource(GetNearbyZipcodes, '/zipcodes')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

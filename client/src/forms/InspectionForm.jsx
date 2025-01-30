@@ -2,11 +2,10 @@ import React, { useContext, useState } from "react";
 import { postJSONToDb, patchJSONToDb } from '../helper';
 import styled from "styled-components";
 import { UserContext } from '../context/userProvider';
-import HiveCard from '../components/HiveCard';
 import { useFormik } from 'formik';
 import * as Yup from 'yup'; // Import yup for validation
 import Error from "../styles/Error";
-import {StyledForm} from "../MiscStyling"
+import { StyledForm, Button } from "../MiscStyling"
 
 const InspectionContainer = styled.div`
     .submitted-confirm {
@@ -124,7 +123,7 @@ const InspectionForm = ({ initObj }) => {
                 )}
               </div>
               <div>
-                <button type="submit">{initObj ? "Update Inspection" : "Add Inspection"}</button>
+                <Button type="submit">{initObj ? "Update Inspection" : "Add Inspection"}</Button>
               </div>
             </StyledForm>
           </>

@@ -29,6 +29,8 @@ const StyledMain = styled.main`
     width: 100%;
     object-fit: cover;
     object-position: top;
+    opacity: 0;
+    animation: fadeIn 1s ease-in-out forwards;
   }
 
 `;

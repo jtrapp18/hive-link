@@ -5,13 +5,7 @@ import styled from "styled-components";
 import { UserContext } from '../context/userProvider';
 import { useFormik } from 'formik';
 import Error from "../styles/Error";
-import { StyledForm } from "../MiscStyling";
-
-const FormField = styled.div`
-  &:not(:last-child) {
-    margin-bottom: 12px;
-  }
-`;
+import { StyledForm, Button } from "../MiscStyling";
 
 function LoginForm({ setShowConfirm }) {
 
@@ -55,7 +49,7 @@ function LoginForm({ setShowConfirm }) {
   return (
     <StyledForm onSubmit={formik.handleSubmit}>
       <h1>Login</h1>
-      <FormField>
+      <div>
         <label htmlFor="username">Username</label>
         <input
           type="text"
@@ -69,8 +63,8 @@ function LoginForm({ setShowConfirm }) {
         {formik.touched.username && formik.errors.username ? (
           <Error>{formik.errors.username}</Error>
         ) : null}
-      </FormField>
-      <FormField>
+      </div>
+      <div>
         <label htmlFor="password">Password</label>
         <input
           type="password"
@@ -84,12 +78,12 @@ function LoginForm({ setShowConfirm }) {
         {formik.touched.password && formik.errors.password ? (
           <Error>{formik.errors.password}</Error>
         ) : null}
-      </FormField>
-      <FormField>
-        <button variant="fill" color="primary" type="submit">
+      </div>
+      <div>
+        <Button variant="fill" color="primary" type="submit">
           Login
-        </button>
-      </FormField>
+        </Button>
+      </div>
     </StyledForm>
   );
 }

@@ -45,7 +45,7 @@ const AccountDetails = () => {
     
   });
 
-  if (!user) return <><Error>Must be logged in to view account details</Error><Login /></>
+  if (!user) return <Login errMessage="Must be logged in to view account details"/>
 
   const handleChange = (e) => {
     const { name, value } = e.target;

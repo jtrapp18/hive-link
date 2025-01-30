@@ -5,13 +5,7 @@ import { UserContext } from '../context/userProvider';
 import { useFormik } from 'formik';
 import * as yup from 'yup';  // Import yup
 import Error from "../styles/Error";
-import { StyledForm } from "../MiscStyling";
-
-const FormField = styled.div`
-  &:not(:last-child) {
-    margin-bottom: 12px;
-  }
-`;
+import { StyledForm, Button } from "../MiscStyling";
 
 const validationSchema = yup.object({
   firstName: yup.string().required('First Name is required'),
@@ -86,7 +80,7 @@ function SignUpForm({ setShowConfirm }) {
   return (
     <StyledForm onSubmit={formik.handleSubmit}>
       <h1>Sign Up</h1>
-      <FormField>
+      <div>
         <label htmlFor="firstName">First Name</label>
         <input
           type="text"
@@ -100,8 +94,8 @@ function SignUpForm({ setShowConfirm }) {
         {formik.touched.firstName && formik.errors.firstName ? (
           <Error>{formik.errors.firstName}</Error>
         ) : null}
-      </FormField>
-      <FormField>
+      </div>
+      <div>
         <label htmlFor="lastName">Last Name</label>
         <input
           type="text"
@@ -112,8 +106,8 @@ function SignUpForm({ setShowConfirm }) {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
         />
-      </FormField>
-      <FormField>
+      </div>
+      <div>
         <label htmlFor="username">Username</label>
         <input
           type="text"
@@ -127,8 +121,8 @@ function SignUpForm({ setShowConfirm }) {
         {formik.touched.username && formik.errors.username ? (
           <Error>{formik.errors.username}</Error>
         ) : null}
-      </FormField>
-      <FormField>
+      </div>
+      <div>
         <label htmlFor="email">Email</label>
         <input
           type="email"
@@ -141,8 +135,8 @@ function SignUpForm({ setShowConfirm }) {
         {formik.touched.email && formik.errors.email ? (
           <Error>{formik.errors.email}</Error>
         ) : null}
-      </FormField>
-      <FormField>
+      </div>
+      <div>
         <label htmlFor="password">Password</label>
         <input
           type="password"
@@ -155,8 +149,8 @@ function SignUpForm({ setShowConfirm }) {
         {formik.touched.password && formik.errors.password ? (
           <Error>{formik.errors.password}</Error>
         ) : null}
-      </FormField>
-      <FormField>
+      </div>
+      <div>
         <label htmlFor="password_confirmation">Password Confirmation</label>
         <input
           type="password"
@@ -169,10 +163,10 @@ function SignUpForm({ setShowConfirm }) {
         {formik.touched.password_confirmation && formik.errors.password_confirmation ? (
           <Error>{formik.errors.password_confirmation}</Error>
         ) : null}
-      </FormField>
-      <FormField>
-        <button type="submit">Sign Up</button>
-      </FormField>
+      </div>
+      <div>
+        <Button type="submit">Sign Up</Button>
+      </div>
     </StyledForm>
   );
 }

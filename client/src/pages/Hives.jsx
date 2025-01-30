@@ -2,7 +2,7 @@ import { useContext, useState} from 'react';
 import styled from "styled-components";
 import {WindowWidthContext} from "../context/windowSize";
 import {useOutletContext} from "react-router-dom";
-import HiveCard from '../components/HiveCard';
+import HiveCard from '../cards/HiveCard';
 import {UserContext} from '../context/userProvider'
 import Login from './Login';
 import Error from "../styles/Error";
@@ -16,7 +16,7 @@ const Hives = () => {
   const { hives } = useOutletContext();
   const {PopupForm: HivePopup, setShowNewForm: setShowNewHive} = usePopupForm(HiveForm);
 
-  if (!user) return <><Error>Must be logged in to view hives</Error><Login /></>
+  if (!user) return <Login errMessage="Must be logged in to view hives"/>
 
   const userHives = hives.filter((hive) => hive.userId === user.id)
 

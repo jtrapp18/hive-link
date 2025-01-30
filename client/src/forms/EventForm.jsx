@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup"; // Validation library
 import { patchJSONToDb, postJSONToDb } from '../helper';
 import Error from "../styles/Error";
-import { StyledForm } from '../MiscStyling';
+import { StyledForm, Button } from '../MiscStyling';
 
 const EventForm = ({ initObj }) => {
   const { user } = useContext(UserContext);
@@ -124,8 +124,8 @@ const EventForm = ({ initObj }) => {
             )}
           </div>
 
-          <button type="submit">{initObj ? "Update Event" : "Add Event"}</button>
-          <button type="button">Delete Event</button>
+          <Button type="submit">{initObj ? "Update Event" : "Add Event"}</Button>
+          <Button type="button">Delete Event</Button>
         </StyledForm>
       ) : (
         <div>

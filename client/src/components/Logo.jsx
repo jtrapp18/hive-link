@@ -10,6 +10,11 @@ const LogoContainer = styled.div`
 
   img {
     height: clamp(2rem, 7vw, 4.2rem);
+    transition: transform 0.3s ease-in-out;
+
+    &:hover {
+      transform: scale(1.3);
+    }
   }
 `
 

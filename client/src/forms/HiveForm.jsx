@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup"; // Validation library
 import { patchJSONToDb, postJSONToDb } from '../helper';
 import Error from "../styles/Error";
-import {StyledForm} from '../MiscStyling'
+import { StyledForm, Button } from '../MiscStyling'
 
 const HiveForm = ({ initObj }) => {
   const { user } = useContext(UserContext);
@@ -136,7 +136,7 @@ const HiveForm = ({ initObj }) => {
             )}
           </div>
 
-          <button type="submit">{initObj ? "Update Hive" : "Add Hive"}</button>
+          <Button type="submit">{initObj ? "Update Hive" : "Add Hive"}</Button>
         </StyledForm>
       ) : (
         <div>

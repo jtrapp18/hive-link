@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import HiveCard from '../components/HiveCard';
+import HiveCard from '../cards/HiveCard';
 import {useOutletContext} from "react-router-dom";
 import HiveForm from '../forms/HiveForm'
-import InspectionCard from '../components/InspectionCard'
-import QueenCard from '../components/QueenCard'
+import InspectionCard from '../cards/InspectionCard'
+import QueenCard from '../cards/QueenCard'
 import { CardContainer } from '../MiscStyling';
 import usePopupForm from '../hooks/usePopupForm';
 import useCrud from '../hooks/useCrud';
 import QueenForm from '../forms/QueenForm'
 import InspectionForm from '../forms/InspectionForm'
+import Loading from './Loading'
 
 const HiveDetails = () => {
   const { id } = useParams(); // Get the ID from the URL
@@ -20,9 +21,7 @@ const HiveDetails = () => {
   const {PopupForm: QueenPopup, setActiveItem: setActiveQueen, setShowNewForm: setShowNewQueen} = usePopupForm(QueenForm);
   const {PopupForm: InspectionPopup, setActiveItem: setActiveInspection, setShowNewForm: setShowNewInspection} = usePopupForm(InspectionForm);
 
-  if (!hive) {
-    return <main>Loading...</main>; // Error handling if cookie is null
-  }
+  if (!hive) {return <Loading />}
 
   const inspections = hive.queens.reduce((inspections, queen) => [...inspections, ...queen.inspections], [])
 

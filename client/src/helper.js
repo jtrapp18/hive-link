@@ -1,23 +1,6 @@
 //****************************************************************************************************
 // JSON-server CRUD functionality
 
-function getReviewsByCookieId(cookieId) {
-
-  // Make the API call to your Lambda (via API Gateway)
-  return fetch(`/api/reviews/cookie/${cookieId}`)
-    .then(res => {
-      if (!res.ok) {
-        console.error(`Error fetching user information! Status: ${res.status}`);
-        // throw new Error(`Error fetching forecast! Status: ${res.status}`);
-      }
-      return res.json();
-    })
-    .catch(err => {
-      console.error('Request failed', err);
-      // You can handle further error logic here if needed
-    });
-}
-
 function userLogout() {
 
   fetch(`/api/logout`, {
@@ -44,7 +27,6 @@ function getJSON(dbKey) {
     .then(res => {
       if (!res.ok) {
         console.error(`Error fetching ${dbKey} information! Status: ${res.status}`);
-        // throw new Error(`Error fetching forecast! Status: ${res.status}`);
       }
       if (res.status === 204) {
         return null
@@ -53,7 +35,6 @@ function getJSON(dbKey) {
     })
     .catch(err => {
       console.error('Request failed', err);
-      // You can handle further error logic here if needed
     });
 }
 
@@ -161,6 +142,24 @@ function deleteJSONFromDb(dbKey, Id) {
   .catch(e => console.error(e));
 }
 
+function getNearbyZipcodes(zipcode, radius) {
+
+  // Make the API call to your Lambda (via API Gateway)
+  return fetch(`/api/zipcodes?zip=${zipcode}&radius=${radius}`)
+    .then(res => {
+      if (!res.ok) {
+        console.error(`Error fetching zipcodes! Status: ${res.status}`);
+      }
+      if (res.status === 204) {
+        return null
+      }
+      return res.json();
+    })
+    .catch(err => {
+      console.error('Request failed', err);
+    });
+}
+
 // Utility to convert snake_case to camelCase
 const snakeToCamel = (obj) => {
   if (Array.isArray(obj)) {
@@ -202,5 +201,5 @@ const scrollToTop = () => {
   });
 };
 
-export {userLogout, getReviewsByCookieId, getJSON, getJSONById, postJSONToDb, 
-  patchJSONToDb, deleteJSONFromDb, snakeToCamel, scrollToTop};
+export {userLogout, getJSON, getJSONById, postJSONToDb, 
+  patchJSONToDb, deleteJSONFromDb, getNearbyZipcodes, snakeToCamel, scrollToTop};

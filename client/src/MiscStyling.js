@@ -100,6 +100,21 @@ const BorderGlow = styled.span`
     rgba(0, 0, 0, 0.9) 60%,
     rgba(0, 0, 0, 1) 100%
   );
+
+  opacity: 0;
+  animation: fadeIn 0.8s ease-in-out forwards;
 `
 
-export { StyledMenuItem, StyledNavLink, StyledLink, StyledMain, StyledForm, CardContainer, BorderGlow }
+const Button = styled.button`
+  color: black;
+  background: var(--yellow);
+  min-width: 100px;
+
+  &:hover {
+    background: var(--honey);
+    font-weight: bold;
+  }
+`
+
+
+export { StyledMenuItem, StyledNavLink, StyledLink, StyledMain, StyledForm, CardContainer, BorderGlow, Button }

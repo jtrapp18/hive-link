@@ -179,18 +179,6 @@ p, label, i, li, a, span, option, select, input, textarea {
   color: var(--font-color-2);
 }
 
-button {
-  color: black;
-  background: var(--yellow);
-  font-family: 'Mogra';
-  min-width: 100px;
-}
-
-button:hover {
-  background: var(--honey);
-  font-weight: bold;
-}
-
 label {
   font-family: 'Mogra';
 }
