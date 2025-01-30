@@ -7,11 +7,14 @@ import {UserContext} from '../context/userProvider'
 import Login from './Login';
 import Error from "../styles/Error";
 import { CardContainer } from '../MiscStyling';
+import usePopupForm from '../hooks/usePopupForm';
+import HiveForm from '../forms/HiveForm'
 
 const Hives = () => {
   const { user } = useContext(UserContext);
   const { isMobile } = useContext(WindowWidthContext);
   const { hives } = useOutletContext();
+  const {PopupForm: HivePopup, setShowNewForm: setShowNewHive} = usePopupForm(HiveForm);
 
   if (!user) return <><Error>Must be logged in to view hives</Error><Login /></>
 
@@ -21,6 +24,8 @@ const Hives = () => {
       <main>
         <h1>My Hives</h1>
         <CardContainer>
+          <button onClick={()=>setShowNewHive(true)}>Add New Hive</button>
+          <HivePopup />
           {userHives.map(hive=>
             <HiveCard
                 key={hive.id}

@@ -1,61 +1,27 @@
 import React, { useContext, useState } from "react";
+import { useParams } from 'react-router-dom';
 import styled from "styled-components";
 import { UserContext } from '../context/userProvider';
 import { useFormik } from "formik";
 import * as Yup from "yup"; // Validation library
 import { patchJSONToDb, postJSONToDb } from '../helper';
 import Error from "../styles/Error";
+import {StyledForm} from "../MiscStyling"
 
-const QueenFormContainer = styled.div`
-  border: 1px solid black;
-  background: var(--gray);
-  padding: 20px;
-  width: 80%;
-  margin: auto;
-  .form-input {
-    margin-bottom: 12px;
-    display: flex;
-    flex-direction: column;
-    label {
-      font-weight: bold;
-    }
-    input, select {
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    input:hover, select:hover {
-      background: var(--yellow);
-    }
-    .error {
-      color: red;
-      font-size: 0.8em;
-    }
-  }
-  button {
-    padding: 10px 20px;
-    background-color: var(--green);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    &:hover {
-      background-color: var(--dark-green);
-    }
-  }
-`;
-
-const QueenForm = ({ queen, hiveId }) => {
+const QueenForm = ({ initObj }) => {
   const { user } = useContext(UserContext);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const { id: hiveId } = useParams(); // Get the ID from the URL
 
-  const initialValues = queen
+  console.log('queenobj', initObj)
+
+  const initialValues = initObj
     ? {
-        status: queen.status || "",
-        origin: queen.origin || "",
-        species: queen.species || "",
-        dateIntroduced: queen.dateIntroduced || "",
-        replacementCause: queen.replacementCause || "",
+        status: initObj.status || "",
+        origin: initObj.origin || "",
+        species: initObj.species || "",
+        dateIntroduced: initObj.dateIntroduced || "",
+        replacementCause: initObj.replacementCause || "",
       }
     : {
         status: "",
@@ -65,9 +31,9 @@ const QueenForm = ({ queen, hiveId }) => {
         replacementCause: "",
       };
 
-  const submitToDB = queen
+  const submitToDB = initObj
     ? (body) =>
-        patchJSONToDb("queens", queen.id, body)
+        patchJSONToDb("queens", initObj.id, body)
           .then(() => setIsSubmitted(true))
           .catch((err) => console.error(err))
     : (body) =>
@@ -110,9 +76,9 @@ const QueenForm = ({ queen, hiveId }) => {
   });
 
   return (
-    <QueenFormContainer>
+    <div>
       {!isSubmitted ? (
-        <form onSubmit={formik.handleSubmit}>
+        <StyledForm onSubmit={formik.handleSubmit}>
           <div className="form-input">
             <label htmlFor="status">Status</label>
             <select
@@ -208,14 +174,14 @@ const QueenForm = ({ queen, hiveId }) => {
             )}
           </div>
 
-          <button type="submit">{queen ? "Update Queen" : "Add Queen"}</button>
-        </form>
+          <button type="submit">{initObj ? "Update Queen" : "Add Queen"}</button>
+        </StyledForm>
       ) : (
         <div>
-          <h3>{queen ? "Queen successfully updated!" : "Queen successfully added!"}</h3>
+          <h3>{initObj ? "Queen successfully updated!" : "Queen successfully added!"}</h3>
         </div>
       )}
-    </QueenFormContainer>
+    </div>
   );
 };
 

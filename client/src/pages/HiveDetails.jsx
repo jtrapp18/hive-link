@@ -1,22 +1,31 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom'; // To access cookie ID from URL
-import HiveCard from '../components/HiveCard'; // Import CookieCard
+import { useParams } from 'react-router-dom';
+import HiveCard from '../components/HiveCard';
 import {useOutletContext} from "react-router-dom";
-import styled from 'styled-components';
-import HiveForm from '../components/HiveForm'
+import HiveForm from '../forms/HiveForm'
 import InspectionCard from '../components/InspectionCard'
 import QueenCard from '../components/QueenCard'
 import { CardContainer } from '../MiscStyling';
+import usePopupForm from '../hooks/usePopupForm';
+import useCrud from '../hooks/useCrud';
+import QueenForm from '../forms/QueenForm'
+import InspectionForm from '../forms/InspectionForm'
 
 const HiveDetails = () => {
   const { id } = useParams(); // Get the ID from the URL
   const { hives } = useOutletContext();
   const hive = hives.find((hive) => hive.id === parseInt(id));
-  const [activeTab, setActiveTab] = useState('');
+  const [activeTab, setActiveTab] = useState(null);
+  const {PopupForm: HivePopup, setActiveItem: setActiveHive, setShowNewForm: setShowNewHive} = usePopupForm(HiveForm);
+  const {PopupForm: QueenPopup, setActiveItem: setActiveQueen, setShowNewForm: setShowNewQueen} = usePopupForm(QueenForm);
+  const {PopupForm: InspectionPopup, setActiveItem: setActiveInspection, setShowNewForm: setShowNewInspection} = usePopupForm(InspectionForm);
 
   if (!hive) {
     return <main>Loading...</main>; // Error handling if cookie is null
   }
+
+  const inspections = hive.queens.reduce((inspections, queen) => [...inspections, ...queen.inspections], [])
+
   return (
     <main>
       <h1>Hive Details</h1>
@@ -26,29 +35,32 @@ const HiveDetails = () => {
       <div className="btn-container">
         <button onClick={()=>setActiveTab('inspections')}>Inspections</button>     
         <button onClick={()=>setActiveTab('queens')}>Queens</button>    
-        <button onClick={()=>setActiveTab('edit_details')}>Edit Details</button>
+        <button onClick={()=>setActiveHive(hive)}>Edit Details</button>
       </div>
-      {activeTab==='edit_details' &&
-        <HiveForm
-          hive={hive}
-        />
-      }
+      <HivePopup />
       {activeTab==='queens' &&
         <CardContainer>
+          <button onClick={()=>setShowNewQueen(true)}>Add Queen to Hive</button>
+          <QueenPopup />
           {hive.queens.map(queen=>
               <QueenCard
                   key={queen.id}
-                  {...queen}
+                  queen={queen}
+                  setActiveQueen={setActiveQueen}
               />
+              
           )}
         </CardContainer>
       }
       {activeTab==='inspections' &&
         <CardContainer>
-          {hive.inspections.map(inspection=>
+          <button onClick={()=>setShowNewInspection(true)}>Add Hive Inspection</button>
+          <InspectionPopup />
+          {inspections.map(inspection=>
               <InspectionCard
                   key={inspection.id}
-                  {...inspection}
+                  inspection={inspection}
+                  setActiveInspection={setActiveInspection}
               />
           )}
         </CardContainer>

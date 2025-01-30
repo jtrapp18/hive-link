@@ -2,83 +2,32 @@ import React, { useContext, useState } from "react";
 import { postJSONToDb, patchJSONToDb } from '../helper';
 import styled from "styled-components";
 import { UserContext } from '../context/userProvider';
-import HiveCard from './HiveCard';
+import HiveCard from '../components/HiveCard';
 import { useFormik } from 'formik';
 import * as Yup from 'yup'; // Import yup for validation
 import Error from "../styles/Error";
+import {StyledForm} from "../MiscStyling"
 
 const InspectionContainer = styled.div`
-  // position: fixed;
-  // z-index: 1000;
-  // top: var(--height-header);
-  // left: 50%;
-  // transform: translateX(-50%);
-  border: 1px solid black;
-  background: var(--gray);
-
-  .hive-card {
-    zoom: .7;
-  }
-
-  .main-inspection {
-    padding: 20px;
-    background: white;
-    height: fit-content;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    form {
-      display: flex;
-      flex-direction: column;
-      width: 90%;
-      padding: 20px;
-      align-items: center;
-
-      .form-input {
-        &:not(:last-child) {
-          margin-bottom: 12px;
-        }
-
-        input:hover, textarea:hover {
-          background: var(--yellow);
-        }
-
-        display: flex;
-        flex-direction: column;
-        align-items: space-between;
-        width: 90%;
-      }
-    }
-
     .submitted-confirm {
-      background: var(--green);
       border-radius: 20px;
       padding: 20px;
-
-      label {
-        font-weight: bold;
-      }
-
-      p, label, h3 {
-        color: white;
-      }
     }
   }
 `;
 
-const InspectionForm = ({ inspection }) => {
+const InspectionForm = ({ initObj }) => {
   const { user } = useContext(UserContext);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const initialValues = inspection
+  const initialValues = initObj
     ? {
-        dateChecked: inspection.dateChecked || "",
-        temp: inspection.origin || "",
-        activitySurroundingHive: inspection.activitySurroundingHive || "",
-        eggCount: inspection.eggCount || "",
-        larvaeCount: inspection.larvaeCount || "",
-        superCount: inspection.superCount || ""
+        dateChecked: initObj.dateChecked || "",
+        temp: initObj.origin || "",
+        activitySurroundingHive: initObj.activitySurroundingHive || "",
+        eggCount: initObj.eggCount || "",
+        larvaeCount: initObj.larvaeCount || "",
+        superCount: initObj.superCount || ""
       }
     : {
         dateChecked: '',
@@ -89,9 +38,9 @@ const InspectionForm = ({ inspection }) => {
         superCount: ''
       };
 
-  const submitToDB = hive
+  const submitToDB = initObj
     ? (body) =>
-        patchJSONToDb("inspections", inspection.id, body)
+        patchJSONToDb("inspections", initObj.id, body)
           .then(() => setIsSubmitted(true))
           .catch((err) => console.error(err))
     : (body) =>
@@ -116,8 +65,8 @@ const InspectionForm = ({ inspection }) => {
     onSubmit: (values) => {
       const body = {
         ...values,
-        user_id: user.id,
-        hive_id: hive.id,
+        userId: user.id,
+        queenId: queen.id,
       };
 
       submitToDB(body);
@@ -129,9 +78,8 @@ const InspectionForm = ({ inspection }) => {
       <div className="main-inspection">
         {!isSubmitted ? (
           <>
-            <h1>Inspection of Hive {hive.name}</h1>
-            <HiveCard {...hive} />
-            <form onSubmit={formik.handleSubmit}>
+            <h1>Inspection</h1>
+            <StyledForm onSubmit={formik.handleSubmit}>
               <div className="form-input">
                 <label htmlFor="dateChecked">Date of Inspection</label>
                 <input
@@ -176,9 +124,9 @@ const InspectionForm = ({ inspection }) => {
                 )}
               </div>
               <div>
-                <button type="submit">{inspection ? "Update Inspection" : "Add Inspection"}</button>
+                <button type="submit">{initObj ? "Update Inspection" : "Add Inspection"}</button>
               </div>
-            </form>
+            </StyledForm>
           </>
         ) : (
           <div className="submitted-confirm">

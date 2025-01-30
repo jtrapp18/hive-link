@@ -153,6 +153,13 @@ const MobileNavBar = () => {
           Analysis
         </StyledNavLink>
         <StyledNavLink
+          to="/events"
+          className="nav-link"
+          onClick={handleClick}
+        >
+          Events
+        </StyledNavLink>
+        <StyledNavLink
           to="/account_details"
           className="nav-link"
           onClick={handleClick}

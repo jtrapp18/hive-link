@@ -32,18 +32,18 @@ const StyledEventCard = styled.article`
     }
 `
 
-const EventCard = ({ id,  signups, title, descr, zipcode, eventDate, handleEventBtn}) => {
+const EventCard = ({ event, handleEventBtn}) => {
     const { user } = useContext(UserContext);
     const [showToast, setShowToast] = useState(false);
+    const { id,  signups, title, descr, zipcode, eventDate } = event
 
     const btnMapping = {
         signupEvent: 'Sign Up',
         cancelSignup: 'Remove Event',
-        cancelEvent: 'Cancel Event'
     }
 
     const handleClick = () => {
-        handleEventBtn(id);
+        handleEventBtn(event);
 
         if (!user) {
             setShowToast(true);
@@ -54,7 +54,6 @@ const EventCard = ({ id,  signups, title, descr, zipcode, eventDate, handleEvent
         <StyledEventCard>
             <div 
                 className="main-event"
-                onClick={handleClick}
             >
                 <span>{`${eventDate} | ${zipcode}`}</span>
                 <label>{title}</label>
@@ -62,7 +61,7 @@ const EventCard = ({ id,  signups, title, descr, zipcode, eventDate, handleEvent
             </div>
             <div className="btn-container">
                 <span>{`${signups.length} Currently Planning to Attend`}</span>
-                <button onClick={handleClick}>{btnMapping[handleEventBtn.name]}</button>
+                <button onClick={handleClick}>{btnMapping[handleEventBtn.name] || "Manage Event"}</button>
                 {showToast && <NotLoggedInToast onClose={()=>setShowToast(false)}/>}
             </div>
         </StyledEventCard>

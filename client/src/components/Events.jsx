@@ -12,7 +12,7 @@ const Events = ({events, role, handleEventBtn}) => {
           (events.map(event=>
             <EventCard
                 key={event.id}
-                {...event}
+                event={event}
                 handleEventBtn={handleEventBtn}
             />
           ))

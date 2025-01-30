@@ -7,16 +7,16 @@ import { patchJSONToDb, postJSONToDb } from '../helper';
 import Error from "../styles/Error";
 import {StyledForm} from '../MiscStyling'
 
-const HiveForm = ({ hive }) => {
+const HiveForm = ({ initObj }) => {
   const { user } = useContext(UserContext);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const initialValues = hive
+  const initialValues = initObj
     ? {
-        dateAdded: hive.dateAdded || "",
-        material: hive.material || "",
-        locationLat: hive.locationLat || "",
-        locationLong: hive.locationLong || "",
+        dateAdded: initObj.dateAdded || "",
+        material: initObj.material || "",
+        locationLat: initObj.locationLat || "",
+        locationLong: initObj.locationLong || "",
       }
     : {
         dateAdded: "",
@@ -25,9 +25,9 @@ const HiveForm = ({ hive }) => {
         locationLong: "",
       };
 
-      const submitToDB = hive
+      const submitToDB = initObj
       ? (body) =>
-          patchJSONToDb("hives", hive.id, body)
+          patchJSONToDb("hives", initObj.id, body)
             .then(() => setIsSubmitted(true))
             .catch((err) => console.error(err))
       : (body) =>
@@ -70,7 +70,7 @@ const HiveForm = ({ hive }) => {
     <div>
       {!isSubmitted ? (
         <StyledForm onSubmit={formik.handleSubmit}>
-          <h3>{hive ? "Hive Details" : "Add New Hive"}</h3>
+          <h3>{initObj ? "Hive Details" : "Add New Hive"}</h3>
           <br />
           <div className="form-input">
             <label htmlFor="dateAdded">Date Added</label>
@@ -136,7 +136,7 @@ const HiveForm = ({ hive }) => {
             )}
           </div>
 
-          <button type="submit">{hive ? "Update Hive" : "Add Hive"}</button>
+          <button type="submit">{initObj ? "Update Hive" : "Add Hive"}</button>
         </StyledForm>
       ) : (
         <div>

@@ -7,16 +7,16 @@ import { patchJSONToDb, postJSONToDb } from '../helper';
 import Error from "../styles/Error";
 import { StyledForm } from '../MiscStyling';
 
-const EventForm = ({ event }) => {
+const EventForm = ({ initObj }) => {
   const { user } = useContext(UserContext);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const initialValues = event
+  const initialValues = initObj
     ? {
-        title: event.title || "",
-        eventDate: event.event_date || "",
-        descr: event.descr || "",
-        zipcode: event.zipcode || "",
+        title: initObj.title || "",
+        eventDate: initObj.eventDate || "",
+        descr: initObj.descr || "",
+        zipcode: initObj.zipcode || "",
       }
     : {
         title: "",
@@ -25,9 +25,9 @@ const EventForm = ({ event }) => {
         zipcode: "",
       };
 
-  const submitToDB = event
+  const submitToDB = initObj
     ? (body) =>
-        patchJSONToDb("events", event.id, body)
+        patchJSONToDb("events", initObj.id, body)
           .then(() => setIsSubmitted(true))
           .catch((err) => console.error(err))
     : (body) =>
@@ -63,7 +63,7 @@ const EventForm = ({ event }) => {
     <div>
       {!isSubmitted ? (
         <StyledForm onSubmit={formik.handleSubmit}>
-          <h3>{event ? "Event Details" : "Add New Event"}</h3>
+          <h3>{initObj ? "Event Details" : "Add New Event"}</h3>
           <br />
           <div className="form-input">
             <label htmlFor="title">Title</label>
@@ -124,7 +124,8 @@ const EventForm = ({ event }) => {
             )}
           </div>
 
-          <button type="submit">{event ? "Update Event" : "Add Event"}</button>
+          <button type="submit">{initObj ? "Update Event" : "Add Event"}</button>
+          <button type="button">Delete Event</button>
         </StyledForm>
       ) : (
         <div>

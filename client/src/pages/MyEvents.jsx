@@ -1,21 +1,18 @@
 import { useContext, useState, useEffect } from 'react';
-import styled from "styled-components";
 import {WindowWidthContext} from "../context/windowSize";
-import {useOutletContext} from "react-router-dom";
 import {UserContext} from '../context/userProvider'
-import Login from './Login';
-import Popup from '../styles/Popup';
-import { CardContainer } from '../MiscStyling';
 import Events from '../components/Events';
 import { getJSON, snakeToCamel, postJSONToDb, deleteJSONFromDb } from '../helper';
-import EventForm from '../components/EventForm'
+import EventForm from '../forms/EventForm'
+import usePopupForm from '../hooks/usePopupForm'
+import useCrud from '../hooks/useCrud';
 
 const MyEvents = () => {
   const { user } = useContext(UserContext);
   const { isMobile } = useContext(WindowWidthContext);
   const [events, setEvents] = useState([]);
-  const [activeEvent, setActiveEvent] = useState('');
-  const [showNewEvent, setShowNewEvent] = useState(false);
+  const {PopupForm, setActiveItem, setShowNewForm} = usePopupForm(EventForm);
+  const {addItem, deleteItem, addToKey} = useCrud(setEvents);
 
   useEffect(() => {
     getJSON("events").then((events) => {
@@ -27,13 +24,16 @@ const MyEvents = () => {
   const addEvent = (event) => {
     postJSONToDb("events", event)
     .then(event => {
-      setEvents(prevEvents => [...prevEvents, event])
+      // setEvents(prevEvents => [...prevEvents, event])
+      addItem(event)
+      
     });
   };
   
   const cancelEvent = (eventId) => {
     deleteJSONFromDb("events", eventId)
-    setEvents(prevEvents => prevEvents.filter(event => event.id !== eventId))
+    // setEvents(prevEvents => prevEvents.filter(event => event.id !== eventId))
+    deleteItem(eventId)
   };
   
   const signupEvent = (eventId) => {
@@ -44,13 +44,14 @@ const MyEvents = () => {
 
     postJSONToDb("signups", signup)
     .then(signup => {
-      setEvents(prevEvents =>
-        prevEvents.map(event =>
-          event.id === eventId
-            ? { ...event, signups: [...event.signups, signup] }
-            : event
-        )
-      )
+      addToKey(eventId, "signups", signup)
+      // setEvents(prevEvents =>
+      //   prevEvents.map(event =>
+      //     event.id === eventId
+      //       ? { ...event, signups: [...event.signups, signup] }
+      //       : event
+      //   )
+      // )
     });
   };
   
@@ -86,13 +87,14 @@ const MyEvents = () => {
         { user &&
           <>
             <h1>My Events</h1>
-            <button onClick={()=>setShowNewEvent(true)}>Host a New Event</button>
+            <button onClick={()=>setShowNewForm(true)}>Host a New Event</button>
+            <PopupForm />            
             <h3>. . . . . </h3>
             <br />
             <Events
               role={"Hosting"}
               events={eventsHosting}
-              handleEventBtn={setActiveEvent}
+              handleEventBtn={setActiveItem}
             />
             <Events
               role={"Attending"}
@@ -109,18 +111,6 @@ const MyEvents = () => {
           events={eventsOther}
           handleEventBtn={signupEvent}
         />
-        {activeEvent &&
-          <Popup onClose={()=>setActiveEvent('')}>
-            <EventForm 
-              event={activeEvent}
-            />
-          </Popup>
-        }
-        {showNewEvent &&
-          <Popup onClose={()=>setShowNewEvent(false)}>
-            <EventForm />
-          </Popup>
-        }
       </main>
     );
   };

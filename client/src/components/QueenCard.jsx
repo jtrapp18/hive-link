@@ -23,62 +23,28 @@ const StyledQueenCard = styled.article`
         display: flex;
     }
 
-    .main-hive {
+    .main-queen {
         position: relative;
         display: flex;
         justify-content: space-between;
         height: 80%;
-        cursor: pointer;
-        
-        section {
-            display: flex;
-            flex-direction: column;
-            padding: 2%;
-            justify-content: center;
-
-            h3 {
-                font-size: clamp(1.2rem, 1.8vw, 1.8rem);
-            }
-
-            img {
-                width: 60%;
-            }
-
-            .hive-info {
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-            }
     }
 `
 
-const QueenCard = ({ id}) => {
+const QueenCard = ({ queen, setActiveQueen }) => {
     const navigate = useNavigate();
     const { user } = useContext(UserContext);
-
-    function handleClick() {
-        navigate(`/hive/${id}`);
-    }
+    const { id } = queen
 
     return (
         <StyledQueenCard>
             <div 
                 className="main-queen"
-                onClick={handleClick}
             >
-                <section>
-                    <div>
-
-                    </div>
-                </section>  
             </div>
+                <p>{id}</p>
             <div className="btn-container">
-                <NavLink
-                    to={`/hive/${id}`}
-                    className="nav-link"
-                >
-                  <button onClick={()=>setActiveTab('edit_details')}>Edit Details</button>    
-                </NavLink>
+                <button onClick={()=>setActiveQueen(queen)}>Edit Details</button>
             </div>
         </StyledQueenCard>
     );
