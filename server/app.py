@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 
 import os
+import joblib
 import requests
-from experience_study import FateStudy, PriorStudy, PredictStudy
-from models import Queen, Hive, Inspection, User, Event, Signup
+import uuid
+import pandas as pd
+from models import Queen, Hive, Inspection, User, Event, Signup, ExplanatoryVariable, ModelHistory
 from config import app, db, api
 from datetime import datetime
 # from flask_migrate import Migrate
 from flask import request, session
 from flask_restful import  Resource
+from experience_study import create_model, add_predicted_values
 
 @app.route('/')
 def index():
@@ -413,7 +416,101 @@ class GetNearbyZipcodes(Resource):
             return response.json()
         else:
             return {'error': 'Failed to fetch ZIP codes'}, 500
+
+class FateStudy(Resource):
+
+    def get(self):
+        # Define the path where the model will be saved
+        model = ModelHistory.query.filter_by(end_date=None).first()
+
+        if not model:
+            return {'error': 'No model found.'}, 404
+
+        try:
+            # If the model exists, load it from the file
+            joblib_data = joblib.load(model.joblib_loc)
+            test_results = joblib_data['test_results']
+
+            return test_results.to_dict(), 200
+        
+        except Exception as e:
+            app.logger.error(f"Error while fetching the model from {model.joblib_loc}: {e}")
+            return {'error': 'An error occurred while fetching the model.'}, 500
     
+    def post(self):
+        joblib_loc = f'fate_study_{uuid.uuid4().hex}.joblib'
+
+        try:
+            # If the model does not exist, create it
+            create_model(joblib_loc)
+
+            # Save metadata for new model to database
+            new_study = ModelHistory(
+                joblib_loc = joblib_loc
+            )
+
+            # Add the new study to the database and commit
+            db.session.add(new_study)
+            db.session.commit()
+
+            return new_study.to_dict(), 201
+
+        except Exception as e:
+            app.logger.error(f"Error while training the model: {e}")
+            return {'error': str(e)}, 500
+
+class PriorStudy(Resource):
+
+    def patch(self):
+        model = ModelHistory.query.filter_by(end_date=None).first()
+
+        if not model:
+            return {'error': 'No prior study found'}, 404
+        
+        if model.end_date is not None:
+            return {'error': 'This study is already closed.'}, 400
+
+        setattr(model, 'end_date', datetime.now().date())
+
+        db.session.commit()
+
+        return model.to_dict(), 200
+
+class PredictStudy(Resource):
+
+    def post(self):
+        # Get the input data from the request
+        input_data = request.get_json()
+
+        if 'data' not in input_data:
+            return {'error': 'No input data provided.'}, 400
+        
+        # Convert input data to a DataFrame with one row (the input data will be a dict)
+        input_df = pd.DataFrame([input_data])
+
+        # Fetch the latest model (you can adjust this depending on your logic for "active" model)
+        model_record = ModelHistory.query.filter_by(end_date=None).first()
+
+        if not model_record:
+            return {'error': 'No active model found.'}, 404
+
+        try:
+            # Load the model, scaler, and explanatory variables from the joblib file
+            joblib_data = joblib.load(model_record.joblib_loc)
+            model = joblib_data['model']
+            scaler = joblib_data['scaler']
+            explanatory_variables = joblib_data['explanatory_variables']
+            
+            # Make predictions using the active model
+            predicted_values = add_predicted_values(explanatory_variables, input_df, model, scaler)
+
+            # Return the predictions
+            return {'predictions': predicted_values['predictions'].to_dict()}, 200
+
+        except Exception as e:
+            app.logger.error(f"Error while making predictions: {e}")
+            return {'error': 'An error occurred while processing the prediction request.'}, 500
+        
 api.add_resource(ClearSession, '/clear', endpoint='clear')
 api.add_resource(AccountSignup, '/account_signup', endpoint='account_signup')
 api.add_resource(CheckSession, '/check_session')
