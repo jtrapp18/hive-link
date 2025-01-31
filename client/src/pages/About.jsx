@@ -40,7 +40,7 @@ function About() {
             <h1>Hive Link</h1>
             <h3>Collaboration is the Heart of the Hive.</h3>
             <p>
-              As a new beekeeper, I have learned that having bees is easy, but keeping bees is another story…
+              One of the first lessons I learned as a beekeeper is that having bees is easy, but keeping bees is another story…
             </p>
             <p>
               Bees are sensitive to a variety of internal and external factors, and as such, recordkeeping is critical to understanding the patterns and needs of the hive. If we can create a network of beekeepers and pool our records together, we will be able to better assess which factors have the highest impact on hive health and use these findings to cultivate happier and healthier hives.

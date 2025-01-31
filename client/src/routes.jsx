@@ -9,6 +9,7 @@ import AccountDetails from "./pages/AccountDetails";
 import ErrorPage from "./pages/ErrorPage";
 import Login from './pages/Login';
 import Analysis from './pages/Analysis'
+import BeekeepingNews from "./pages/BeekeepingNews";
 
 const routes = [
   {
@@ -32,6 +33,10 @@ const routes = [
         path: "analysis",
         element: <Analysis />,
       },
+      {
+        path: "news",
+        element: <BeekeepingNews />,
+      },      
       {
         path: "events",
         element: <MyEvents />,

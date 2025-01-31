@@ -23,6 +23,13 @@ function NavLinks({ handleClick, setIsMenuOpen }) {
         About
       </StyledNavLink>
       <StyledNavLink
+        to="/news"
+        className="nav-link"
+        onClick={handleClick}
+      >
+        News
+      </StyledNavLink>
+      <StyledNavLink
         to="/events"
         className="nav-link"
         onClick={handleClick}

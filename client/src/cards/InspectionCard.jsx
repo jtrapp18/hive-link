@@ -16,8 +16,8 @@ const InspectionCard = ({ inspection, setActiveInspection}) => {
             >
                 <section className='img-section'>
                     <img
-                        src='images/queen_bee.png'
-                        alt='queen bee'
+                        src='images/leather_journal.png'
+                        alt='leather journal'
                     />
                 </section>
                 <section className='info-section'>
@@ -26,7 +26,7 @@ const InspectionCard = ({ inspection, setActiveInspection}) => {
                         <p>{dateChecked}</p>
                     </div>
                     <div>
-                        <label>Latitude: </label>
+                        <label>Fate: </label>
                         <p>{fate}</p>
                     </div>
                     <div>

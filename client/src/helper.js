@@ -160,6 +160,24 @@ function getNearbyZipcodes(zipcode, radius) {
     });
 }
 
+function getBeekeepingNews() {
+
+  // Make the API call to your Lambda (via API Gateway)
+  return fetch(`/api/beekeeping_news`)
+    .then(res => {
+      if (!res.ok) {
+        console.error(`Error fetching articles! Status: ${res.status}`);
+      }
+      if (res.status === 204) {
+        return null
+      }
+      return res.json();
+    })
+    .catch(err => {
+      console.error('Request failed', err);
+    });
+}
+
 // Utility to convert snake_case to camelCase
 const snakeToCamel = (obj) => {
   if (Array.isArray(obj)) {
@@ -201,5 +219,5 @@ const scrollToTop = () => {
   });
 };
 
-export {userLogout, getJSON, getJSONById, postJSONToDb, 
-  patchJSONToDb, deleteJSONFromDb, getNearbyZipcodes, snakeToCamel, scrollToTop};
+export {userLogout, getJSON, getJSONById, postJSONToDb, patchJSONToDb, deleteJSONFromDb, 
+  getNearbyZipcodes, getBeekeepingNews, snakeToCamel, scrollToTop};

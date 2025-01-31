@@ -5,7 +5,7 @@ import joblib
 import requests
 import uuid
 import pandas as pd
-from models import Queen, Hive, Inspection, User, Event, Signup, ExplanatoryVariable, ModelHistory
+from models import Queen, Hive, Inspection, HoneyPull, User, Event, Signup, ModelHistory
 from config import app, db, api
 from datetime import datetime
 # from flask_migrate import Migrate
@@ -393,22 +393,18 @@ class SignupById(Resource):
         db.session.commit()
         return {}, 204
 
-class GetNearbyZipcodes(Resource):
+class NearbyZipcodes(Resource):
 
     def get(self):
-        print('got response!')
         API_KEY = os.getenv("ZIPCODE_API_KEY")
 
         zip_code = request.args.get("zip")
         radius = request.args.get("radius", 5)
 
-        print(zip_code)
-
         if not zip_code:
             return {'error': 'ZIP code is required'}, 400
 
         url = f'https://www.zipcodeapi.com/rest/{API_KEY}/radius.json/{zip_code}/{radius}/mile'
-        print(url)
 
         response = requests.get(url)
 
@@ -417,6 +413,26 @@ class GetNearbyZipcodes(Resource):
         else:
             return {'error': 'Failed to fetch ZIP codes'}, 500
 
+class BeekeepingNews(Resource):
+
+    def get(self):
+        url = "https://www.googleapis.com/customsearch/v1"
+        params = {
+            "key": os.getenv("GSEARCH_API_KEY"),
+            "cx": os.getenv("GSEARCH_ENGINE_ID"),
+            "q": "beekeeping OR honeybee OR apiary",
+            "sort": "date",
+            "num": 10,
+            "lr": "lang_en"
+        }
+
+        response = requests.get(url, params=params)
+
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return {'error': 'Failed to fetch articles'}, 500
+        
 class FateStudy(Resource):
 
     def get(self):
@@ -531,7 +547,8 @@ api.add_resource(Events, '/events', endpoint='events')
 api.add_resource(EventById, '/events/<int:event_id>')
 api.add_resource(Signups, '/signups', endpoint='signups')
 api.add_resource(SignupById, '/signups/<int:signup_id>')
-api.add_resource(GetNearbyZipcodes, '/zipcodes')
+api.add_resource(NearbyZipcodes, '/zipcodes')
+api.add_resource(BeekeepingNews, '/beekeeping_news')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

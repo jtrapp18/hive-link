@@ -17,12 +17,13 @@ class Hive(db.Model, SerializerMixin):
 
     user = db.relationship('User', back_populates='hives')
     queens = db.relationship('Queen', back_populates='hive', cascade='all, delete-orphan')
+    honey_pulls = db.relationship('HoneyPull', back_populates='hive', cascade='all, delete-orphan')
 
     # Association proxy to get inspections for this hive through queens
     inspections = association_proxy('queens', 'inspection',
                                  creator=lambda inspection_obj: Queen(inspection=inspection_obj))
 
-    serialize_rules = ('-user', '-queens.hive', '-queens.inspections.queen', '-inspections.queen')
+    serialize_rules = ('-user', '-queens.hive', '-honey_pulls.hive', '-queens.inspections.queen', '-inspections.queen')
 
     def __repr__(self):
         return f'<Hive {self.id}, Date Added: {self.date_added}, Material: {self.material}>'

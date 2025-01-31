@@ -57,15 +57,16 @@ const HiveDetails = () => {
   return (
     <main>
       <h1>Hive Details</h1>
-      <HiveCardContainer className={shrinkCard ? "shrunken" : ""}>
+      <HiveCardContainer onClick={clickEdit} className={shrinkCard ? "shrunken" : ""}>
         <HiveCard
           {...hive}
         />
       </HiveCardContainer>
       <ButtonContainer>
-        <HexagonButton onClick={()=>clickOther('inspections')}>Inspections</HexagonButton>     
-        <HexagonButton onClick={()=>clickOther('queens')}>Queens</HexagonButton>    
         <HexagonButton onClick={clickEdit}>Edit Details</HexagonButton>
+        <HexagonButton onClick={()=>clickOther('queens')}>Queens</HexagonButton>
+        <HexagonButton onClick={()=>clickOther('inspections')}>Inspections</HexagonButton>
+        <HexagonButton onClick={()=>clickOther('queens')}>Honey Pulls</HexagonButton>
       </ButtonContainer>
       <HivePopup />
       {activeTab==='queens' &&

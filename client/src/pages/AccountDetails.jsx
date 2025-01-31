@@ -16,7 +16,7 @@ const AccountDetails = () => {
     email: user?.email || "",
     address: user?.address || "",
     phoneNumber: user?.phoneNumber || "",
-    
+    zipcode: user?.zipcode || "",
   });
 
   if (!user) return <Login errMessage="Must be logged in to view account details"/>
@@ -51,6 +51,10 @@ const AccountDetails = () => {
             <div>
               <label>Phone Number:</label>
               <p>{user.phoneNumber}</p>
+            </div>
+            <div>
+              <label>Zip Code:</label>
+              <p>{user.zipcode}</p>
             </div>
             <Button 
               type="button" 
@@ -95,6 +99,15 @@ const AccountDetails = () => {
                 type="text" 
                 name="phoneNumber" 
                 value={formData.phoneNumber} 
+                onChange={handleChange} 
+              />
+            </div>
+            <div>
+              <label>Zip Code:</label>
+              <input 
+                type="text" 
+                name="zipcode" 
+                value={formData.zipcode} 
                 onChange={handleChange} 
               />
             </div>

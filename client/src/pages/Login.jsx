@@ -30,11 +30,11 @@ function Login({errMessage}) {
         <>
           <SignupForm setShowConfirm={setShowConfirm}/>
           <p>Already have an account?</p>
-          <button
+          <Button
             onClick={()=>setShowSignUp(false)}
           >
             Log In
-          </button>
+          </Button>
         </>
       }
     </main>

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 const StyledPlot = styled(Plot)`
   width: 100%;
-  max-height: 50vh;
+  max-height: 40vh;
 `
 
 const TrendChart = ({ plotData, title, xInfo, yInfo }) => {
