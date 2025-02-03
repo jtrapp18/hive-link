@@ -44,7 +44,6 @@ const useCrudState = (setState, optionalFunc=null) => {
     
     const addToKeyInState = (itemId, arrayKey, newObj) => {
         setState(prevItems => {
-          console.log('prevState', prevItems)
             const updatedState = prevItems.map(item =>
               item.id === itemId
               ? { ...item, [arrayKey]: [...item[arrayKey], newObj] }
@@ -53,12 +52,32 @@ const useCrudState = (setState, optionalFunc=null) => {
 
             if (optionalFunc) {
               optionalFunc(updatedState)
-              console.log(updatedState)
             }
       
             return updatedState 
         })
     };
+
+    const updateKeyInState = (itemId, arrayKey, arrayId, newObj) => {
+      setState(prevItems => {
+          const updatedState = prevItems.map(item => {
+            if (item.id !== itemId) return item; // Keep unchanged items
+      
+            return {
+              ...item,
+              [arrayKey]: item[arrayKey].map(subItem =>
+                subItem.id === arrayId ? { ...subItem, ...newObj } : subItem
+              )
+            };
+          });
+
+          if (optionalFunc) {
+            optionalFunc(updatedState)
+          }
+    
+          return updatedState 
+      })
+  };
     
     const deleteFromKeyInState = (itemId, arrayKey, arrayId) => {
         setState(prevItems => {
@@ -76,7 +95,8 @@ const useCrudState = (setState, optionalFunc=null) => {
         })
     };
 
-    return {addToState, updateState, deleteFromState, addToKeyInState, deleteFromKeyInState}
+    return {addToState, updateState, deleteFromState, 
+      addToKeyInState, updateKeyInState, deleteFromKeyInState}
 }
 
 export default useCrudState;

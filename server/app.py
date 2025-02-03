@@ -148,8 +148,10 @@ class Hives(Resource):
                 user_id=data['user_id'],  # Link the hive to the user
                 date_added=data['date_added'],
                 material=data['material'],
-                location_lat=data['location_lat'],
-                location_long=data['location_long']
+                address_line=data['address_line'],
+                city=data['city'],
+                state=data['state'],
+                postal_code=data['postal_code']
             )
 
             # Add the new hive to the database and commit
@@ -192,6 +194,57 @@ class HiveById(Resource):
         if not hive:
             return {'error': 'Hive not found'}, 404
         db.session.delete(hive)
+        db.session.commit()
+        return {}, 204
+    
+class HoneyPulls(Resource):
+    def post(self):
+        try:
+            # Get data from the request
+            data = request.get_json()
+
+            # Create new honey pull
+            new_honey_pull = HoneyPull(
+                hive_id=data['hive_id'],  # Link the hive to the user
+                date_reset=data['date_reset'],
+                date_pulled=data['date_pulled'],
+                weight=data['weight']
+            )
+
+            # Add the new honey pull to the database and commit
+            db.session.add(new_honey_pull)
+            db.session.commit()
+
+            # Return the created hive as a response
+            return new_honey_pull.to_dict(), 201
+        except Exception as e:
+            db.session.rollback()
+            return {'error': f'An error occurred: {str(e)}'}, 500
+    
+class HoneyPullById(Resource):
+    def get(self, honey_pull_id):
+        honey_pull = HoneyPull.query.get(honey_pull_id)
+        if not honey_pull:
+            return {'error': 'Honey Pull not found'}, 404
+        return honey_pull.to_dict(), 200
+
+    def patch(self, honey_pull_id):
+        honey_pull = HoneyPull.query.get(honey_pull_id)
+        if not honey_pull:
+            return {'error': 'Honey Pull not found'}, 404
+        data = request.get_json()
+
+        for attr in data:
+            setattr(honey_pull, attr, data.get(attr))
+
+        db.session.commit()
+        return honey_pull.to_dict(), 200
+
+    def delete(self, honey_pull_id):
+        honey_pull = HoneyPull.query.get(honey_pull_id)
+        if not honey_pull:
+            return {'error': 'Honey Pull not found'}, 404
+        db.session.delete(honey_pull)
         db.session.commit()
         return {}, 204
 
@@ -573,6 +626,8 @@ api.add_resource(UserById, '/users/<int:user_id>')
 api.add_resource(Hives, '/hives', endpoint='hives')
 api.add_resource(HivesByUser, '/user_hives', endpoint='user_hives')
 api.add_resource(HiveById, '/hives/<int:hive_id>')
+api.add_resource(HoneyPulls, '/honey_pulls', endpoint='honey_pulls')
+api.add_resource(HoneyPullById, '/honey_pulls/<int:honey_pull_id>')
 api.add_resource(Inspections, '/inspections', endpoint='inspections')
 api.add_resource(InspectionById, '/inspections/<int:inspection_id>')
 api.add_resource(Queens, '/queens', endpoint='queens')

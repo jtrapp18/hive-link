@@ -35,13 +35,22 @@ const useCrudStateDB = (setState, dbKey, optionalFunc=null) => {
       });
     };
 
+    const updateKey = (itemId, arrayKey, arrayId, body) => {
+      patchJSONToDb(arrayKey, arrayId, body)
+      .then(json => {
+        const jsonTransformed = snakeToCamel(json)
+        updateKeyInState(itemId, arrayKey, jsonTransformed)
+      });
+    };
+
     const deleteFromKey = (itemId, arrayKey, arrayId) => {
       deleteJSONFromDb(arrayKey, arrayId)
       deleteFromKeyInState(itemId, arrayKey, arrayId)
     };
     
 
-  return {addItem, updateItem, deleteItem, addToKey, deleteFromKey}
+  return {addItem, updateItem, deleteItem, 
+    addToKey, updateKey, deleteFromKey}
 }
 
 export default useCrudStateDB;

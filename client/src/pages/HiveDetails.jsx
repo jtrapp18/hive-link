@@ -38,7 +38,7 @@ const HiveDetails = () => {
   const [activeTab, setActiveTab] = useState(null);
   const [shrinkCard, setShrinkCard] = useState(false);
   const {PopupForm: HivePopup, setActiveItem: setActiveHive, setShowNewForm: setShowNewHive} = usePopupForm(HiveForm);
-  const {PopupForm: QueenPopup, setActiveItem: setActiveQueen, setShowNewForm: setShowNewQueen} = usePopupForm(QueenForm);
+  // const {PopupForm: QueenPopup, setActiveItem: setActiveQueen, setShowNewForm: setShowNewQueen} = usePopupForm(QueenForm);
   const {PopupForm: HoneyPullPopup, setActiveItem: setActiveHoneyPull, setShowNewForm: setShowNewHoneyPull} = usePopupForm(HoneyForm);
   const {PopupForm: InspectionPopup, setActiveItem: setActiveInspection, setShowNewForm: setShowNewInspection} = usePopupForm(InspectionForm);
 
@@ -67,27 +67,10 @@ const HiveDetails = () => {
       </HiveCardContainer>
       <ButtonContainer>
         <HexagonButton onClick={clickEdit}>Edit Details</HexagonButton>
-        <HexagonButton onClick={()=>clickOther('queens')}>Queens</HexagonButton>
         <HexagonButton onClick={()=>clickOther('honeyPulls')}>Honey Pulls</HexagonButton>
         <HexagonButton onClick={()=>clickOther('inspections')}>Inspections</HexagonButton>
       </ButtonContainer>
       <HivePopup />
-      {activeTab==='queens' &&
-        <>
-          <h3>Queens</h3>
-          <CardContainer>
-            <Button onClick={()=>setShowNewQueen(true)}>Add Queen to Hive</Button>
-            <QueenPopup />
-            {hive.queens.map(queen=>
-                <QueenCard
-                    key={queen.id}
-                    queen={queen}
-                    setActiveQueen={setActiveQueen}
-                />
-            )}
-          </CardContainer>
-        </>
-      }
       {activeTab==='honeyPulls' &&
         <>
           <h3>Honey Pulls</h3>

@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import {useOutletContext} from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup"; // Validation library
@@ -6,11 +7,14 @@ import { UserContext } from "../context/userProvider";
 import { patchJSONToDb, postJSONToDb } from "../helper";
 import Error from "../styles/Error";
 import { StyledForm, StyledSubmit, Button } from "../MiscStyling";
+import useCrudStateDB from '../hooks/useCrudStateDB';
 
 const HoneyForm = ({ initObj }) => {
   const { user } = useContext(UserContext);
   const [isEditing, setIsEditing] = useState(!initObj);
   const { id: hiveId } = useParams(); // Get hive ID from URL
+  const { setHives } = useOutletContext();
+  const {addToKey, deleteFromKey} = useCrudStateDB(setHives, "hives");
 
   const initialValues = initObj
     ? {
@@ -26,13 +30,9 @@ const HoneyForm = ({ initObj }) => {
 
   const submitToDB = initObj
     ? (body) =>
-        patchJSONToDb("honey_pulls", initObj.id, body)
-          .then(() => setIsEditing(false))
-          .catch((err) => console.error(err))
+        updateKey(hive.id, "honeyPulls", initObj.id, body)
     : (body) =>
-        postJSONToDb("honey_pulls", body)
-          .then(() => setIsEditing(false))
-          .catch((err) => console.error(err));
+        addToKey(hive.id, "honeyPulls", body)
 
   // Validation schema matching backend
   const validationSchema = Yup.object({

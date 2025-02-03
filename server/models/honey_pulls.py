@@ -15,8 +15,7 @@ class HoneyPull(db.Model, SerializerMixin):
     hive = db.relationship('Hive', back_populates='honey_pulls')
     inspections = db.relationship('Inspection', back_populates='honey_pull', cascade='all, delete-orphan')  
 
-    # serialize_rules = ('-activity_surrounding', '-pests_surrounding', '-feeding', '-treatment', 
-                    #    '-stores', '-fate', '-local_bloom', '-weather_conditions', '-chalkbrood_presence', '-varroa_mites')
+    serialize_rules = ('-hive')
 
     def __repr__(self):
         return f'<Honey Pull {self.id}, Hive ID: {self.hive_id}, Date: {self.date_pulled}>'
