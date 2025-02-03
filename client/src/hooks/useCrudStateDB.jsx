@@ -1,15 +1,18 @@
 
 import { useState } from "react";
-import { postJSONToDb, patchJSONToDb, deleteJSONFromDb } from "../helper";
+import { snakeToCamel, postJSONToDb, patchJSONToDb, deleteJSONFromDb } from "../helper";
 import useCrudState from "./useCrudState";
+ 
+const useCrudStateDB = (setState, dbKey, optionalFunc=null) => {
 
-const useCrudStateDB = (setState, dbKey) => {
-
-    const {addToState, updateState, deleteFromState, addToKeyInState} = useCrudState(setState);
+    const {addToState, updateState, deleteFromState, addToKeyInState} = useCrudState(setState, optionalFunc);
 
     const addItem = (item) => {
       postJSONToDb(dbKey, item)
-      .then(addToState)
+      .then(json => {
+        const jsonTransformed = snakeToCamel(json)
+        addToState(jsonTransformed)
+      })
     };
     
     const updateItem = (itemId, item) => {
@@ -26,8 +29,9 @@ const useCrudStateDB = (setState, dbKey) => {
     const addToKey = (itemId, arrayKey, body) => {
       console.log(arrayKey, body)
       postJSONToDb(arrayKey, body)
-      .then(item => {
-        addToKeyInState(itemId, arrayKey, item)
+      .then(json => {
+        const jsonTransformed = snakeToCamel(json)
+        addToKeyInState(itemId, arrayKey, jsonTransformed)
       });
     };
     

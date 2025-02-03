@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup"; // Validation library
 import Error from "../styles/Error";
 import { StyledForm, StyledSubmit, Button } from '../MiscStyling';
- 
+
 const EventForm = ({ initObj, addEvent, updateEvent, cancelEvent }) => {
   const { user } = useContext(UserContext);
   const [isEditing, setIsEditing] = useState(!initObj);
