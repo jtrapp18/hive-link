@@ -14,7 +14,7 @@ class Signup(db.Model, SerializerMixin):
     user = db.relationship('User', back_populates='signups')
     event = db.relationship('Event', back_populates='signups')
 
-    serialize_rules = ('-user', '-event.signups')
+    serialize_rules = ('-user', '-event')
 
     def __repr__(self):
         return f'<Signup {self.id}, User ID: {self.user_id}, Event ID: {self.event_id}>'

@@ -23,6 +23,7 @@ const useCrudState = (setState, optionalFunc=null) => {
 
           if (optionalFunc) {
             optionalFunc(updatedState)
+            console.log(updatedState)
           }
 
           return updatedState
@@ -43,10 +44,28 @@ const useCrudState = (setState, optionalFunc=null) => {
     
     const addToKeyInState = (itemId, arrayKey, newObj) => {
         setState(prevItems => {
+          console.log('prevState', prevItems)
+            const updatedState = prevItems.map(item =>
+              item.id === itemId
+              ? { ...item, [arrayKey]: [...item[arrayKey], newObj] }
+              : item
+            )
+
+            if (optionalFunc) {
+              optionalFunc(updatedState)
+              console.log(updatedState)
+            }
+      
+            return updatedState 
+        })
+    };
+    
+    const deleteFromKeyInState = (itemId, arrayKey, arrayId) => {
+        setState(prevItems => {
             const updatedState = prevItems.map(item =>
                 item.id === itemId
-                ? { ...item, arrayKey: [...item[arrayKey], newObj] }
-                : item
+                ? { ...item, [arrayKey]: item[arrayKey].filter(arrayObj => arrayObj.id !== arrayId) }
+                : item              
             )
 
             if (optionalFunc) {
@@ -54,20 +73,10 @@ const useCrudState = (setState, optionalFunc=null) => {
             }
       
             return updatedState 
-            
         })
     };
-    
-    // const deleteFromKey = (itemId, arrayKey) => {
-    //     setState(prevItems =>
-    //         prevItems.map(item =>
-    //             item.id === itemId
-    //             ? { ...item, arrayKey: item[arrayKey].filter(arrayObj => arrayObj[userId] !== user.id) }
-    //             : item
-    //         ))
-    // };
 
-    return {addToState, updateState, deleteFromState, addToKeyInState}
+    return {addToState, updateState, deleteFromState, addToKeyInState, deleteFromKeyInState}
 }
 
 export default useCrudState;

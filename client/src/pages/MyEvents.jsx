@@ -66,9 +66,6 @@ const MyEvents = () => {
   const eventFiltering = (events) => {
 
     const eventsHosting = !user ? [] : events.filter((event) => event.userId === user.id)
-    console.log('events', events)
-    console.log('user', user)
-    console.log('hosting', eventsHosting)
     const  eventsAttending = !user ? [] : events.reduce((acc, event) => {
         if (event.signups.some(signup => signup.userId === user.id)) {
           acc.push(event);
@@ -97,12 +94,16 @@ const MyEvents = () => {
     getJSON("events").then((events) => {
       const eventsTransformed = snakeToCamel(events);
       setEvents(eventsTransformed);
-      eventFiltering(eventsTransformed, user);
+      eventFiltering(eventsTransformed);
     });
   }, []);
 
-  const {addItem, updateItem, deleteItem, addToKey} = useCrudStateDB(setEvents, "events", 
-    (events)=> eventFiltering(events, user));
+  useEffect(() => {
+    eventFiltering(events);
+  }, [user]);
+
+  const {addItem, updateItem, deleteItem, addToKey, deleteFromKey} = useCrudStateDB(setEvents, "events", 
+    eventFiltering);
 
   function apiZipcodeCall() {
     if (filterZip) {
@@ -128,15 +129,8 @@ const MyEvents = () => {
   
   const cancelSignup = (event) => {
     const eventId = event.id
-    deleteJSONFromDb("events", eventId)
-
-    setEvents(prevEvents =>
-      prevEvents.map(event =>
-        event.id === eventId
-          ? { ...event, signups: event.signups.filter(signup => signup.userId !== user.id) }
-          : event
-      )
-    )
+    const signup = event.signups.filter(signup=>signup.userId===user.id)[0]
+    deleteFromKey(eventId, "signups", signup.id)
   };
 
     const eventCardProps = {
