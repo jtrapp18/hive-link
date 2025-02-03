@@ -5,9 +5,11 @@ import {useOutletContext} from "react-router-dom";
 import HiveForm from '../forms/HiveForm'
 import InspectionCard from '../cards/InspectionCard'
 import QueenCard from '../cards/QueenCard'
+import HoneyCard from '../cards/HoneyCard'
 import { CardContainer } from '../MiscStyling';
 import usePopupForm from '../hooks/usePopupForm';
 import QueenForm from '../forms/QueenForm'
+import HoneyForm from '../forms/HoneyForm'
 import InspectionForm from '../forms/InspectionForm'
 import Loading from './Loading'
 import styled from 'styled-components';
@@ -37,11 +39,12 @@ const HiveDetails = () => {
   const [shrinkCard, setShrinkCard] = useState(false);
   const {PopupForm: HivePopup, setActiveItem: setActiveHive, setShowNewForm: setShowNewHive} = usePopupForm(HiveForm);
   const {PopupForm: QueenPopup, setActiveItem: setActiveQueen, setShowNewForm: setShowNewQueen} = usePopupForm(QueenForm);
+  const {PopupForm: HoneyPullPopup, setActiveItem: setActiveHoneyPull, setShowNewForm: setShowNewHoneyPull} = usePopupForm(HoneyForm);
   const {PopupForm: InspectionPopup, setActiveItem: setActiveInspection, setShowNewForm: setShowNewInspection} = usePopupForm(InspectionForm);
 
   if (!hive) {return <Loading />}
 
-  const inspections = hive.queens.reduce((inspections, queen) => [...inspections, ...queen.inspections], [])
+  const inspections = hive.honeyPulls.reduce((inspections, honeyPull) => [...inspections, ...honeyPull.inspections], [])
 
   const clickEdit = () => {
     setActiveTab('editDetails');
@@ -65,8 +68,8 @@ const HiveDetails = () => {
       <ButtonContainer>
         <HexagonButton onClick={clickEdit}>Edit Details</HexagonButton>
         <HexagonButton onClick={()=>clickOther('queens')}>Queens</HexagonButton>
+        <HexagonButton onClick={()=>clickOther('honeyPulls')}>Honey Pulls</HexagonButton>
         <HexagonButton onClick={()=>clickOther('inspections')}>Inspections</HexagonButton>
-        <HexagonButton onClick={()=>clickOther('queens')}>Honey Pulls</HexagonButton>
       </ButtonContainer>
       <HivePopup />
       {activeTab==='queens' &&
@@ -80,6 +83,22 @@ const HiveDetails = () => {
                     key={queen.id}
                     queen={queen}
                     setActiveQueen={setActiveQueen}
+                />
+            )}
+          </CardContainer>
+        </>
+      }
+      {activeTab==='honeyPulls' &&
+        <>
+          <h3>Honey Pulls</h3>
+          <Button onClick={()=>setShowNewHoneyPull(true)}>Add Honey Pull</Button>
+          <CardContainer>
+            <HoneyPullPopup />
+            {hive.honeyPulls.map(honeyPull=>
+                <HoneyCard
+                    key={honeyPull.id}
+                    honeyPull={honeyPull}
+                    setActiveHoneyPull={setActiveHoneyPull}
                 />
             )}
           </CardContainer>

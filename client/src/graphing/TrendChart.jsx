@@ -8,22 +8,31 @@ const StyledPlot = styled(Plot)`
   max-height: 40vh;
 `
 
-const TrendChart = ({ plotData, title, xInfo, yInfo }) => {
+const TrendChart = ({ data, xCol, yCol }) => {
+
+  const dates = Object.keys(data.antsPresent); // Assuming data is aligned by index (e.g., same number of entries)
+
+  const trace = {
+    x: Object.values(data[xCol]),
+    y: Object.values(data[yCol]),
+    type: 'scatter',
+    mode: 'lines+markers',
+    name: 'Ant Presence',
+  };
 
   const layout = {
-    title: title,
+    title: 'Ant Presence Over Time',
     xaxis: {
-      title: xInfo.title,
-      type: xInfo.type,  // This tells Plotly to treat the x-axis as time-based
+      title: 'Date',
     },
     yaxis: {
-      title: yInfo.title,  // Change depending on what metric you're plotting
+      title: 'Presence (0 = No, 1 = Yes)',
     },
   };
 
   return (
     <StyledPlot
-      data={plotData}
+      data={[trace]}
       layout={layout}
       config={{ responsive: true }}
     />

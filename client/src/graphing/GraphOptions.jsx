@@ -54,29 +54,15 @@ const StyledForm = styled.form`
 
 const GraphOptions = ({ filters, setFilters, target, setTarget, 
   explanatoryVar, setExplanatoryVar }) => {
-
-  const initialValues = {
-        userOnly: false,
-        somethingElse: false,
-        target: "fate",
-        explanatory: "dateChecked"
-      };
-
-  const formik = useFormik({
-    initialValues,
-    onSubmit: (values) => {
-      setFilters({user: values.userOnly});
-      setTarget({value: "Dead", variable: values.target})
-      setExplanatoryVar({table: "inspections", variable: values.explanatory})
-    }
-  });
+  
+  const { aggData } = useOutletContext();
 
   return (
-    <StyledForm onSubmit={formik.handleSubmit}>
+    <StyledForm>
         <h3>Graph options</h3>
         <div id="options-container">
-          <strong>Filters</strong>
-          <div id="filters">
+          {/* <strong>Filters</strong> */}
+          {/* <div id="filters">
             <div className="filter-input">
                 <label htmlFor="userOnly">User Only</label>
                 <input
@@ -87,19 +73,7 @@ const GraphOptions = ({ filters, setFilters, target, setTarget,
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                 />
-            </div>
-            <div className="filter-input">
-                <label htmlFor="somethingElse">User Only</label>
-                <input
-                    type="checkbox"
-                    id="somethingElse"
-                    name="somethingElse"
-                    value={formik.values.somethingElse}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                />
-              </div>
-          </div>
+            </div> */}
           <strong>Variable Selection</strong>
           <div id="variable-selection">
             <div className="form-input">
@@ -107,30 +81,27 @@ const GraphOptions = ({ filters, setFilters, target, setTarget,
                 <select
                     id="target"
                     name="target"
-                    value={formik.values.target}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
+                    value={target}
+                    onChange={(e) => setTarget(e.target.value)}
                 >
-                    <option value="" label="Select target" />
-                    <option value="Fate" label="Fate" />
+                    <option value="weight" label="Weight" />
                 </select>
             </div>
             <div className="form-input">
-                <label htmlFor="explanatory">Explanatory Variable</label>
+                <label htmlFor="explanatoryVar">Explanatory Variable</label>
                 <select
-                    id="explanatory"
-                    name="explanatory"
-                    value={formik.values.explanatory}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
+                    id="explanatoryVar"
+                    name="explanatoryVar"
+                    value={explanatoryVar}
+                    onChange={(e) => setExplanatoryVar(e.target.value)}
                 >
-                    <option value="" label="Select target" />
-                    <option value="dateChecked" label="dateChecked" />
+                    {Object.keys(aggData).map(key=>
+                      <option key={key} value={key} label={key} />
+                    )}
                 </select>
             </div>
           </div>
         </div>
-        <Button type="submit">Apply Filters</Button>
     </StyledForm>
   );
 };

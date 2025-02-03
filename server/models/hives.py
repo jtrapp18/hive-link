@@ -18,14 +18,14 @@ class Hive(db.Model, SerializerMixin):
     postal_code = db.Column(db.String(10), nullable=False)
 
     user = db.relationship('User', back_populates='hives')
-    queens = db.relationship('Queen', back_populates='hive', cascade='all, delete-orphan')
+    # queens = db.relationship('Queen', back_populates='hive', cascade='all, delete-orphan')
     honey_pulls = db.relationship('HoneyPull', back_populates='hive', cascade='all, delete-orphan')
 
-    # Association proxy to get inspections for this hive through queens
-    inspections = association_proxy('queens', 'inspection',
-                                 creator=lambda inspection_obj: Queen(inspection=inspection_obj))
+    # Association proxy to get inspections for this hive through honey pulls
+    inspections = association_proxy('honey_pulls', 'inspection',
+                                 creator=lambda inspection_obj: HoneyPull(inspection=inspection_obj))
 
-    serialize_rules = ('-user', '-queens.hive', '-honey_pulls.hive', '-queens.inspections.queen', '-inspections.queen')
+    serialize_rules = ('-user', '-honey_pulls.hive', '-honey_pulls.inspections.honey_pull', '-inspections.honey_pull')
 
     def __repr__(self):
         return f'<Hive {self.id}, Date Added: {self.date_added}, Material: {self.material}>'

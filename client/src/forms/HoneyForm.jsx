@@ -14,10 +14,12 @@ const HoneyForm = ({ initObj }) => {
 
   const initialValues = initObj
     ? {
+        dateReset: initObj.dateReset || "",
         datePulled: initObj.datePulled || "",
         weight: initObj.weight || "",
       }
     : {
+        dateReset: "",
         datePulled: "",
         weight: "",
       };
@@ -34,13 +36,16 @@ const HoneyForm = ({ initObj }) => {
 
   // Validation schema matching backend
   const validationSchema = Yup.object({
+    dateReset: Yup.date()
+      .required("Date reset is required")
+      .typeError("Invalid date format"),
     datePulled: Yup.date()
-      .required("Date pulled is required")
+      .nullable()
       .typeError("Invalid date format"),
     weight: Yup.number()
       .nullable()
-      .min(-10, "Weight cannot be below -10")
-      .max(50, "Weight cannot exceed 50")
+      .min(-10, "Weight cannot be below 0")
+      .max(50, "Weight cannot exceed 200")
       .typeError("Weight must be a number"),
   });
 
@@ -50,7 +55,7 @@ const HoneyForm = ({ initObj }) => {
     onSubmit: (values) => {
       const body = {
         ...values,
-        hiveId: hiveId, // Link honey pull to a hive
+        hiveId: hiveId,
         userId: user.id,
       };
 
@@ -65,6 +70,20 @@ const HoneyForm = ({ initObj }) => {
           <h3>{initObj ? "Update Honey Pull" : "Add New Honey Pull"}</h3>
 
           <div className="form-input">
+            <label htmlFor="dateReset">Start Date</label>
+            <input
+              type="date"
+              id="dateReset"
+              name="dateReset"
+              value={formik.values.dateReset}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            {formik.touched.datePulled && formik.errors.datePulled && (
+              <Error>{formik.errors.datePulled}</Error>
+            )}
+          </div>
+          <div className="form-input">
             <label htmlFor="datePulled">Date Pulled</label>
             <input
               type="date"
@@ -78,7 +97,6 @@ const HoneyForm = ({ initObj }) => {
               <Error>{formik.errors.datePulled}</Error>
             )}
           </div>
-
           <div className="form-input">
             <label htmlFor="weight">Weight (lbs)</label>
             <input
@@ -99,6 +117,10 @@ const HoneyForm = ({ initObj }) => {
       ) : (
         <StyledSubmit>
           <h1>Honey Pull Details</h1>
+          <div>
+            <label>Start Date: </label>
+            <p>{formik.values.dateReset}</p>
+          </div>
           <div>
             <label>Date Pulled: </label>
             <p>{formik.values.datePulled}</p>

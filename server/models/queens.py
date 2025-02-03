@@ -8,20 +8,20 @@ class Queen(db.Model, SerializerMixin):
     __tablename__ = 'queens'
 
     id = db.Column(db.Integer, primary_key=True)
-    hive_id = db.Column(db.Integer, db.ForeignKey('hives.id'), nullable=False)  # Link to hive
+    hive_id = db.Column(db.Integer, db.ForeignKey('hives.id'), nullable=False)
     status = db.Column(db.String(50), nullable=False)
     origin = db.Column(db.String(50), nullable=False)
     species = db.Column(db.String(50), nullable=False)
     date_introduced = db.Column(db.Date, nullable=False)
     active = db.Column(db.Boolean, nullable=False, default=True)
     
-    hive = db.relationship('Hive', back_populates='queens')
-    inspections = db.relationship('Inspection', back_populates='queen', cascade='all, delete-orphan')  
+    # hive = db.relationship('Hive', back_populates='queens')
+    # inspections = db.relationship('Inspection', back_populates='queen', cascade='all, delete-orphan')  
 
     # serialize_rules = ('-status', '-origin', '-type', '-date_introduced', '-replacement_cause')
 
     def __repr__(self):
-        return f'<Queen {self.id}, Status: {self.status}, Type: {self.type}, Origin: {self.origin}>'
+        return f'<Queen {self.id}, Status: {self.status}, Species: {self.species}, Origin: {self.origin}>'
 
     @validates('status')
     def validate_status(self, key, value):

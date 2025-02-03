@@ -18,14 +18,19 @@ const HiveForm = ({ initObj }) => {
     ? {
         dateAdded: initObj.dateAdded || "",
         material: initObj.material || "",
-        locationLat: initObj.locationLat || "",
-        locationLong: initObj.locationLong || "",
+        addressLine: initObj.addressLine || "",
+        city: initObj.city || "",
+        state: initObj.state || "",
+        postalCode: initObj.postalCode || "",
       }
     : {
         dateAdded: "",
         material: "",
-        locationLat: "",
-        locationLong: "",
+        city: "",
+        addressLine: "",
+        city: "",
+        state: "",
+        postalCode: "",
       };
 
       const submitToDB = initObj
@@ -42,14 +47,15 @@ const HiveForm = ({ initObj }) => {
     material: Yup.string()
       .oneOf(["Wood", "Polystyrene", "Other"], "Material must be Wood, Polystyrene, or Other")
       .required("Material is required"),
-    locationLat: Yup.number()
-      .required("Latitude is required")
-      .min(-90, "Latitude must be between -90 and 90")
-      .max(90, "Latitude must be between -90 and 90"),
-    locationLong: Yup.number()
-      .required("Longitude is required")
-      .min(-180, "Longitude must be between -180 and 180")
-      .max(180, "Longitude must be between -180 and 180"),
+    addressLine: Yup.string()
+      .required("Address is required"),
+    city: Yup.string()
+      .required("City is required"),
+    state: Yup.string()
+    .required("State is required"),
+    postalCode: Yup.string()
+      .matches(/^\d{5}(-\d{4})?$/, "Invalid zipcode format")
+      .required("Zipcode is required"),
   });
 
   const formik = useFormik({
@@ -105,37 +111,58 @@ const HiveForm = ({ initObj }) => {
               <Error>{formik.errors.material}</Error>
             )}
           </div>
-
           <div className="form-input">
-            <label htmlFor="locationLat">Latitude</label>
+            <label htmlFor="addressLine">Address Line</label>
             <input
-              type="number"
-              id="locationLat"
-              name="locationLat"
-              value={formik.values.locationLat}
+              id="addressLine"
+              name="addressLine"
+              value={formik.values.addressLine}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
-            {formik.touched.locationLat && formik.errors.locationLat && (
-              <Error>{formik.errors.locationLat}</Error>
+            {formik.touched.addressLine && formik.errors.addressLine && (
+              <Error>{formik.errors.addressLine}</Error>
             )}
           </div>
-
           <div className="form-input">
-            <label htmlFor="locationLong">Longitude</label>
+            <label htmlFor="city">City</label>
             <input
-              type="number"
-              id="locationLong"
-              name="locationLong"
-              value={formik.values.locationLong}
+              id="city"
+              name="city"
+              value={formik.values.city}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
-            {formik.touched.locationLong && formik.errors.locationLong && (
-              <Error>{formik.errors.locationLong}</Error>
+            {formik.touched.city && formik.errors.city && (
+              <Error>{formik.errors.city}</Error>
             )}
           </div>
-
+          <div className="form-input">
+            <label htmlFor="state">State</label>
+            <input
+              id="state"
+              name="state"
+              value={formik.values.state}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            {formik.touched.state && formik.errors.state && (
+              <Error>{formik.errors.state}</Error>
+            )}
+          </div>
+          <div className="form-input">
+            <label htmlFor="postalCode">Zip Code</label>
+            <input
+              id="postalCode"
+              name="postalCode"
+              value={formik.values.postalCode}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            {formik.touched.postalCode && formik.errors.postalCode && (
+              <Error>{formik.errors.postalCode}</Error>
+            )}
+          </div>
           <Button type="submit">{initObj ? "Update Hive" : "Add Hive"}</Button>
         </StyledForm>
       ) : (
@@ -150,12 +177,20 @@ const HiveForm = ({ initObj }) => {
               <p>{formik.values.material}</p>
             </div>
             <div>
-              <label>Latitude:</label>
-              <p>{formik.values.locationLat}</p>
+              <label>Address Line:</label>
+              <p>{formik.values.addressLine}</p>
             </div>
             <div>
-              <label>Longitude:</label>
-              <p>{formik.values.locationLong}</p>
+              <label>City:</label>
+              <p>{formik.values.city}</p>
+            </div>
+            <div>
+              <label>State:</label>
+              <p>{formik.values.state}</p>
+            </div>
+            <div>
+              <label>Zip Code:</label>
+              <p>{formik.values.postalCode}</p>
             </div>
             <Button 
               type="button" 

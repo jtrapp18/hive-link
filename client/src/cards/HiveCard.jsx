@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from '../context/userProvider';
 import { StyledCard } from '../MiscStyling';
 
-const HiveCard = ({ id,  dateAdded, material, locationLat, locationLong, queens, inspections, setActiveTab}) => {
+const HiveCard = ({ id,  dateAdded, material, city, state}) => {
     const navigate = useNavigate();
     const { user } = useContext(UserContext);
 
@@ -33,12 +33,12 @@ const HiveCard = ({ id,  dateAdded, material, locationLat, locationLong, queens,
                         <p>{dateAdded}</p>
                     </div>
                     <div>
-                        <label>Latitude: </label>
-                        <p>{locationLat}</p>
+                        <label>City: </label>
+                        <p>{city}</p>
                     </div>
                     <div>
-                        <label>Longitude: </label>
-                        <p>{locationLong}</p>
+                        <label>State: </label>
+                        <p>{state}</p>
                     </div>
                 </section>  
             </div>

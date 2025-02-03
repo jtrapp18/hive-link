@@ -15,7 +15,7 @@ class Inspection(db.Model, SerializerMixin):
 
 # metadata
     id = db.Column(db.Integer, primary_key=True)
-    queen_id = db.Column(db.Integer, db.ForeignKey('queens.id'), nullable=False)
+    # queen_id = db.Column(db.Integer, db.ForeignKey('queens.id'), nullable=False)
     honey_pull_id = db.Column(db.Integer, db.ForeignKey('honey_pulls.id'), nullable=False)
     date_checked = db.Column(db.Date, nullable=False)
     super_count = db.Column(db.Integer, nullable=True)
@@ -57,14 +57,14 @@ class Inspection(db.Model, SerializerMixin):
     stability_in_hive = db.Column(Enum(CountCategory), nullable=True)
     notes = db.Column(db.String(100), nullable=True)
 
-    queen = db.relationship('Queen', back_populates='inspections')
-    honey_pulls = db.relationship('HoneyPull', back_populates='inspections')
+    # queen = db.relationship('Queen', back_populates='inspections')
+    honey_pull = db.relationship('HoneyPull', back_populates='inspections')
 
     # serialize_rules = ('-activity_surrounding', '-pests_surrounding', '-feeding', '-treatment', 
                     #    '-stores', '-fate', '-local_bloom', '-weather_conditions', '-chalkbrood_presence', '-varroa_mites')
 
     def __repr__(self):
-        return f'<Inspection {self.id}, Hive ID: {self.hive_id}, Queen ID: {self.queen_id}, Date: {self.date_checked}>'
+        return f'<Inspection {self.id}, Hive ID: {self.hive_id}, Honey Pull ID: {self.honey_pull}, Date: {self.date_checked}>'
 
     @validates('date_checked')
     def validate_date_checked(self, key, value):

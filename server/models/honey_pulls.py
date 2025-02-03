@@ -9,7 +9,7 @@ class HoneyPull(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     hive_id = db.Column(db.Integer, db.ForeignKey('hives.id'), nullable=False)
     date_reset = db.Column(db.Date, nullable=False)
-    date_pulled = db.Column(db.Date, nullable=False)
+    date_pulled = db.Column(db.Date, nullable=True)
     weight = db.Column(db.Float, nullable=True)
 
     hive = db.relationship('Hive', back_populates='honey_pulls')
@@ -24,8 +24,12 @@ class HoneyPull(db.Model, SerializerMixin):
     @validates('date_reset', 'date_pulled')
     def validate_dates(self, key, value):
         """Validates that the date fields are not null and are valid dates."""
-        if value is None:
+        if key == 'date_reset' and value is None:
             raise ValueError(f'{key} is required.')
+        
+        # If the key is 'date_pulled' and the value is None, it's allowed (optional field)
+        if key == 'date_pulled' and value is None:
+            return value  # Allow None for optional field
         
         # Check if the value is a valid date object
         if isinstance(value, str):
@@ -39,12 +43,12 @@ class HoneyPull(db.Model, SerializerMixin):
             pass
         else:
             raise ValueError('Invalid date format. Must be a string or datetime object.')
-        
+
         return value
 
     @validates('weight')
     def validate_weight(self, key, value):
         """Validates weight is within a reasonable range."""
-        if value is not None and (value < -10 or value > 50):  # Adjust range as needed
-            raise ValueError("Weight must be between -10 and 50.")
+        if value is not None and (value < 0 or value > 200):  # Adjust range as needed
+            raise ValueError("Weight must be between 0 and 200.")
         return value

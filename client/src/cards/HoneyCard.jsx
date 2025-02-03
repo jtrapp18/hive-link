@@ -6,8 +6,8 @@ import { useOutletContext } from "react-router-dom";
 import { UserContext } from '../context/userProvider';
 import { StyledCard, Button } from '../MiscStyling';
 
-const HoneyCard = ({ honey_pull, setActiveHoneyPull }) => {
-    const { id, datePulled, weight } = honey_pull
+const HoneyCard = ({ honeyPull, setActiveHoneyPull }) => {
+    const { id, hiveId, dateReset, datePulled, weight } = honeyPull
 
     return (
         <StyledCard>
@@ -22,7 +22,11 @@ const HoneyCard = ({ honey_pull, setActiveHoneyPull }) => {
                 </section>
                 <section className='info-section'>
                     <div>
-                        <label>Date: </label>
+                        <label>Start Date: </label>
+                        <p>{dateReset}</p>
+                    </div>
+                    <div>
+                        <label>End Date: </label>
                         <p>{datePulled}</p>
                     </div>
                     <div>
@@ -32,8 +36,8 @@ const HoneyCard = ({ honey_pull, setActiveHoneyPull }) => {
                 </section>  
             </div>
             <div className="bottom-container">
-                <span>{`Honey Pull ID: ${id}`}</span>
-                <Button onClick={()=>setActiveHoneyPull(honey_pull)}>Edit Details</Button> 
+                <span>{`Honey Pull ID: ${id} | Hive ID: ${hiveId}`}</span>
+                <Button onClick={()=>setActiveHoneyPull(honeyPull)}>Edit Details</Button> 
             </div>
         </StyledCard>
     );

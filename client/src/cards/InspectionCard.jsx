@@ -7,7 +7,7 @@ import { StyledCard, Button } from '../MiscStyling';
 const InspectionCard = ({ inspection, setActiveInspection}) => {
     const navigate = useNavigate();
     const { user } = useContext(UserContext);
-    const { id, queenId, dateChecked, fate, chalkbroodPresence, varroaMites } = inspection
+    const { id, honeyPullId, dateChecked, fate, hasChalkbrood, hasTwistedLarvae, varroaMiteCount } = inspection
 
     return (
         <StyledCard>
@@ -30,17 +30,21 @@ const InspectionCard = ({ inspection, setActiveInspection}) => {
                         <p>{fate}</p>
                     </div>
                     <div>
+                        <label>Twisted Larvae Seen: </label>
+                        <p>{hasTwistedLarvae ? "Yes" : "No"}</p>
+                    </div>
+                    <div>
                         <label>Chalkbrood Seen: </label>
-                        <p>{chalkbroodPresence ? "Yes" : "No"}</p>
+                        <p>{hasChalkbrood ? "Yes" : "No"}</p>
                     </div>
                     <div>
                         <label>Varroa Mites Seen: </label>
-                        <p>{varroaMites ? "Yes" : "No"}</p>
+                        <p>{varroaMiteCount}</p>
                     </div>
                 </section>  
             </div>
             <div className="bottom-container">
-                <span>{`Inspection ID: ${id}`}</span>
+                <span>{`Inspection ID: ${id} | Honey Pull ID: ${honeyPullId}`}</span>
                 <Button onClick={()=>setActiveInspection(inspection)}>Edit Details</Button>    
             </div>
         </StyledCard>

@@ -9,6 +9,8 @@ function App() {
 
   const { setUser } = useContext(UserContext);
   const [hives, setHives] = useState([]);
+  const [aggData, setAggData] = useState([]);
+  const [aggDataUser, setAggDataUser] = useState([]);
 
   useEffect(() => {
     // auto-login
@@ -26,13 +28,27 @@ function App() {
     });
   }, []);
 
+  useEffect(() => {
+    getJSON("aggregate_data").then((data) => {
+      const dataTransformed = snakeToCamel(data);
+      setAggData(dataTransformed);
+    });
+
+    getJSON("aggregate_data_user").then((data) => {
+      const dataTransformed = snakeToCamel(data);
+      setAggDataUser(dataTransformed);
+    });
+  }, []);
+
   return (
     <>
       <Header/>
       <Outlet
           context={{
             hives,
-            setHives
+            setHives,
+            aggDataUser,
+            aggData
           }}
         />
       <Footer />

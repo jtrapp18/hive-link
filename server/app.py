@@ -526,7 +526,44 @@ class PredictStudy(Resource):
         except Exception as e:
             app.logger.error(f"Error while making predictions: {e}")
             return {'error': 'An error occurred while processing the prediction request.'}, 500
+
+class AggData(Resource):
+
+    def get(self):
+
+        import data_processing as dclean
+
+        hives = [hive.to_dict() for hive in Hive.query.all()]
+
+        try:      
+            hives_mod = dclean.rename_ids(hives)
+            df_normalized = dclean.normalize_data(hives_mod)
+            df_aggregated = dclean.aggregate_data(df_normalized)
+
+            return df_aggregated.to_dict(), 200
         
+        except Exception as e:
+            return {'error': 'An error occurred while aggregating the hive data.'}, 500
+
+class AggDataUser(Resource):
+
+    def get(self):
+
+        import data_processing as dclean
+        
+        user_id = session['user_id']
+        hives = [hive.to_dict() for hive in Hive.query.filter_by(user_id=user_id)]
+
+        try:
+            hives_mod = dclean.rename_ids(hives)
+            df_normalized = dclean.normalize_data(hives_mod)
+            df_aggregated = dclean.aggregate_data(df_normalized)
+
+            return df_aggregated.to_dict(), 200
+        
+        except Exception as e:
+            return {'error': 'An error occurred while aggregating the hive data.'}, 500
+
 api.add_resource(ClearSession, '/clear', endpoint='clear')
 api.add_resource(AccountSignup, '/account_signup', endpoint='account_signup')
 api.add_resource(CheckSession, '/check_session')
@@ -549,6 +586,8 @@ api.add_resource(Signups, '/signups', endpoint='signups')
 api.add_resource(SignupById, '/signups/<int:signup_id>')
 api.add_resource(NearbyZipcodes, '/zipcodes')
 api.add_resource(BeekeepingNews, '/beekeeping_news')
+api.add_resource(AggData, '/aggregate_data')
+api.add_resource(AggDataUser, '/aggregate_data_user')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

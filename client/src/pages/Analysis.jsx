@@ -4,55 +4,44 @@ import {useOutletContext} from "react-router-dom";
 import { prepareDataForPlot } from '../graphing/dataProcessing';
 import GraphOptions from '../graphing/GraphOptions';
 import styled from 'styled-components';
+import Loading from './Loading'
+import AnalysisGrid from '../graphing/AnalysisGrid';
+import { Button, HexagonButton } from '../MiscStyling';
 
-const StyledAnalysis = styled.div`
-    width: 600px;
-    max-width: 90vw;
-    display: flex;
-    flex-direction: column;
-    padding: 2%;
+const ButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 50px;
 `
 
 const Analysis = () => {
 
-    const { hives } = useOutletContext();    
-    const [filters, setFilters] = useState({
-        user: false
-      });
-    const [explanatoryVar, setExplanatoryVar] = useState({
-        table: '',
-        variable: ''
-    });
-    const [target, setTarget] = useState({
-        value: '',
-        variable: ''
-    });
+    const { aggData, aggDataUser } = useOutletContext();
+    const [activeTab, setActiveTab] = useState('userOnly');
 
-    const filteredHives = hives
-    const plotData = prepareDataForPlot(filteredHives, explanatoryVar, target);
-    const title = 'Hive Trend Over Time'
-    const xInfo = {title: 'Date', type: 'date'}
-    const yInfo = {title: 'Temperature (°C)'}
+
+    if (aggData.length===0) return <Loading />
 
     return (
         <main>
             <h1>Exploratory Analysis</h1>
-            <StyledAnalysis>
-                <TrendChart
-                    plotData={plotData}
-                    title={title}
-                    xInfo={xInfo}
-                    yInfo={yInfo}
+            <ButtonContainer>
+                <HexagonButton onClick={()=>setActiveTab('userOnly')}>My Stats</HexagonButton>                
+                <HexagonButton onClick={()=>setActiveTab('allUsers')}>All Stats</HexagonButton>
+            </ButtonContainer>
+            {activeTab==='userOnly' &&
+                <AnalysisGrid
+                    aggData={aggDataUser}
+                    label='My Hive Statistics'
                 />
-                <GraphOptions
-                    filters={filters}
-                    setFilters={setFilters}
-                    target={target}
-                    setTarget={setTarget}
-                    explanatoryVar={explanatoryVar}
-                    setExplanatoryVar={setExplanatoryVar}
+            }
+            {activeTab==='allUsers' &&
+                <AnalysisGrid
+                    aggData={aggData}
+                    label='Hive Statistics for All Users'
                 />
-            </StyledAnalysis>
+            }
         </main>
     );
 }
