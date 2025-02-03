@@ -8,10 +8,12 @@ class HoneyPull(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     hive_id = db.Column(db.Integer, db.ForeignKey('hives.id'), nullable=False)
+    date_reset = db.Column(db.Date, nullable=False)
     date_pulled = db.Column(db.Date, nullable=False)
     weight = db.Column(db.Float, nullable=True)
 
     hive = db.relationship('Hive', back_populates='honey_pulls')
+    inspections = db.relationship('Inspection', back_populates='honey_pull', cascade='all, delete-orphan')  
 
     # serialize_rules = ('-activity_surrounding', '-pests_surrounding', '-feeding', '-treatment', 
                     #    '-stores', '-fate', '-local_bloom', '-weather_conditions', '-chalkbrood_presence', '-varroa_mites')
@@ -19,11 +21,11 @@ class HoneyPull(db.Model, SerializerMixin):
     def __repr__(self):
         return f'<Honey Pull {self.id}, Hive ID: {self.hive_id}, Date: {self.date_pulled}>'
 
-    @validates('date_pulled')
-    def validate_date_pulled(self, key, value):
-        """Validates that the date_pulled field is not null and is a valid date."""
+    @validates('date_reset', 'date_pulled')
+    def validate_dates(self, key, value):
+        """Validates that the date fields are not null and are valid dates."""
         if value is None:
-            raise ValueError('Date added is required.')
+            raise ValueError(f'{key} is required.')
         
         # Check if the value is a valid date object
         if isinstance(value, str):

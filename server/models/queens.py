@@ -13,8 +13,8 @@ class Queen(db.Model, SerializerMixin):
     origin = db.Column(db.String(50), nullable=False)
     species = db.Column(db.String(50), nullable=False)
     date_introduced = db.Column(db.Date, nullable=False)
-    replacement_cause = db.Column(db.String(100), nullable=True)
- 
+    active = db.Column(db.Boolean, nullable=False, default=True)
+    
     hive = db.relationship('Hive', back_populates='queens')
     inspections = db.relationship('Inspection', back_populates='queen', cascade='all, delete-orphan')  
 
@@ -46,18 +46,3 @@ class Queen(db.Model, SerializerMixin):
         if value not in valid_species:
             raise ValueError(f"Species must be one of {', '.join(valid_species)}.")
         return value
-
-    @validates('replacement_cause')
-    def validate_replacement_cause(self, key, value):
-        """Validates the reason for replacement."""
-        valid_replacement_causes = ['supersedure', 'swarm', 'n/a']
-        if value and value not in valid_replacement_causes:
-            raise ValueError(f"Replacement cause must be one of {', '.join(valid_replacement_causes)}.")
-        return value
-
-    @hybrid_property
-    def is_replacement_due(self):
-        """Indicates whether the queen is due for replacement based on the cause."""
-        if self.replacement_cause in ['supersedure', 'swarm']:
-            return True
-        return False

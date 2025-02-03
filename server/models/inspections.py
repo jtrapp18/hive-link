@@ -13,30 +13,52 @@ class CountCategory(enum.Enum):
 class Inspection(db.Model, SerializerMixin):
     __tablename__ = 'inspections'
 
+# metadata
     id = db.Column(db.Integer, primary_key=True)
     queen_id = db.Column(db.Integer, db.ForeignKey('queens.id'), nullable=False)
+    honey_pull_id = db.Column(db.Integer, db.ForeignKey('honey_pulls.id'), nullable=False)
     date_checked = db.Column(db.Date, nullable=False)
-    temp = db.Column(db.Float, nullable=True)
-    activity_surrounding_hive = db.Column(db.String(50), nullable=True)
     super_count = db.Column(db.Integer, nullable=True)
     hive_body_count = db.Column(db.Integer, nullable=True)
-    egg_count = db.Column(Enum(CountCategory), nullable=True)
-    larvae_count = db.Column(Enum(CountCategory), nullable=True)
-    capped_brood = db.Column(Enum(CountCategory), nullable=True)
-    twisted_larvae = db.Column(db.Boolean, nullable=True)
-    pests_surrounding = db.Column(db.String(50), nullable=True)
-    stability_in_hive = db.Column(Enum(CountCategory), nullable=True)
-    feeding = db.Column(db.String(50), nullable=True)  # Type of food (e.g. Sugar Syrup, Pollen Patties)
-    treatment = db.Column(db.String(50), nullable=True)  # Type of treatment (e.g. Oxalic Acid)
-    stores = db.Column(Enum(CountCategory), nullable=True)  # Low, Medium, High
-    fate = db.Column(db.String(50), nullable=True)
-    local_bloom = db.Column(db.String(50), nullable=True)
+
+# hive conditions (can probably be grouped together)
+    bias = db.Column(db.Integer, nullable=False)
+
+# presence of pests
+    ants_present = db.Column(db.Boolean, nullable=False, default=False)
+    slugs_present = db.Column(db.Boolean, nullable=False, default=False)
+    hive_beetles_present = db.Column(db.Boolean, nullable=False, default=False)  # Small Hive Beetles (SHB)
+    wax_moths_present = db.Column(db.Boolean, nullable=False, default=False)  # Wax moth larvae damage
+    wasps_hornets_present = db.Column(db.Boolean, nullable=False, default=False)  # Predatory attacks on bees
+    mice_present = db.Column(db.Boolean, nullable=False, default=False)  # Winter hive intrusions
+    robber_bees_present = db.Column(db.Boolean, nullable=False, default=False)  # Signs of hive robbing
+
+# active hive management
+    num_pollen_patties = db.Column(db.Integer, nullable=False, default=0)
+    num_sugar_syrup_frames = db.Column(db.Integer, nullable=False, default=0)
+    oxalic_acid_dosage = db.Column(db.Float, nullable=False, default=0)
+    formic_acid_dosage = db.Column(db.Float, nullable=False, default=0)
+    thymol_dosage = db.Column(db.Float, nullable=False, default=0)
+    apistan_dosage = db.Column(db.Float, nullable=False, default=0)
+
+# weather
+    temp = db.Column(db.Float, nullable=True)    
     weather_conditions = db.Column(db.String(50), nullable=True)
     humidity = db.Column(db.Float, nullable=True)
-    chalkbrood_presence = db.Column(db.Boolean, nullable=True)
-    varroa_mites = db.Column(db.Boolean, nullable=True)
+
+# outcomes
+    fate = db.Column(db.String(50), nullable=False)
+    has_twisted_larvae = db.Column(db.Boolean, nullable=True)    
+    has_chalkbrood = db.Column(db.Boolean, nullable=True)
+    varroa_mite_count = db.Column(db.Float, nullable=True)
+
+# additional records for beekeeper
+    activity_surrounding_hive = db.Column(Enum(CountCategory), nullable=True)
+    stability_in_hive = db.Column(Enum(CountCategory), nullable=True)
+    notes = db.Column(db.String(100), nullable=True)
 
     queen = db.relationship('Queen', back_populates='inspections')
+    honey_pulls = db.relationship('HoneyPull', back_populates='inspections')
 
     # serialize_rules = ('-activity_surrounding', '-pests_surrounding', '-feeding', '-treatment', 
                     #    '-stores', '-fate', '-local_bloom', '-weather_conditions', '-chalkbrood_presence', '-varroa_mites')
@@ -65,29 +87,13 @@ class Inspection(db.Model, SerializerMixin):
         
         return value
 
-    @validates('local_bloom', 'activity_surrounding_hive', 'egg_count', 'larvae_count', 'capped_brood', 'stability_in_hive', 'stores')
+    @validates('activity_surrounding_hive', 'stability_in_hive')
     def validate_count_category(self, key, value):
         """Validates that the count categories are one of the valid options."""
         valid_categories = [CountCategory.LOW, CountCategory.MEDIUM, CountCategory.HIGH]
         # Convert value to uppercase to match database enum values
         if value.upper() not in [category.name for category in valid_categories]:
             raise ValueError(f"{key} must be one of {', '.join([category.value for category in valid_categories])}.")
-        return value
-    
-    @validates('feeding')
-    def validate_feeding(self, key, value):
-        """Validates the feeding type."""
-        valid_feedings = ['None', 'Sugar syrup', 'Pollen patty', 'Other']
-        if value not in valid_feedings:
-            raise ValueError(f"Feeding must be one of {', '.join(valid_feedings)}.")
-        return value
-
-    @validates('treatment')
-    def validate_treatment(self, key, value):
-        """Validates the treatment type."""
-        valid_treatments = ['None', 'Formic acid', 'Thymol', 'Oxalic acid', 'Other']
-        if value not in valid_treatments:
-            raise ValueError(f"Treatment must be one of {', '.join(valid_treatments)}.")
         return value
 
     @validates('fate')
@@ -104,14 +110,6 @@ class Inspection(db.Model, SerializerMixin):
         valid_weather = ['Sunny', 'Overcast', 'Rainy', 'Snowy', 'Windy']
         if value not in valid_weather:
             raise ValueError(f"Weather conditions must be one of {', '.join(valid_weather)}.")
-        return value
-
-    @validates('pests_surrounding')
-    def validate_pests_surrounding(self, key, value):
-        """Validates the pests surrounding the hive."""
-        valid_pests = ['None', 'Ants', 'Slugs', 'Mites', 'Other']
-        if value not in valid_pests:
-            raise ValueError(f"Pests surrounding must be one of {', '.join(valid_pests)} or None.")
         return value
 
     @validates('temp')

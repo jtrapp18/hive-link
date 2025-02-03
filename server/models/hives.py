@@ -12,8 +12,10 @@ class Hive(db.Model, SerializerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # Link to user
     date_added = db.Column(db.Date, nullable=False)
     material = db.Column(db.String(50), nullable=False)  # e.g. Wood, Polystyrene, Other
-    location_lat = db.Column(db.Float, nullable=False)  # Latitude of the hive
-    location_long = db.Column(db.Float, nullable=False)  # Longitude of the hive
+    address_line = db.Column(db.String(100), nullable=False)  # Full street address
+    city = db.Column(db.String(50), nullable=False)
+    state = db.Column(db.String(50), nullable=False)
+    postal_code = db.Column(db.String(10), nullable=False)
 
     user = db.relationship('User', back_populates='hives')
     queens = db.relationship('Queen', back_populates='hive', cascade='all, delete-orphan')
@@ -59,20 +61,30 @@ class Hive(db.Model, SerializerMixin):
         
         return value
 
-    @validates('location_lat')
-    def validate_location_lat(self, key, value):
-        """Validates that the latitude is not null."""
-        if value is None:
-            raise ValueError('Latitude is required.')
-        if not (-90 <= value <= 90):
-            raise ValueError('Latitude must be between -90 and 90 degrees.')
-        return value
+    @validates('postal_code')
+    def validate_postal_code(self, key, value):
+        """Validates postal code format."""
+        if isinstance(value, str) and value.isdigit() and len(value) in [5, 9]:
+            return value
+        raise ValueError("Invalid postal code format. Must be 5 or 9 digits.")
 
-    @validates('location_long')
-    def validate_location_long(self, key, value):
-        """Validates that the longitude is not null."""
-        if value is None:
-            raise ValueError('Longitude is required.')
-        if not (-180 <= value <= 180):
-            raise ValueError('Longitude must be between -180 and 180 degrees.')
-        return value
+    @validates('address_line')
+    def validate_address_line(self, key, value):
+        """Ensures address line is not empty and properly formatted."""
+        if not value:
+            raise ValueError('Address line is required.')
+        return value.strip()
+
+    @validates('city')
+    def validate_city(self, key, value):
+        """Ensures city name is non-empty and formatted properly."""
+        if not value:
+            raise ValueError('City is required.')
+        return value.strip()
+    
+    @validates('state')
+    def validate_state(self, key, value):
+        """Ensures state name is non-empty and properly formatted."""
+        if not value:
+            raise ValueError('State is required.')
+        return value.strip()
