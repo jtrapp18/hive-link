@@ -211,6 +211,8 @@ const StyledCard = styled.article`
     max-width: clamp(300px, 100%, 600px);
     padding: 10px;
     margin-bottom: 10px;
+    
+    border: ${props => props.active ? '1px solid white' : 'none'};
 
     .bottom-container {
         padding-top: 2%;

@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import styled from "styled-components";
+import {useOutletContext} from "react-router-dom";
 import { UserContext } from '../context/userProvider';
 import { useParams } from "react-router-dom";
 import { useFormik } from "formik";
@@ -12,8 +13,8 @@ const InspectionForm = ({ initObj, addInspection, updateInspection }) => {
   const { hives } = useOutletContext();
   const [isEditing, setIsEditing] = useState(!initObj);
 
-  const hive = hives.filter(hive=>hive.id===hiveId)[0]
-  const honeyPull = hive.honeyPulls.filter(honeyPull=>honeyPull.pullDate===null)[0]
+  const hive = hives.find(hive=>hive.id===parseInt(hiveId))
+  const honeyPull = hive.honeyPulls.find(honeyPull=>!honeyPull.pullDate)
 
   const submitToDB = initObj
     ? (body) =>

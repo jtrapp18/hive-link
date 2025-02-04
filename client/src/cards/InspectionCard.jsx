@@ -11,7 +11,7 @@ const InspectionCard = ({ inspection, setActiveInspection}) => {
 
     return (
         <StyledCard>
-            <div 
+            <div
                 className="main-container"
             >
                 <section className='img-section'>

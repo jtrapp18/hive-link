@@ -77,13 +77,15 @@ const HiveDetails = () => {
           <Button onClick={()=>setShowNewHoneyPull(true)}>Add Honey Pull</Button>
           <CardContainer>
             <HoneyPullPopup />
-            {hive.honeyPulls.map(honeyPull=>
-                <HoneyCard
-                    key={honeyPull.id}
-                    honeyPull={honeyPull}
-                    setActiveHoneyPull={setActiveHoneyPull}
-                />
-            )}
+            {hive.honeyPulls
+            .sort((a, b) => new Date(b.dateReset) - new Date(a.dateReset)) // Sort by date in descending order
+            .map((honeyPull) => (
+              <HoneyCard
+                key={honeyPull.id}
+                honeyPull={honeyPull}
+                setActiveHoneyPull={setActiveHoneyPull}
+              />
+            ))}
           </CardContainer>
         </>
       }
@@ -93,13 +95,15 @@ const HiveDetails = () => {
           <Button onClick={()=>setShowNewInspection(true)}>Add Hive Inspection</Button>
           <CardContainer>
             <InspectionPopup />
-            {inspections.map(inspection=>
-                <InspectionCard
-                    key={inspection.id}
-                    inspection={inspection}
-                    setActiveInspection={setActiveInspection}
-                />
-            )}
+            {inspections
+            .sort((a, b) => new Date(b.dateChecked) - new Date(a.dateChecked)) // Sort by date in descending order
+            .map((inspection) => (
+              <InspectionCard
+                key={inspection.id}
+                inspection={inspection}
+                setActiveInspection={setActiveInspection}
+              />
+            ))}
           </CardContainer>
         </>
       }

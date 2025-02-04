@@ -10,7 +10,7 @@ const HoneyCard = ({ honeyPull, setActiveHoneyPull }) => {
     const { id, hiveId, dateReset, datePulled, weight } = honeyPull
 
     return (
-        <StyledCard>
+        <StyledCard active={!datePulled}>
             <div 
                 className="main-container"
             >
