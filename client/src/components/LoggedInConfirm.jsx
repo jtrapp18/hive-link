@@ -33,7 +33,7 @@ function LoggedInConfirm({setShowConfirm}) {
       <p>{`Logged in as ${user.username}`}</p>
       <h1>{`Hello, ${user.firstName}!`}</h1>
       <img
-          src='images/welcome_bee.png'
+          src='images/bee_flying.png'
           alt='welcome bee'
         />
       <NavLink

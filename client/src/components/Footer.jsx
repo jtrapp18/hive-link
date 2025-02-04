@@ -8,20 +8,23 @@ const StyledFooter = styled.footer`
     align-items: center;
     background: black;
 
-    img {
-        // height: 250px;
+    div {
         width: 100%;
-        object-fit: cover;
-        object-position: top;
+        display: flex;
+        justify-content: end;
+    }
+
+    img {
+        width: 70%;
     }
     
     section {
         position: absolute;
         bottom: 0;
-        color: black;
+        color: white;
 
         p {
-            color: inherit;
+            color: var(--honey);
         }
     }
 `
@@ -30,10 +33,12 @@ const Footer = () => {
 
     return (
         <StyledFooter id="footer">
-            <img
-                src={'images/honeycomb_footer.png'}
-                alt='Honeycomb watercolor'
-            />
+            <div>
+                <img
+                    src={'images/orange_hexagons.png'}
+                    alt='Honeycomb watercolor'
+                />
+            </div>
             <section>
                 <p>Phase 5 Project</p>
             </section>

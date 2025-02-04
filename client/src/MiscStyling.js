@@ -238,7 +238,7 @@ const StyledCard = styled.article`
         cursor: pointer;
 
         &:hover {
-            background: #212D40;
+            background: var(--dark-gray);
             border-radius: 5px;
         }
 
@@ -275,5 +275,36 @@ const StyledCard = styled.article`
     }
 `
 
+const PlotContainer = styled.div`
+  width: 100%;
+  overflow: hidden;
+  background: black;
+
+  .gtitle {
+    text-decoration: underline;
+    font-weight: bold;
+    color: white;
+  }
+`;
+
+
+const StyledAnalysis = styled.div`
+    width: 95%;
+
+    display: flex;
+    flex-direction: column;
+    padding: 0 5% 0 5%;
+    justify-content: center;
+    align-items: center;
+
+    .graph-container {
+        display: grid;
+        width: 100%;
+        grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+        gap: 1%;
+    }
+`
+
 export { StyledMenuItem, StyledNavLink, StyledLink, StyledMain, StyledForm, 
-  StyledSubmit, StyledDeleted, CardContainer, BorderGlow, Button, HexagonButton, StyledCard }
+  StyledSubmit, StyledDeleted, CardContainer, BorderGlow, Button, 
+  HexagonButton, StyledCard, StyledAnalysis, PlotContainer }

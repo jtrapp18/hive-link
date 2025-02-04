@@ -3,7 +3,7 @@ import Plot from 'react-plotly.js';
 import styled from 'styled-components';
 import { PlotContainer } from '../MiscStyling';
 
-const TrendChart = ({ data, title, x, y }) => {
+const BarChart = ({ data, title, x, y }) => {
   // Prevent rendering if data is missing or empty
   if (!data || !data[x.dataCol] || !data[y.dataCol]) {
     return <p>Loading chart...</p>;
@@ -12,21 +12,25 @@ const TrendChart = ({ data, title, x, y }) => {
   const trace = {
     x: data[x.dataCol],
     y: data[y.dataCol],
-    type: 'scatter',
-    mode: 'markers',
+    type: 'bar',
     name: title,
   };
 
   const layout = {
     title: {
       text: title,
+      font: { color: 'black' }
     },
     xaxis: {
       title: { text: x.label },
+      font: { color: 'black' }
     },
     yaxis: {
       title: { text: y.label },
+      font: { color: 'black' }
     },
+    // paper_bgcolor: '#36454F',
+    // plot_bgcolor: 'rgba(255, 255, 255, .7)',
   };
 
   return (
@@ -41,4 +45,4 @@ const TrendChart = ({ data, title, x, y }) => {
   );
 };
 
-export default TrendChart;
+export default BarChart;
