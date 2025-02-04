@@ -55,7 +55,7 @@ const StyledForm = styled.form`
 const GraphOptions = ({ filters, setFilters, target, setTarget, 
   explanatoryVar, setExplanatoryVar }) => {
   
-  const { aggData } = useOutletContext();
+  const { graphData } = useOutletContext();
 
   return (
     <StyledForm>
@@ -95,7 +95,7 @@ const GraphOptions = ({ filters, setFilters, target, setTarget,
                     value={explanatoryVar}
                     onChange={(e) => setExplanatoryVar(e.target.value)}
                 >
-                    {Object.keys(aggData).map(key=>
+                    {Object.keys(graphData.aggregated).map(key=>
                       <option key={key} value={key} label={key} />
                     )}
                 </select>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import TrendChart from '../graphing/TrendChart';
 import {useOutletContext} from "react-router-dom";
 import { prepareDataForPlot } from '../graphing/dataProcessing';
@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import Loading from './Loading'
 import AnalysisGrid from '../graphing/AnalysisGrid';
 import { Button, HexagonButton } from '../MiscStyling';
+import { UserContext } from '../context/userProvider';
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -16,29 +17,28 @@ const ButtonContainer = styled.div`
 `
 
 const Analysis = () => {
+    const { user } = useContext(UserContext);
+    const { graphData, graphDataUser } = useOutletContext();
+    const [activeTab, setActiveTab] = useState('allUsers');
 
-    const { aggData, aggDataUser } = useOutletContext();
-    const [activeTab, setActiveTab] = useState('userOnly');
-
-
-    if (aggData.length===0) return <Loading />
+    if (graphData.length===0) return <Loading />
 
     return (
         <main>
             <h1>Exploratory Analysis</h1>
             <ButtonContainer>
-                <HexagonButton onClick={()=>setActiveTab('userOnly')}>My Stats</HexagonButton>                
-                <HexagonButton onClick={()=>setActiveTab('allUsers')}>All Stats</HexagonButton>
+                <HexagonButton onClick={()=>setActiveTab('userOnly')}>My Stats</HexagonButton>
+                {user && <HexagonButton onClick={()=>setActiveTab('allUsers')}>All Stats</HexagonButton>}
             </ButtonContainer>
             {activeTab==='userOnly' &&
                 <AnalysisGrid
-                    aggData={aggDataUser}
+                    graphData={graphDataUser}
                     label='My Hive Statistics'
                 />
             }
             {activeTab==='allUsers' &&
                 <AnalysisGrid
-                    aggData={aggData}
+                    graphData={graphData}
                     label='Hive Statistics for All Users'
                 />
             }

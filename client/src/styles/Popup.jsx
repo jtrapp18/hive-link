@@ -40,7 +40,7 @@ const Wrapper = styled.div`
 const Element = styled.div`
   margin: 0;
   background: black;
-  max-height: 85vh;
+  max-height: 75vh;
   overflow-y: scroll;
 `;
 

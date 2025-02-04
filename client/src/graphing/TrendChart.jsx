@@ -1,41 +1,53 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Plot from 'react-plotly.js';
-import { prepareDataForPlot } from './dataProcessing'
 import styled from 'styled-components';
 
-const StyledPlot = styled(Plot)`
+const PlotContainer = styled.div`
   width: 100%;
-  max-height: 40vh;
-`
+  overflow: hidden;
 
-const TrendChart = ({ data, xCol, yCol }) => {
+  .gtitle {
+    text-decoration: underline;
+    font-weight: bold;
+  }
+`;
 
-  const dates = Object.keys(data.antsPresent); // Assuming data is aligned by index (e.g., same number of entries)
+const TrendChart = ({ data, title, x, y }) => {
+  // Prevent rendering if data is missing or empty
+  if (!data || !data[x.dataCol] || !data[y.dataCol]) {
+    return <p>Loading chart...</p>;
+  }
 
   const trace = {
-    x: Object.values(data[xCol]),
-    y: Object.values(data[yCol]),
+    x: data[x.dataCol],
+    y: data[y.dataCol],
     type: 'scatter',
-    mode: 'lines+markers',
-    name: 'Ant Presence',
+    mode: 'markers',
+    name: title,
   };
 
   const layout = {
-    title: 'Ant Presence Over Time',
+    title: {
+      text: title,
+      font: { size: 18 },
+    },
     xaxis: {
-      title: 'Date',
+      title: { text: x.label },
     },
     yaxis: {
-      title: 'Presence (0 = No, 1 = Yes)',
+      title: { text: y.label },
     },
   };
 
   return (
-    <StyledPlot
-      data={[trace]}
-      layout={layout}
-      config={{ responsive: true }}
-    />
+    <PlotContainer>
+      <Plot
+        key={JSON.stringify(data)} // Ensures re-render when data updates
+        data={[trace]}
+        layout={layout}
+        config={{ responsive: true }}
+      />
+    </PlotContainer>
   );
 };
 

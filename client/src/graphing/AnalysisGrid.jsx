@@ -17,11 +17,11 @@ const StyledAnalysis = styled.div`
         display: grid;
         width: 100%;
         grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-        gap: 1%;    
+        gap: 1%;
     }
 `
-
-const AnalysisGrid = ({aggData, label}) => {
+ 
+const AnalysisGrid = ({graphData, label}) => {
 
     // const { hives, aggData } = useOutletContext();
     const [filters, setFilters] = useState({
@@ -30,32 +30,44 @@ const AnalysisGrid = ({aggData, label}) => {
     const [explanatoryVar, setExplanatoryVar] = useState('dateAdded');
     const [target, setTarget] = useState('temp');
 
-    if (aggData.length===0) return <Loading />
+    if (!graphData) return <Loading />
+
+    if (graphData.aggregated.length===0) return <Loading />
 
     return (
         <StyledAnalysis>
             <h3>{label}</h3>
             <div className='graph-container'>
                 <TrendChart
-                    data={aggData}
-                    xCol={explanatoryVar}
-                    yCol={target}
+                    data={graphData.aggregated}
+                    title={'Honey Production by Average Temperature'}
+                    x={{dataCol: 'temp', label: 'Average Temperature'}}
+                    y={{dataCol: 'weight', label: 'Honey Production (lbs)'}}
                 />
                 <TrendChart
-                    data={aggData}
-                    xCol={explanatoryVar}
-                    yCol={target}
+                    data={graphData.aggregated}
+                    title={'something'}
+                    x={{dataCol: explanatoryVar, label: 'something'}}
+                    y={{dataCol: target, label: 'something'}}
                 />
                 <TrendChart
-                    data={aggData}
-                    xCol={explanatoryVar}
-                    yCol={target}
+                    data={graphData.aggregated}
+                    title={'something'}
+                    x={{dataCol: explanatoryVar, label: 'something'}}
+                    y={{dataCol: target, label: 'something'}}
                 />
-                <div>
+                <TrendChart
+                    data={graphData.aggregated}
+                    title={'something'}
+                    x={{dataCol: explanatoryVar, label: 'something'}}
+                    y={{dataCol: target, label: 'something'}}
+                />
+                {/* <div>
                     <TrendChart
-                        data={aggData}
-                        xCol={explanatoryVar}
-                        yCol={target}
+                        data={graphData.aggregated}
+                        title={'something'}
+                        x={{dataCol: explanatoryVar, label: 'something'}}
+                        y={{dataCol: target, label: 'something'}}
                     />
                     <GraphOptions
                         filters={filters}
@@ -65,7 +77,7 @@ const AnalysisGrid = ({aggData, label}) => {
                         explanatoryVar={explanatoryVar}
                         setExplanatoryVar={setExplanatoryVar}
                     />
-                </div>
+                </div> */}
             </div>
         </StyledAnalysis>
     );

@@ -7,10 +7,10 @@ import { UserContext } from './context/userProvider';
 
 function App() {
 
-  const { setUser } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const [hives, setHives] = useState([]);
-  const [aggData, setAggData] = useState([]);
-  const [aggDataUser, setAggDataUser] = useState([]);
+  const [graphData, setGraphData] = useState([]);
+  const [graphDataUser, setGraphDataUser] = useState([]);
 
   useEffect(() => {
     // auto-login
@@ -29,16 +29,20 @@ function App() {
   }, []);
 
   useEffect(() => {
-    getJSON("aggregate_data").then((data) => {
+    getJSON("graph_data").then((data) => {
       const dataTransformed = snakeToCamel(data);
-      setAggData(dataTransformed);
-    });
-
-    getJSON("aggregate_data_user").then((data) => {
-      const dataTransformed = snakeToCamel(data);
-      setAggDataUser(dataTransformed);
+      setGraphData(dataTransformed);
     });
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      getJSON("graph_data_user").then((data) => {
+        const dataTransformed = snakeToCamel(data);
+        setGraphDataUser(dataTransformed);
+      });
+    }
+  }, [user]);
 
   return (
     <>
@@ -47,8 +51,8 @@ function App() {
           context={{
             hives,
             setHives,
-            aggDataUser,
-            aggData
+            graphDataUser,
+            graphData
           }}
         />
       <Footer />
