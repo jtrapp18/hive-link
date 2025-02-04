@@ -8,11 +8,11 @@ import Error from "../styles/Error";
 import { StyledForm, StyledSubmit, Button } from '../MiscStyling'
 import useCrudStateDB from '../hooks/useCrudStateDB';
 
-const HiveForm = ({ initObj }) => {
+const HiveForm = ({ initObj, handleAdd }) => {
   const { user } = useContext(UserContext);
   const [isEditing, setIsEditing] = useState(!initObj);
   const { setHives } = useOutletContext();
-  const {addItem, updateItem} = useCrudStateDB(setHives, "hives");
+  const {addItem, updateItem} = useCrudStateDB(setHives, "hives", null, handleAdd);
 
   const initialValues = initObj
     ? {
@@ -36,8 +36,9 @@ const HiveForm = ({ initObj }) => {
       const submitToDB = initObj
       ? (body) =>
         updateItem(initObj.id, body)
-      : (body) =>
+      : (body) => {
         addItem(body)
+      }
 
   // Validation schema
   const validationSchema = Yup.object({

@@ -1,66 +1,95 @@
-import React, { useContext, useState } from "react";
-import { postJSONToDb, patchJSONToDb } from '../helper';
+import React, { useContext, useState, useEffect } from "react";
 import styled from "styled-components";
 import { UserContext } from '../context/userProvider';
-import { useFormik } from 'formik';
-import * as Yup from 'yup'; // Import yup for validation
+import { useParams } from "react-router-dom";
+import { useFormik } from "formik";
+import * as Yup from "yup"; // Validation library
 import Error from "../styles/Error";
-import { StyledForm, StyledSubmit, Button } from "../MiscStyling"
+import { StyledForm, StyledSubmit, Button } from '../MiscStyling';
 
-const InspectionForm = ({ initObj }) => {
-  const { user } = useContext(UserContext);
+const InspectionForm = ({ initObj, addInspection, updateInspection }) => {
+  const { id: hiveId } = useParams(); // Get hive ID from URL
+  const { hives } = useOutletContext();
   const [isEditing, setIsEditing] = useState(!initObj);
 
-  const initialValues = initObj
-    ? {
-        dateChecked: initObj.dateChecked || "",
-        temp: initObj.origin || "",
-        activitySurroundingHive: initObj.activitySurroundingHive || "",
-        eggCount: initObj.eggCount || "",
-        larvaeCount: initObj.larvaeCount || "",
-        superCount: initObj.superCount || ""
-      }
-    : {
-        dateChecked: '',
-        temp: '',
-        activitySurroundingHive: '',
-        eggCount: '',
-        larvaeCount: '',
-        superCount: ''
-      };
+  const hive = hives.filter(hive=>hive.id===hiveId)[0]
+  const honeyPull = hive.honeyPulls.filter(honeyPull=>honeyPull.pullDate===null)[0]
 
   const submitToDB = initObj
     ? (body) =>
-        patchJSONToDb("inspections", initObj.id, body)
-          .then(() => setIsEditing(false))
-          .catch((err) => console.error(err))
-    : (body) =>
-        postJSONToDb("inspections", body)
-          .then(() => setIsEditing(false))
-          .catch((err) => console.error(err));
+      updateInspection(initObj.id, body)
+    : (body) => {
+      addInspection(body)
+    }
 
-  // Yup validation schema
+  // Validation schema
   const validationSchema = Yup.object({
-    dateChecked: Yup.date().required('Date is required').typeError('Invalid date format'),
-    temp: Yup.number().min(-10, 'Temperature must be between -10 and 50').max(50, 'Temperature must be between -10 and 50').nullable(),
-    activitySurroundingHive: Yup.string().max(50, 'Max length is 50 characters').nullable(),
-    eggCount: Yup.mixed().oneOf(['Low', 'Medium', 'High'], 'Egg count must be Low, Medium, or High').nullable(),
-    larvaeCount: Yup.mixed().oneOf(['Low', 'Medium', 'High'], 'Larvae count must be Low, Medium, or High').nullable(),
-    superCount: Yup.number().nullable(),
-    // Add other fields as necessary, applying the validation rules from your backend model
+    dateChecked: Yup.date().required("Date is required").typeError("Invalid date format"),
+    bias: Yup.number().required("Bias is required").min(0, "Must be a non-negative number"),
+    fate: Yup.string().required("Fate is required").oneOf(["Dead", "Swarmed", "Split", "Thriving"]),
+    activitySurroundingHive: Yup.string().oneOf(["Low", "Medium", "High"]),
+    stabilityInHive: Yup.string().oneOf(["Low", "Medium", "High"]),
+    temp: Yup.number().min(-10, "Temperature must be between -10 and 50").max(50, "Temperature must be between -10 and 50"),
+    humidity: Yup.number().min(0, "Humidity must be between 0 and 100").max(100, "Humidity must be between 0 and 100"),
+    weatherConditions: Yup.string().oneOf(["Sunny", "Overcast", "Rainy", "Snowy", "Windy"]),
+    antsPresent: Yup.boolean(),
+    slugsPresent: Yup.boolean(),
+    hiveBeetlesPresent: Yup.boolean(),
+    waxMothsPresent: Yup.boolean(),
+    waspsHornetsPresent: Yup.boolean(),
+    micePresent: Yup.boolean(),
+    robberBeesPresent: Yup.boolean(),
+    numPollenPatties: Yup.number().min(0, "Number of pollen patties cannot be negative"),
+    numSugarSyrupFrames: Yup.number().min(0, "Number of sugar syrup frames cannot be negative"),
+    oxalicAcidDosage: Yup.number().min(0, "Oxalic acid dosage cannot be negative"),
+    formicAcidDosage: Yup.number().min(0, "Formic acid dosage cannot be negative"),
+    thymolDosage: Yup.number().min(0, "Thymol dosage cannot be negative"),
+    apistanDosage: Yup.number().min(0, "Apistan dosage cannot be negative"),
+    hasTwistedLarvae: Yup.boolean(),
+    hasChalkbrood: Yup.boolean(),
+    varroaMiteCount: Yup.number().min(0, "Varroa mite count cannot be negative"),
   });
 
   const formik = useFormik({
-    initialValues,
+      enableReinitialize: true,
+      initialValues: initObj || { 
+      dateChecked: "", 
+      bias: "", 
+      fate: "", 
+      activitySurroundingHive: "", 
+      stabilityInHive: "",
+      temp: "", 
+      humidity: "", 
+      weatherConditions: "",
+      antsPresent: false,
+      slugsPresent: false,
+      hiveBeetlesPresent: false,
+      waxMothsPresent: false,
+      waspsHornetsPresent: false,
+      micePresent: false,
+      robberBeesPresent: false,
+      numPollenPatties: 0,
+      numSugarSyrupFrames: 0,
+      oxalicAcidDosage: 0,
+      formicAcidDosage: 0,
+      thymolDosage: 0,
+      apistanDosage: 0,
+      hasTwistedLarvae: false,
+      hasChalkbrood: false,
+      varroaMiteCount: 0,
+      activity_surrounding_hive: "",
+      stability_in_hive: "",
+      notes: ""
+    },
     validationSchema,
     onSubmit: (values) => {
       const body = {
         ...values,
-        userId: user.id,
-        queenId: queen.id,
+        honeyPullId: honeyPull.id,
       };
 
       submitToDB(body);
+      setIsEditing(false);
     },
   });
 
@@ -68,9 +97,10 @@ const InspectionForm = ({ initObj }) => {
     <div>
       {isEditing ? (
         <StyledForm onSubmit={formik.handleSubmit}>
-          <h3>{initObj ? "Update Inspection Details" : "Add New Inspection"}</h3>
+          <h3>{initObj ? "Inspection Details" : "Add New Inspection"}</h3>
+          <br />
           <div className="form-input">
-            <label htmlFor="dateChecked">Date of Inspection</label>
+            <label htmlFor="dateChecked">Date</label>
             <input
               type="date"
               id="dateChecked"
@@ -83,6 +113,80 @@ const InspectionForm = ({ initObj }) => {
               <Error>{formik.errors.dateChecked}</Error>
             )}
           </div>
+
+          <div className="form-input">
+            <label htmlFor="bias">Bias (Number of frames with brood)</label>
+            <input
+              type="number"
+              id="bias"
+              name="bias"
+              value={formik.values.bias}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            {formik.touched.bias && formik.errors.bias && (
+              <Error>{formik.errors.bias}</Error>
+            )}
+          </div>
+
+          <div className="form-input">
+            <label htmlFor="fate">Fate</label>
+            <select
+              id="fate"
+              name="fate"
+              value={formik.values.fate}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            >
+              <option value="">Select Fate</option>
+              <option value="Dead">Dead</option>
+              <option value="Swarmed">Swarmed</option>
+              <option value="Split">Split</option>
+              <option value="Thriving">Thriving</option>
+            </select>
+            {formik.touched.fate && formik.errors.fate && (
+              <Error>{formik.errors.fate}</Error>
+            )}
+          </div>
+
+          <div className="form-input">
+            <label htmlFor="activitySurroundingHive">Activity Surrounding Hive</label>
+            <select
+              id="activitySurroundingHive"
+              name="activitySurroundingHive"
+              value={formik.values.activitySurroundingHive}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            >
+              <option value="">Select Activity Level</option>
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+            {formik.touched.activitySurroundingHive && formik.errors.activitySurroundingHive && (
+              <Error>{formik.errors.activitySurroundingHive}</Error>
+            )}
+          </div>
+
+          <div className="form-input">
+            <label htmlFor="stabilityInHive">Stability in Hive</label>
+            <select
+              id="stabilityInHive"
+              name="stabilityInHive"
+              value={formik.values.stabilityInHive}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            >
+              <option value="">Select Stability</option>
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+            {formik.touched.stabilityInHive && formik.errors.stabilityInHive && (
+              <Error>{formik.errors.stabilityInHive}</Error>
+            )}
+          </div>
+
           <div className="form-input">
             <label htmlFor="temp">Temperature</label>
             <input
@@ -97,58 +201,308 @@ const InspectionForm = ({ initObj }) => {
               <Error>{formik.errors.temp}</Error>
             )}
           </div>
-          {/* Add more form inputs based on other inspection attributes */}
+
+          <div className="form-input">
+            <label htmlFor="humidity">Humidity</label>
+            <input
+              type="number"
+              id="humidity"
+              name="humidity"
+              value={formik.values.humidity}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            {formik.touched.humidity && formik.errors.humidity && (
+              <Error>{formik.errors.humidity}</Error>
+            )}
+          </div>
+
+          <div className="form-input">
+            <label htmlFor="weatherConditions">Weather Conditions</label>
+            <select
+              id="weatherConditions"
+              name="weatherConditions"
+              value={formik.values.weatherConditions}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            >
+              <option value="">Select Weather</option>
+              <option value="Sunny">Sunny</option>
+              <option value="Overcast">Overcast</option>
+              <option value="Rainy">Rainy</option>
+              <option value="Snowy">Snowy</option>
+              <option value="Windy">Windy</option>
+            </select>
+            {formik.touched.weatherConditions && formik.errors.weatherConditions && (
+              <Error>{formik.errors.weatherConditions}</Error>
+            )}
+          </div>
+          {/* Ants Present */}
+          <div className="form-input">
+            <label htmlFor="antsPresent">Ants Present</label>
+            <input
+              type="checkbox"
+              id="antsPresent"
+              name="antsPresent"
+              checked={formik.values.antsPresent}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+          </div>
+
+          {/* Slugs Present */}
+          <div className="form-input">
+            <label htmlFor="slugsPresent">Slugs Present</label>
+            <input
+              type="checkbox"
+              id="slugsPresent"
+              name="slugsPresent"
+              checked={formik.values.slugsPresent}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+          </div>
+
+          {/* Hive Beetles Present */}
+          <div className="form-input">
+            <label htmlFor="hiveBeetlesPresent">Hive Beetles Present</label>
+            <input
+              type="checkbox"
+              id="hiveBeetlesPresent"
+              name="hiveBeetlesPresent"
+              checked={formik.values.hiveBeetlesPresent}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+          </div>
+
+          {/* Wax Moths Present */}
+          <div className="form-input">
+            <label htmlFor="waxMothsPresent">Wax Moths Present</label>
+            <input
+              type="checkbox"
+              id="waxMothsPresent"
+              name="waxMothsPresent"
+              checked={formik.values.waxMothsPresent}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+          </div>
+
+          {/* Wasps/Hornets Present */}
+          <div className="form-input">
+            <label htmlFor="waspsHornetsPresent">Wasps/Hornets Present</label>
+            <input
+              type="checkbox"
+              id="waspsHornetsPresent"
+              name="waspsHornetsPresent"
+              checked={formik.values.waspsHornetsPresent}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+          </div>
+
+          {/* Mice Present */}
+          <div className="form-input">
+            <label htmlFor="micePresent">Mice Present</label>
+            <input
+              type="checkbox"
+              id="micePresent"
+              name="micePresent"
+              checked={formik.values.micePresent}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+          </div>
+
+          {/* Robber Bees Present */}
+          <div className="form-input">
+            <label htmlFor="robberBeesPresent">Robber Bees Present</label>
+            <input
+              type="checkbox"
+              id="robberBeesPresent"
+              name="robberBeesPresent"
+              checked={formik.values.robberBeesPresent}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+          </div>
+
+          {/* Pollen Patties */}
+          <div className="form-input">
+            <label htmlFor="numPollenPatties">Number of Pollen Patties</label>
+            <input
+              type="number"
+              id="numPollenPatties"
+              name="numPollenPatties"
+              value={formik.values.numPollenPatties}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+          </div>
+
+          {/* Sugar Syrup Frames */}
+          <div className="form-input">
+            <label htmlFor="numSugarSyrupFrames">Number of Sugar Syrup Frames</label>
+            <input
+              type="number"
+              id="numSugarSyrupFrames"
+              name="numSugarSyrupFrames"
+              value={formik.values.numSugarSyrupFrames}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+          </div>
+
+          {/* Oxalic Acid Dosage */}
+          <div className="form-input">
+            <label htmlFor="oxalicAcidDosage">Oxalic Acid Dosage (grams)</label>
+            <input
+              type="number"
+              id="oxalicAcidDosage"
+              name="oxalicAcidDosage"
+              value={formik.values.oxalicAcidDosage}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+          </div>
+
+          {/* Formic Acid Dosage */}
+          <div className="form-input">
+            <label htmlFor="formicAcidDosage">Formic Acid Dosage (grams)</label>
+            <input
+              type="number"
+              id="formicAcidDosage"
+              name="formicAcidDosage"
+              value={formik.values.formicAcidDosage}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+          </div>
+
+          {/* Thymol Dosage */}
+          <div className="form-input">
+            <label htmlFor="thymolDosage">Thymol Dosage (grams)</label>
+            <input
+              type="number"
+              id="thymolDosage"
+              name="thymolDosage"
+              value={formik.values.thymolDosage}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+          </div>
+
+          {/* Apistan Dosage */}
+          <div className="form-input">
+            <label htmlFor="apistanDosage">Apistan Dosage (grams)</label>
+            <input
+              type="number"
+              id="apistanDosage"
+              name="apistanDosage"
+              value={formik.values.apistanDosage}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+          </div>
+
+          {/* Twisted Larvae */}
+          <div className="form-input">
+            <label htmlFor="hasTwistedLarvae">Has Twisted Larvae?</label>
+            <input
+              type="checkbox"
+              id="hasTwistedLarvae"
+              name="hasTwistedLarvae"
+              checked={formik.values.hasTwistedLarvae}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+          </div>
+
+          {/* Chalkbrood Presence */}
+          <div className="form-input">
+            <label htmlFor="hasChalkbrood">Has Chalkbrood?</label>
+            <input
+              type="checkbox"
+              id="hasChalkbrood"
+              name="hasChalkbrood"
+              checked={formik.values.hasChalkbrood}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+          </div>
+
+          {/* Varroa Mite Count */}
+          <div className="form-input">
+            <label htmlFor="varroaMiteCount">Varroa Mite Count</label>
+            <input
+              type="number"
+              id="varroaMiteCount"
+              name="varroaMiteCount"
+              value={formik.values.varroaMiteCount}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+          </div>
+          {/* Activity Surrounding Hive (Enum Selection) */}
           <div className="form-input">
             <label htmlFor="activitySurroundingHive">Activity Surrounding Hive</label>
-            <input
-              type="text"
+            <select
               id="activitySurroundingHive"
               name="activitySurroundingHive"
               value={formik.values.activitySurroundingHive}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
+            >
+              <option value="">Select Activity</option>
+              {/* Add your Enum values here */}
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+          {/* Stability in Hive (Enum Selection) */}
+          <div className="form-input">
+            <label htmlFor="stabilityInHive">Stability in Hive</label>
+            <select
+              id="stabilityInHive"
+              name="stabilityInHive"
+              value={formik.values.stabilityInHive}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            >
+              <option value="">Select Stability</option>
+              {/* Add your Enum values here */}
+              <option value="Stable">Stable</option>
+              <option value="Unstable">Unstable</option>
+            </select>
+          </div>
+
+          {/* Notes */}
+          <div className="form-input">
+            <label htmlFor="notes">Notes</label>
+            <textarea
+              id="notes"
+              name="notes"
+              value={formik.values.notes}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             />
-            {formik.touched.activitySurroundingHive && formik.errors.activitySurroundingHive && (
-              <Error>{formik.errors.activitySurroundingHive}</Error>
-            )}
           </div>
-          <div>
-            <Button type="submit">{initObj ? "Update Inspection" : "Add Inspection"}</Button>
-          </div>
+
+          <Button type="submit">{initObj ? "Update Inspection" : "Add Inspection"}</Button>
+
         </StyledForm>
       ) : (
         <StyledSubmit>
-            <h1>Inspection Details</h1>
-            <div>
-                <label>Date Checked: </label>
-                <p>{formik.values.dateChecked}</p>
-            </div>
-            <div>
-                <label>Temperature: </label>
-                <p>{formik.values.temp}</p>
-            </div>
-            <div>
-                <label>Activity Around Hive: </label>
-                <p>{formik.values.activitySurroundingHive}</p>
-            </div>
-            <div>
-                <label>Egg Count: </label>
-                <p>{formik.values.eggCount}</p>
-            </div>
-            <div>
-                <label>Larvae Count: </label>
-                <p>{formik.values.larvaeCount}</p>
-            </div>
-            <div>
-                <label>Super Count: </label>
-                <p>{formik.values.superCount}</p>
-            </div>
-            <Button 
-              type="button" 
-              onClick={() => setIsEditing(true)}
-            >
-                Edit
-            </Button>
+          <h1>Inspection Details</h1>
+          <div>
+            <label>Fate:</label>
+            <p>{formik.values.fate}</p>
+          </div>
+          <Button type="button" onClick={() => setIsEditing(true)}>
+            Edit Inspection Details
+          </Button>
         </StyledSubmit>
       )}
     </div>

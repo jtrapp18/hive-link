@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { Button } from '../MiscStyling';
 import Error from "../styles/Error";
 import { StyledForm, StyledSubmit } from "../MiscStyling";
+import useCrudStateDB from '../hooks/useCrudStateDB';
 
 const AccountDetails = () => {
   const { user, setUser } = useContext(UserContext);

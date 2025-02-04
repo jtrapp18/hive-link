@@ -3,7 +3,7 @@ import { useState } from "react";
 import { snakeToCamel, postJSONToDb, patchJSONToDb, deleteJSONFromDb } from "../helper";
 import useCrudState from "./useCrudState";
  
-const useCrudStateDB = (setState, dbKey, optionalFunc=null) => {
+const useCrudStateDB = (setState, dbKey, optionalFunc=null, addFunc=null) => {
 
     const {addToState, updateState, deleteFromState, addToKeyInState, deleteFromKeyInState} = 
     useCrudState(setState, optionalFunc);
@@ -13,6 +13,10 @@ const useCrudStateDB = (setState, dbKey, optionalFunc=null) => {
       .then(json => {
         const jsonTransformed = snakeToCamel(json)
         addToState(jsonTransformed)
+
+        if (addFunc) {
+          addFunc(jsonTransformed)
+        }
       })
     };
     

@@ -258,25 +258,32 @@ class Inspections(Resource):
             new_inspection = Inspection(
                 hive_id=data['hive_id'],  # Link the inspection to a hive
                 date_checked=data['date_checked'],
-                temp=data.get('temp'),
-                activity_surrounding_hive=data.get('activity_surrounding_hive'),
                 super_count=data.get('super_count'),
                 hive_body_count=data.get('hive_body_count'),
-                egg_count=data.get('egg_count'),
-                larvae_count=data.get('larvae_count'),
-                capped_brood=data.get('capped_brood'),
-                twisted_larvae=data.get('twisted_larvae'),
-                pests_surrounding=data.get('pests_surrounding'),
-                stability_in_hive=data.get('stability_in_hive'),
-                feeding=data.get('feeding'),
-                treatment=data.get('treatment'),
-                stores=data.get('stores'),
-                fate=data.get('fate'),
-                local_bloom=data.get('local_bloom'),
+                bias=data.get('bias', 0),  # Default to 0 if not provided
+                ants_present=data.get('ants_present', False),
+                slugs_present=data.get('slugs_present', False),
+                hive_beetles_present=data.get('hive_beetles_present', False),
+                wax_moths_present=data.get('wax_moths_present', False),
+                wasps_hornets_present=data.get('wasps_hornets_present', False),
+                mice_present=data.get('mice_present', False),
+                robber_bees_present=data.get('robber_bees_present', False),
+                num_pollen_patties=data.get('num_pollen_patties', 0),
+                num_sugar_syrup_frames=data.get('num_sugar_syrup_frames', 0),
+                oxalic_acid_dosage=data.get('oxalic_acid_dosage', 0),
+                formic_acid_dosage=data.get('formic_acid_dosage', 0),
+                thymol_dosage=data.get('thymol_dosage', 0),
+                apistan_dosage=data.get('apistan_dosage', 0),
+                temp=data.get('temp'),
                 weather_conditions=data.get('weather_conditions'),
                 humidity=data.get('humidity'),
-                chalkbrood_presence=data.get('chalkbrood_presence'),
-                varroa_mites=data.get('varroa_mites')
+                fate=data.get('fate'),
+                has_twisted_larvae=data.get('has_twisted_larvae', False),
+                has_chalkbrood=data.get('has_chalkbrood', False),
+                varroa_mite_count=data.get('varroa_mite_count'),
+                activity_surrounding_hive=data.get('activity_surrounding_hive'),
+                stability_in_hive=data.get('stability_in_hive'),
+                notes=data.get('notes')
             )
 
             # Add the new inspection to the database and commit

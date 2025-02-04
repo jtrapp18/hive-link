@@ -2,7 +2,7 @@ import { useContext, useState, useEffect } from 'react';
 import {WindowWidthContext} from "../context/windowSize";
 import {UserContext} from '../context/userProvider'
 import Events from '../components/Events';
-import { getJSON, snakeToCamel, postJSONToDb, patchJSONToDb, deleteJSONFromDb, getNearbyZipcodes, userLogout } from '../helper';
+import { getJSON, snakeToCamel, getNearbyZipcodes } from '../helper';
 import { Button } from '../MiscStyling';
 import EventForm from '../forms/EventForm'
 import usePopupForm from '../hooks/usePopupForm'
@@ -103,7 +103,7 @@ const MyEvents = () => {
   }, [user]);
 
   const {addItem, updateItem, deleteItem, addToKey, deleteFromKey} = useCrudStateDB(setEvents, "events", 
-    eventFiltering);
+    eventFiltering, setActiveItem);
 
   function apiZipcodeCall() {
     if (filterZip) {
@@ -122,7 +122,6 @@ const MyEvents = () => {
     addItem(event);
     setShowNewForm(false);
     setShowDeleted(false);
-    setActiveItem(event);
   };
 
   const viewEvent = (event) => {
