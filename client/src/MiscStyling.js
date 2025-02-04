@@ -297,6 +297,13 @@ const StyledAnalysis = styled.div`
     justify-content: center;
     align-items: center;
 
+    // section {
+    //   h3 {
+    //     width: 100%;
+    //     border: 1px solid white;
+    //   }
+    // }
+
     .graph-container {
         display: grid;
         width: 100%;

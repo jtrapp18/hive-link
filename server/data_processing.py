@@ -61,20 +61,24 @@ def normalize_data(hives_mod):
     df_normalized = df_normalized.rename(columns={'id': 'inspection_id'})
     df_normalized = df_normalized.replace({np.nan: None})
 
+    categorical_columns = ['fate', 'activity_surrounding_hive', 'stability_in_hive']
+    df_normalized = pd.get_dummies(df_normalized, columns=categorical_columns, drop_first=True)
+
     return df_normalized
 
 def aggregate_data(df_normalized):
     df = df_normalized.copy()
-    df_filtered = df.loc[~df['date_pulled'].isna()]
+    df_filtered = df.loc[~df['date_pulled'].isna()].copy()
 
-    # Assuming df is your DataFrame
-    df_filtered['date_checked'] = pd.to_datetime(df_filtered['date_checked'])
     df_filtered['count'] = 1
+
+    # convert to datetime
+    df_filtered['date_checked'] = pd.to_datetime(df_filtered['date_checked'])
 
     # Add season column based on month of inspection
     df_filtered['season'] = df_filtered['date_checked'].dt.month % 12 // 3 + 1  # 1=Winter, 2=Spring, 3=Summer, 4=Fall
 
-    hive_columns = ['date_added', 'material', 'city', 'state']
+    hive_columns = ['hive_id', 'date_added', 'material', 'city', 'state']
     honey_pull_columns = ['honey_pull_id', 'date_reset', 'date_pulled', 'weight']
 
     # # Aggregating by honey_pull_id
@@ -87,9 +91,17 @@ def aggregate_data(df_normalized):
         'varroa_mite_count': 'mean',
         'humidity': 'mean',
         'ants_present': 'sum',
+        'slugs_present': 'sum',
         'hive_beetles_present': 'sum',
-        'has_chalkbrood': 'sum'
+        'wax_moths_present': 'sum',
+        'wasps_hornets_present': 'sum',
+        'mice_present': 'sum',
+        'robber_bees_present': 'sum',
+        'has_chalkbrood': 'sum',
+        'has_twisted_larvae': 'sum'
     }).reset_index()
+
+    df_aggregated['days'] = (pd.to_datetime(df_aggregated['date_pulled']) - pd.to_datetime(df_aggregated['date_reset'])).dt.days
 
     return df_aggregated
 

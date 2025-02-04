@@ -5,60 +5,67 @@ import BarChart from './BarChart';
 import {useOutletContext} from "react-router-dom";
 import GraphOptions from './GraphOptions';
 import styled from 'styled-components';
-import Loading from '../pages/Loading'
 import { StyledAnalysis } from '../MiscStyling';
- 
-const AnalysisHoney = ({graphData, label}) => {
+import GraphSectionHeader from '../styles/GraphSectionHeader'
 
-    if (!graphData) return <Loading />
+const AnalysisHoney = ({graphData, label, filters}) => {
 
-    if (graphData.length===0) return <Loading />
+    const isUserOnly = filters.includes('user')
+    const pieSplit = isUserOnly ? 'hiveId' : 'state'
+
+    if (!graphData) return <p>Loading...</p>
+
+    if (graphData.length===0) return <p>Loading...</p>
 
     return (
         <StyledAnalysis>
             <h3>{label}</h3>
             <br />
+            <GraphSectionHeader>Basic Statistics</GraphSectionHeader>
             <div className='graph-container'>
                 <PieChart
                     data={graphData}
-                    title={'Honey Production by Hive'}
-                    labelCol='hiveId'
+                    title={`Honey Production by ${pieSplit==='hiveId' ? 'Hive' : 'State'}`}
+                    labelCol={pieSplit}
                     valueCol='weight'
                 />
+            </div>
+            <GraphSectionHeader>Impact of Temperature</GraphSectionHeader>
+            <div className='graph-container'>
                 <TrendChart
                     data={graphData}
                     title={'Honey Production by Average Temperature'}
                     x={{dataCol: 'temp', label: 'Average Temperature'}}
                     y={{dataCol: 'weight', label: 'Honey Production (lbs)'}}
                 />
-                <BarChart
+                <TrendChart
                     data={graphData}
-                    title={'Honey Production by Average Temperature'}
-                    x={{dataCol: 'temp', label: 'Average Temperature'}}
+                    title={'Honey Production by Average Humidity'}
+                    x={{dataCol: 'humidity', label: 'Average Humidity'}}
                     y={{dataCol: 'weight', label: 'Honey Production (lbs)'}}
                 />
             </div>
-            <h3>Pests</h3>
+            <GraphSectionHeader>Impact of Pests</GraphSectionHeader>
             <div className='graph-container'>
-                {/* <TrendChart
+                <TrendChart
                     data={graphData}
                     title={'Impact of Ants on Honey Production'}
                     x={{dataCol: 'antsPresent', label: '# Inspections with Ants Present'}}
                     y={{dataCol: 'weight', label: 'Honey Production (lbs)'}}
-                /> */}
+                />
                 <TrendChart
                     data={graphData}
                     title={'Impact of Slugs on Honey Production'}
                     x={{dataCol: 'slugsPresent', label: '# Inspections with Slugs Present'}}
                     y={{dataCol: 'weight', label: 'Honey Production (lbs)'}}
                 />
-                {/* <TrendChart
+                <TrendChart
                     data={graphData}
                     title={'Impact of Hive Beetles on Honey Production'}
                     x={{dataCol: 'hiveBeetlesPresent', label: '# Inspections with Hive Beetles Present'}}
                     y={{dataCol: 'weight', label: 'Honey Production (lbs)'}}
-                /> */}
-                {/* <TrendChart
+                />
+                <TrendChart
                     data={graphData}
                     title={'Impact of Wax Moths on Honey Production'}
                     x={{dataCol: 'waxMothsPresent', label: '# Inspections with Wax Moths Present'}}
@@ -81,7 +88,7 @@ const AnalysisHoney = ({graphData, label}) => {
                     title={'Impact of Robber Bees on Honey Production'}
                     x={{dataCol: 'robberBeesPresent', label: '# Inspections with Robber Bees Present'}}
                     y={{dataCol: 'weight', label: 'Honey Production (lbs)'}}
-                /> */}
+                />
             </div>
         </StyledAnalysis>
     );

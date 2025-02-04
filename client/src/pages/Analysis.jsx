@@ -35,24 +35,28 @@ const Analysis = () => {
             </ButtonContainer>
             {activeTab==='honeyUser' &&
                 <AnalysisHoney
+                    filters={['user']}
                     graphData={graphDataUser.aggregated}
                     label='My Honey Statistics'
                 />
             }
             {activeTab==='healthUser' &&
                 <AnalysisHealth
+                    filters={['user']}
                     graphData={graphDataUser.normalized}
                     label='My Hive Statistics'
                 />
             }
             {activeTab==='honeyAll' &&
                 <AnalysisHoney
+                    filters={[]}
                     graphData={graphData.aggregated}
                     label='Honey Statistics for All Users'
                 />
             }
             {activeTab==='healthAll' &&
                 <AnalysisHealth
+                    filters={[]}
                     graphData={graphData.normalized}
                     label='Hive Statistics for All Users'
                 />

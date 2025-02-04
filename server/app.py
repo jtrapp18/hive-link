@@ -613,9 +613,7 @@ class GraphDataUser(Resource):
         hives = [hive.to_dict() for hive in Hive.query.filter_by(user_id=user_id)]
 
         try:
-            print('made it to this point')
             graphing_data = dclean.process_data_for_graphing(hives)
-            print(graphing_data)
 
             return graphing_data, 200
         
