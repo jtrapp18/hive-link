@@ -2,6 +2,7 @@ import experience_study as exp
 import os
 import joblib
 import pandas as pd
+import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network import MLPClassifier
@@ -58,16 +59,16 @@ def normalize_data(hives_mod):
 
     df_normalized = pd.merge(df_inspections, df_honey_pulls, on='honey_pull_id')
     df_normalized = df_normalized.rename(columns={'id': 'inspection_id'})
+    df_normalized = df_normalized.replace({np.nan: None})
 
     return df_normalized
 
 def aggregate_data(df_normalized):
     df = df_normalized.copy()
-    df_filtered = df_filtered.loc[~df['date_pulled'].isna()]
+    df_filtered = df.loc[~df['date_pulled'].isna()]
 
     # Assuming df is your DataFrame
     df_filtered['date_checked'] = pd.to_datetime(df_filtered['date_checked'])
-
     df_filtered['count'] = 1
 
     # Add season column based on month of inspection
