@@ -31,11 +31,38 @@ const AnalysisHealth = ({graphData, label}) => {
                     x={{dataCol: 'temp', label: 'Average Temperature'}}
                     y={{dataCol: 'varroaMiteCount', label: 'Varroa Mite Count'}}
                 />
-                <BarChart
+                <TrendChart
                     data={graphData}
-                    title={'Honey Production by Average Temperature'}
-                    x={{dataCol: 'temp', label: 'Average Temperature'}}
-                    y={{dataCol: 'weight', label: 'Honey Production (lbs)'}}
+                    title={'Varroa Mite Count over Time'}
+                    x={{dataCol: 'dateChecked', label: 'Inspection Date'}}
+                    y={{dataCol: 'varroaMiteCount', label: 'Varroa Mite Count'}}
+                />
+            </div>
+            <h3>Varroa Mite Treatments</h3>
+            <div className='graph-container'>
+                <TrendChart
+                    data={graphData}
+                    title={'Varroa Mite Count by Oxalic Acid Dosage'}
+                    x={{dataCol: 'oxalicAcidDosage', label: 'Oxalic Acid Dosage'}}
+                    y={{dataCol: 'varroaMiteCount', label: 'Varroa Mite Count'}}
+                />
+                <TrendChart
+                    data={graphData}
+                    title={'Varroa Mite Count by Formic Acid Dosage'}
+                    x={{dataCol: 'formicAcidDosage', label: 'Formic Acid Dosage'}}
+                    y={{dataCol: 'varroaMiteCount', label: 'Varroa Mite Count'}}
+                />
+                <TrendChart
+                    data={graphData}
+                    title={'Varroa Mite Count by Thymol Dosage'}
+                    x={{dataCol: 'thymolDosage', label: 'Thymol Dosage'}}
+                    y={{dataCol: 'varroaMiteCount', label: 'Varroa Mite Count'}}
+                />
+                <TrendChart
+                    data={graphData}
+                    title={'Varroa Mite Count by Apistan Dosage'}
+                    x={{dataCol: 'apistanDosage', label: 'Apistan Dosage'}}
+                    y={{dataCol: 'varroaMiteCount', label: 'Varroa Mite Count'}}
                 />
             </div>
         </StyledAnalysis>
