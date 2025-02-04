@@ -1,34 +1,21 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import styled from "styled-components";
 import { UserContext } from '../context/userProvider';
 import { useFormik } from "formik";
 import * as Yup from "yup"; // Validation library
 import Error from "../styles/Error";
-import { StyledForm, StyledSubmit, Button } from '../MiscStyling';
+import { StyledForm, StyledSubmit, StyledDeleted, Button } from '../MiscStyling';
 
-const EventForm = ({ initObj, addEvent, updateEvent, cancelEvent }) => {
+const EventForm = ({ initObj, addEvent, updateEvent, cancelEvent, deleted }) => {
   const { user } = useContext(UserContext);
   const [isEditing, setIsEditing] = useState(!initObj);
-
-  const initialValues = initObj
-    ? {
-        title: initObj.title || "",
-        eventDate: initObj.eventDate || "",
-        descr: initObj.descr || "",
-        zipcode: initObj.zipcode || "",
-      }
-    : {
-        title: "",
-        eventDate: "",
-        descr: "",
-        zipcode: "",
-      };
 
   const submitToDB = initObj
     ? (body) =>
       updateEvent(initObj.id, body)
-    : (body) =>
+    : (body) => {
       addEvent(body)
+    }
 
   // Validation schema
   const validationSchema = Yup.object({
@@ -42,18 +29,34 @@ const EventForm = ({ initObj, addEvent, updateEvent, cancelEvent }) => {
   });
 
   const formik = useFormik({
-    initialValues,
+    enableReinitialize: true, // Ensure Formik updates when initObj changes
+    initialValues: initObj || { title: "", eventDate: "", descr: "", zipcode: "" },
     validationSchema,
     onSubmit: (values) => {
+      console.log("submitting form");
       const body = {
         ...values,
         userId: user.id,
       };
-
+  
       submitToDB(body);
       setIsEditing(false);
-    }
+    },
   });
+
+  if (deleted) return  (
+    <StyledDeleted>
+      <h1>Event Cancelled</h1>
+      <div>
+        <label>Title:</label>
+        <p>{formik.values.title}</p>
+      </div>
+      <div>
+        <label>Event Date:</label>
+        <p>{formik.values.eventDate}</p>
+      </div>
+    </StyledDeleted>
+  )
 
   return (
     <div>

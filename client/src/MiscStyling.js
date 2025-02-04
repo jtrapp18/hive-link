@@ -99,6 +99,29 @@ const StyledSubmit = styled.div`
   }
 `
 
+const StyledDeleted = styled.div`
+  width: fit-content;
+  max-width: 90vw;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+
+  h1 {
+    padding: 5px;
+    border-radius: 200px;
+    text-align: center;
+    color: red;
+  }
+
+  div {
+    display: flex;
+    border-bottom: 2px dotted gray;
+    justify-content: space-between;
+    margin: 10px 5px 0px 5px;
+    padding: 20px 5px 0px 5px;
+  }
+`
+
 const CardContainer = styled.div`
   width: 100%;
   display: grid;
@@ -245,4 +268,4 @@ const StyledCard = styled.article`
 `
 
 export { StyledMenuItem, StyledNavLink, StyledLink, StyledMain, StyledForm, 
-  StyledSubmit, CardContainer, BorderGlow, Button, HexagonButton, StyledCard }
+  StyledSubmit, StyledDeleted, CardContainer, BorderGlow, Button, HexagonButton, StyledCard }

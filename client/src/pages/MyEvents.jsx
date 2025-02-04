@@ -57,7 +57,7 @@ const MyEvents = () => {
   const [eventsHosting, setEventsHosting] = useState([]);
   const [eventsAttending, setEventsAttending] = useState([]);
   const [eventsFiltered, setEventsFiltered] = useState([]);
-  const {PopupForm, setActiveItem, setShowNewForm} = usePopupForm(EventForm);
+  const {PopupForm, setActiveItem, setShowNewForm, setShowDeleted} = usePopupForm(EventForm);
   const [filterZip, setFilterZip] = useState(!user ? '' : user.zipcode);
   const [filterRadius, setFilterRadius] = useState(5);
   const [nearbyZipcodes, setNearbyZipcodes] = useState([]);
@@ -117,6 +117,24 @@ const MyEvents = () => {
       });
     }
   }
+
+  const addEvent = (event) => {
+    addItem(event);
+    setShowNewForm(false);
+    setShowDeleted(false);
+    setActiveItem(event);
+  };
+
+  const viewEvent = (event) => {
+    setActiveItem(event)
+    setShowNewForm(false);
+    setShowDeleted(false);
+  };
+
+  const cancelEvent = (event) => {
+    deleteItem(event);
+    setShowDeleted(true);
+  };
   
   const signupEvent = (event) => {
     const signup = ({
@@ -133,17 +151,17 @@ const MyEvents = () => {
     deleteFromKey(eventId, "signups", signup.id)
   };
 
-    const eventCardProps = {
-      host: {btnLabel: "Manage Event", handleEventBtn: setActiveItem},
-      attendee: {role: "Attending", btnLabel: "Remove Event", handleEventBtn: cancelSignup},
-      other: {role: "Other", btnLabel: "Sign Up", handleEventBtn: signupEvent},
-    }
+  const eventCardProps = {
+    host: {btnLabel: "Manage Event", handleEventBtn: viewEvent},
+    attendee: {role: "Attending", btnLabel: "Remove Event", handleEventBtn: cancelSignup},
+    other: {role: "Other", btnLabel: "Sign Up", handleEventBtn: signupEvent},
+  }
 
-    const clearFilters = () => {
-      setNearbyZipcodes([]);
-      setIsFiltered(false);
-      setFilterZip('');
-    }
+  const clearFilters = () => {
+    setNearbyZipcodes([]);
+    setIsFiltered(false);
+    setFilterZip('');
+  }
 
   if (!events) return <Loading />
 
@@ -153,9 +171,9 @@ const MyEvents = () => {
           <>
             <h1>My Events</h1>
             <Button onClick={()=>setShowNewForm(true)}>Host a New Event</Button>
-            <PopupForm 
-              addEvent={addItem} 
-              cancelEvent={deleteItem} 
+            <PopupForm
+              addEvent={addEvent}
+              cancelEvent={cancelEvent}
               updateEvent={updateItem}
             />
             <h3>. . . . . </h3>
