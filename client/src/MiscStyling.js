@@ -169,7 +169,6 @@ const HexagonButton = styled.button`
   position: relative;
   width: 100px;
   height: 58px;
-  background-color: var(--honey);
   border: none;
   cursor: pointer;
   outline: none;
@@ -181,6 +180,7 @@ const HexagonButton = styled.button`
   align-items: center;
   border-right: 1px solid black;
   border-left: 1px solid black;
+  background-color:  ${props=> props.isActive ? 'var(--yellow)' : 'var(--honey)'};
 
   &:hover {
     font-weight: bold;
@@ -197,12 +197,12 @@ const HexagonButton = styled.button`
 
   &:before {
     top: -29px;
-    border-bottom: 29px solid var(--honey);
+    border-bottom: 29px solid ${props=> props.isActive ? 'var(--yellow)' : 'var(--honey)'};
   }
 
   &:after {
     bottom: -29px;
-    border-top: 29px solid var(--honey);
+    border-top: 29px solid ${props=> props.isActive ? 'var(--yellow)' : 'var(--honey)'};
   }
 `;
 
@@ -213,6 +213,12 @@ const StyledCard = styled.article`
     margin-bottom: 10px;
     
     border: ${props => props.active ? '1px solid white' : 'none'};
+
+    .current-round {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
 
     .bottom-container {
         padding-top: 2%;

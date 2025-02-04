@@ -14,6 +14,7 @@ const HoneyCard = ({ honeyPull, setActiveHoneyPull }) => {
             <div 
                 className="main-container"
             >
+                {!datePulled && <span className='current-round'>🐝 Active Round</span>}
                 <section className='img-section'>
                     <img
                         src='images/dripping_honeycomb.png'
@@ -26,7 +27,7 @@ const HoneyCard = ({ honeyPull, setActiveHoneyPull }) => {
                         <p>{dateReset}</p>
                     </div>
                     <div>
-                        <label>End Date: </label>
+                        <label>Pull Date: </label>
                         <p>{datePulled}</p>
                     </div>
                     <div>

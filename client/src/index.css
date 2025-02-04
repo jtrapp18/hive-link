@@ -187,6 +187,10 @@ span {
   display: block;
 }
 
+div {
+  position: relative;
+}
+
 main {
   min-height: var(--size-body);
   padding: 20px;

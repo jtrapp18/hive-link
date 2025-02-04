@@ -9,14 +9,14 @@ import Error from "../styles/Error";
 import { StyledForm, StyledSubmit, Button } from '../MiscStyling';
 import FormFooter from "../components/FormFooter";
 
-const InspectionForm = ({ initObj, addInspection, updateInspection }) => {
+const InspectionForm = ({ initObj, addInspection, updateInspection, activeHoneyPull }) => {
   const { id: hiveId } = useParams(); // Get hive ID from URL
   const { hives } = useOutletContext();
   const [isEditing, setIsEditing] = useState(!initObj);
   const [step, setStep] = useState(1);
 
   const hive = hives.find(hive=>hive.id===parseInt(hiveId))
-  const honeyPull = hive.honeyPulls.find(honeyPull=>!honeyPull.pullDate)
+  // const honeyPull = hive.honeyPulls.find(honeyPull=>!honeyPull.pullDate)
 
   const nextStep = () => setStep((prev) => prev + 1);
   const prevStep = () => setStep((prev) => prev - 1);
@@ -91,7 +91,7 @@ const InspectionForm = ({ initObj, addInspection, updateInspection }) => {
     onSubmit: (values) => {
       const body = {
         ...values,
-        honeyPullId: honeyPull.id,
+        honeyPullId: activeHoneyPull.id,
       };
 
       submitToDB(body);
@@ -108,6 +108,7 @@ const InspectionForm = ({ initObj, addInspection, updateInspection }) => {
         {step === 1 && (
           <>
             <p>Basic Information</p>
+            <span>{`Honey Pull ID: ${activeHoneyPull.id}`}</span>
             <div className="form-input">
               <label htmlFor="dateChecked">Date</label>
               <input

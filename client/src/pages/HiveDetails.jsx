@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import HiveCard from '../cards/HiveCard';
+import { useNavigate } from 'react-router-dom';
 import {useOutletContext} from "react-router-dom";
 import HiveForm from '../forms/HiveForm'
 import InspectionCard from '../cards/InspectionCard'
@@ -14,6 +15,14 @@ import InspectionForm from '../forms/InspectionForm'
 import Loading from './Loading'
 import styled from 'styled-components';
 import { Button, HexagonButton } from '../MiscStyling';
+import HiveToast from '../styles/HiveToast';
+
+const BackButton = styled.button`
+  background: none;
+  color: #00A3FF;
+  text-decoration: underline;
+  border: none;
+`
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -34,9 +43,11 @@ const HiveCardContainer = styled.article`
 const HiveDetails = () => {
   const { id } = useParams(); // Get the ID from the URL
   const { hives } = useOutletContext();
+  const navigate = useNavigate();
   const hive = hives.find((hive) => hive.id === parseInt(id));
   const [activeTab, setActiveTab] = useState(null);
   const [shrinkCard, setShrinkCard] = useState(false);
+  const [showToast, setShowToast] = useState(null);
   const {PopupForm: HivePopup, setActiveItem: setActiveHive, setShowNewForm: setShowNewHive} = usePopupForm(HiveForm);
   // const {PopupForm: QueenPopup, setActiveItem: setActiveQueen, setShowNewForm: setShowNewQueen} = usePopupForm(QueenForm);
   const {PopupForm: HoneyPullPopup, setActiveItem: setActiveHoneyPull, setShowNewForm: setShowNewHoneyPull} = usePopupForm(HoneyForm);
@@ -45,6 +56,25 @@ const HiveDetails = () => {
   if (!hive) {return <Loading />}
 
   const inspections = hive.honeyPulls.reduce((inspections, honeyPull) => [...inspections, ...honeyPull.inspections], [])
+  const activeHoneyPull = hive.honeyPulls.find(honeyPull=>!honeyPull.pullDate)
+
+  const clickNewHoney = () => {
+    if (activeHoneyPull) {
+      setShowToast('honey');
+    }
+    else {
+      setShowNewHoneyPull(true);
+    }
+  }
+
+  const clickNewInspection = () => {
+    if (!activeHoneyPull) {
+      setShowToast('inspection');
+    }
+    else {
+      setShowNewInspection(true);
+    }
+  }
 
   const clickEdit = () => {
     setActiveTab('editDetails');
@@ -60,21 +90,31 @@ const HiveDetails = () => {
   return (
     <main>
       <h1>Hive Details</h1>
+      <BackButton onClick={() => navigate(-1)}>Back to Hives</BackButton>
       <HiveCardContainer onClick={clickEdit} className={shrinkCard ? "shrunken" : ""}>
         <HiveCard
           {...hive}
         />
       </HiveCardContainer>
       <ButtonContainer>
-        <HexagonButton onClick={clickEdit}>Edit Details</HexagonButton>
-        <HexagonButton onClick={()=>clickOther('honeyPulls')}>Honey Pulls</HexagonButton>
-        <HexagonButton onClick={()=>clickOther('inspections')}>Inspections</HexagonButton>
+        <HexagonButton isActive={activeTab==='editDetails'} onClick={clickEdit}>Edit Details</HexagonButton>
+        <HexagonButton isActive={activeTab==='honeyPulls'} onClick={()=>clickOther('honeyPulls')}>Honey Pulls</HexagonButton>
+        <HexagonButton isActive={activeTab==='inspections'} onClick={()=>clickOther('inspections')}>Inspections</HexagonButton>
       </ButtonContainer>
       <HivePopup />
       {activeTab==='honeyPulls' &&
         <>
           <h3>Honey Pulls</h3>
-          <Button onClick={()=>setShowNewHoneyPull(true)}>Add Honey Pull</Button>
+          <div>
+            <Button onClick={clickNewHoney}>Add Honey Pull</Button>
+            {showToast==='honey' && 
+              <HiveToast 
+                onClose={()=>setShowToast(null)}
+              >
+                Need to record pull date and weight of current round before adding new honey pull
+              </HiveToast>
+            }
+          </div>
           <CardContainer>
             <HoneyPullPopup />
             {hive.honeyPulls
@@ -92,9 +132,18 @@ const HiveDetails = () => {
       {activeTab==='inspections' &&
         <>
           <h3>Inspections</h3>
-          <Button onClick={()=>setShowNewInspection(true)}>Add Hive Inspection</Button>
+          <div>
+            <Button onClick={clickNewInspection}>Add Hive Inspection</Button>
+            {showToast==='inspection' && 
+              <HiveToast 
+                onClose={()=>setShowToast(null)}
+              >
+                Need to set up an active honey pull round before adding a new inspection
+              </HiveToast>
+            }
+          </div>
           <CardContainer>
-            <InspectionPopup />
+            <InspectionPopup activeHoneyPull={activeHoneyPull}/>
             {inspections
             .sort((a, b) => new Date(b.dateChecked) - new Date(a.dateChecked)) // Sort by date in descending order
             .map((inspection) => (
