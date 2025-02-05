@@ -13,9 +13,11 @@ const AnalysisHoney = ({graphData, label, filters}) => {
     const isUserOnly = filters.includes('user')
     const pieSplit = isUserOnly ? 'hiveId' : 'state'
 
-    if (!graphData) return <p>Loading...</p>
+    if (!graphData) return <h3>Loading...</h3>
 
-    if (graphData.length===0) return <p>Loading...</p>
+    if (graphData.length===0) return <h3>Loading...</h3>
+
+    if (graphData.weight.length===0) return <h3>No honey pulls have been recorded</h3>
 
     return (
         <StyledAnalysis>

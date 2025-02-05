@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Alert } from "../MiscStyling";
 
 function Error({ children }) {
   return (
@@ -15,17 +16,6 @@ const Wrapper = styled.div`
   align-items: center;
   gap: 8px;
   margin: 8px 0;
-`;
-
-const Alert = styled.span`
-  border: 1px solid red;
-  height: 30px;
-  width: 30px;
-  border-radius: 50%;
-  font-weight: bold;
-  display: grid;
-  place-content: center;
-  color: red;
 `;
 
 const Message = styled.p`

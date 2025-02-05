@@ -9,6 +9,7 @@ import AnalysisHoney from '../graphing/AnalysisHoney';
 import AnalysisHealth from '../graphing/AnalysisHealth';
 import { Button, HexagonButton } from '../MiscStyling';
 import { UserContext } from '../context/userProvider';
+import AnalysisUser from '../graphing/AnalysisUser';
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -28,11 +29,15 @@ const Analysis = () => {
         <main>
             <h1>Hive Analysis</h1>
             <ButtonContainer>
+                {user && <HexagonButton isActive={activeTab==='hivesUser'} onClick={()=>setActiveTab('hivesUser')}>My Hives</HexagonButton>}
                 {user && <HexagonButton isActive={activeTab==='honeyUser'} onClick={()=>setActiveTab('honeyUser')}>My Honey</HexagonButton>}
                 {user && <HexagonButton isActive={activeTab==='healthUser'} onClick={()=>setActiveTab('healthUser')}>Hive Health</HexagonButton>}                
                 <HexagonButton isActive={activeTab==='honeyAll'} onClick={()=>setActiveTab('honeyAll')}>Honey Trends</HexagonButton>
                 <HexagonButton isActive={activeTab==='healthAll'} onClick={()=>setActiveTab('healthAll')}>Health Trends</HexagonButton>
             </ButtonContainer>
+            {activeTab==='hivesUser' &&
+                <AnalysisUser />
+            }
             {activeTab==='honeyUser' &&
                 <AnalysisHoney
                     filters={['user']}

@@ -312,6 +312,17 @@ const StyledAnalysis = styled.div`
     }
 `
 
+const Alert = styled.span`
+  border: 1px solid red;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  font-weight: bold;
+  display: grid;
+  place-content: center;
+  color: red;
+`;
+
 export { StyledMenuItem, StyledNavLink, StyledLink, StyledMain, StyledForm, 
   StyledSubmit, StyledDeleted, CardContainer, BorderGlow, Button, 
-  HexagonButton, StyledCard, StyledAnalysis, PlotContainer }
+  HexagonButton, StyledCard, StyledAnalysis, PlotContainer, Alert }

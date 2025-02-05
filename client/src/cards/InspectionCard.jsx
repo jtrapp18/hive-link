@@ -38,7 +38,7 @@ const InspectionCard = ({ inspection, setActiveInspection}) => {
                         <p>{hasChalkbrood ? "Yes" : "No"}</p>
                     </div>
                     <div>
-                        <label>Varroa Mites Seen: </label>
+                        <label>Varroa Mite Count: </label>
                         <p>{varroaMiteCount}</p>
                     </div>
                 </section>  

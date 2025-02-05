@@ -16,7 +16,6 @@ const InspectionForm = ({ initObj, addInspection, updateInspection, activeHoneyP
   const [step, setStep] = useState(1);
 
   const hive = hives.find(hive=>hive.id===parseInt(hiveId))
-  // const honeyPull = hive.honeyPulls.find(honeyPull=>!honeyPull.pullDate)
 
   const nextStep = () => setStep((prev) => prev + 1);
   const prevStep = () => setStep((prev) => prev - 1);
@@ -32,6 +31,8 @@ const InspectionForm = ({ initObj, addInspection, updateInspection, activeHoneyP
   const validationSchema = Yup.object({
     dateChecked: Yup.date().required("Date is required").typeError("Invalid date format"),
     bias: Yup.number().required("Bias is required").min(0, "Must be a non-negative number"),
+    hasEggs: Yup.boolean(),
+    hasLarvae: Yup.boolean(),    
     fate: Yup.string().required("Fate is required").oneOf(["Dead", "Swarmed", "Split", "Thriving"]),
     activitySurroundingHive: Yup.string().oneOf(["Low", "Medium", "High"]),
     stabilityInHive: Yup.string().oneOf(["Low", "Medium", "High"]),
@@ -61,6 +62,8 @@ const InspectionForm = ({ initObj, addInspection, updateInspection, activeHoneyP
       initialValues: initObj || { 
       dateChecked: "", 
       bias: "", 
+      hasEggs: false,      
+      hasLarvae: false,
       fate: "", 
       activitySurroundingHive: "", 
       stabilityInHive: "",
@@ -142,6 +145,28 @@ const InspectionForm = ({ initObj, addInspection, updateInspection, activeHoneyP
               {formik.touched.bias && formik.errors.bias && (
                 <Error>{formik.errors.bias}</Error>
               )}
+            </div>
+            <div className="form-input">
+              <label htmlFor="hasEggs">Eggs Present</label>
+              <input
+                type="checkbox"
+                id="hasEggs"
+                name="hasEggs"
+                checked={formik.values.hasEggs}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+            </div>
+            <div className="form-input">
+              <label htmlFor="hasLarvae">Larva Present</label>
+              <input
+                type="checkbox"
+                id="hasLarvae"
+                name="hasLarvae"
+                checked={formik.values.hasLarvae}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
             </div>
           </>
         )}

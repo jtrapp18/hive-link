@@ -13,6 +13,8 @@ const AnalysisHealth = ({graphData, label, filters}) => {
 
     if (graphData.length===0) return <p>Loading...</p>
 
+    if (graphData.dateChecked.length===0) return <h3>No inspections have been recorded</h3>
+
     return (
         <StyledAnalysis>
             <h3>{label}</h3>
@@ -42,6 +44,12 @@ const AnalysisHealth = ({graphData, label, filters}) => {
                     data={graphData}
                     title={'Varroa Mite Count by Average Temperature'}
                     x={{dataCol: 'temp', label: 'Average Temperature'}}
+                    y={{dataCol: 'varroaMiteCount', label: 'Varroa Mite Count'}}
+                />
+                <TrendChart
+                    data={graphData}
+                    title={'Varroa Mite Count by Average Humidity'}
+                    x={{dataCol: 'humidity', label: 'Average Humidity'}}
                     y={{dataCol: 'varroaMiteCount', label: 'Varroa Mite Count'}}
                 />
             </div>
