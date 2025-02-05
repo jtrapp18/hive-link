@@ -154,7 +154,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2 {
+h1 {
   font-family: var(--title-font), sans-serif;
 }
 
@@ -168,6 +168,7 @@ h1 {
 
 h2 {
   font-size: clamp(1.3rem, 2vw, 1.9rem);
+  font-family: var(--default-font)
 }
 
 h3 {

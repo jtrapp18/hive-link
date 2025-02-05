@@ -50,6 +50,7 @@ const StyledForm = styled.form`
   max-width: 90vw;
   padding: 50px;
   border: 3px double var(--yellow);
+  overflow-y: scroll;
 
   h1 {
     padding: 5px;
@@ -70,6 +71,10 @@ const StyledForm = styled.form`
 
   div:not(:last-child) {
     margin-bottom: 12px;
+  }
+
+  span {
+    color: gray;
   }
 `
 
@@ -296,13 +301,6 @@ const StyledAnalysis = styled.div`
     padding: 0 5% 0 5%;
     justify-content: center;
     align-items: center;
-
-    // section {
-    //   h3 {
-    //     width: 100%;
-    //     border: 1px solid white;
-    //   }
-    // }
 
     .graph-container {
         display: grid;

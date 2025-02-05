@@ -17,7 +17,7 @@ const AnalysisHealth = ({graphData, label, filters}) => {
 
     return (
         <StyledAnalysis>
-            <h3>{label}</h3>
+            <h2>{label}</h2>
             <br />
             {isUserOnly &&
                 <>

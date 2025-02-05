@@ -5,6 +5,15 @@ const StyledFooter = styled.footer`
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    button {
+        background: black;
+        color: var(--honey);
+
+        &.disabled {
+            color: gray;
+        }
+    }
 `
 
 const FormFooter = ({step, prevStep, nextStep}) => {
@@ -18,11 +27,11 @@ const FormFooter = ({step, prevStep, nextStep}) => {
             >
                 Prev Page
             </button>
-            <p>{`Page ${step} of 7`}</p>
+            <p>{`Page ${step} of 5`}</p>
             <button 
                 type='button' 
                 onClick={nextStep}
-                disabled={step === 7}
+                disabled={step === 5}
             >
                 Next Page
             </button>

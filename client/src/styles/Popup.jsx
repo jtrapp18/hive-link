@@ -41,7 +41,6 @@ const Element = styled.div`
   margin: 0;
   background: black;
   max-height: 75vh;
-  overflow-y: scroll;
 `;
 
 const Overlay = styled.div`

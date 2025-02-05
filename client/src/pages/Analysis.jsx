@@ -30,10 +30,10 @@ const Analysis = () => {
             <h1>Hive Analysis</h1>
             <ButtonContainer>
                 {user && <HexagonButton isActive={activeTab==='hivesUser'} onClick={()=>setActiveTab('hivesUser')}>My Hives</HexagonButton>}
-                {user && <HexagonButton isActive={activeTab==='honeyUser'} onClick={()=>setActiveTab('honeyUser')}>My Honey</HexagonButton>}
-                {user && <HexagonButton isActive={activeTab==='healthUser'} onClick={()=>setActiveTab('healthUser')}>Hive Health</HexagonButton>}                
+                {user && <HexagonButton isActive={activeTab==='honeyUser'} onClick={()=>setActiveTab('honeyUser')}>Honey Stats</HexagonButton>}
+                {user && <HexagonButton isActive={activeTab==='healthUser'} onClick={()=>setActiveTab('healthUser')}>Hive Stats</HexagonButton>}                
                 <HexagonButton isActive={activeTab==='honeyAll'} onClick={()=>setActiveTab('honeyAll')}>Honey Trends</HexagonButton>
-                <HexagonButton isActive={activeTab==='healthAll'} onClick={()=>setActiveTab('healthAll')}>Health Trends</HexagonButton>
+                <HexagonButton isActive={activeTab==='healthAll'} onClick={()=>setActiveTab('healthAll')}>Hive Trends</HexagonButton>
             </ButtonContainer>
             {activeTab==='hivesUser' &&
                 <AnalysisUser />

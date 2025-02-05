@@ -9,6 +9,26 @@ import Error from "../styles/Error";
 import { StyledForm, StyledSubmit, Button } from '../MiscStyling';
 import FormFooter from "../components/FormFooter";
 
+const ModForm = styled(StyledForm)`
+  height: 70vh;
+
+  .checkbox-area {
+      padding: 5%;
+      border: 1px solid gray;
+      width: 100%;
+
+      .form-input {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        
+        input {
+          width: fit-content;
+        }
+      }
+  }
+`
+
 const InspectionForm = ({ initObj, addInspection, updateInspection, activeHoneyPull }) => {
   const { id: hiveId } = useParams(); // Get hive ID from URL
   const { hives } = useOutletContext();
@@ -17,8 +37,20 @@ const InspectionForm = ({ initObj, addInspection, updateInspection, activeHoneyP
 
   const hive = hives.find(hive=>hive.id===parseInt(hiveId))
 
-  const nextStep = () => setStep((prev) => prev + 1);
   const prevStep = () => setStep((prev) => prev - 1);
+
+  const nextStep = async () => {
+    const errors = await formik.validateForm();
+  
+    if (Object.keys(errors).length > 0) {
+      formik.setTouched(
+        Object.keys(errors).reduce((acc, key) => ({ ...acc, [key]: true }), {})
+      );
+      return; // Stop navigation if there are errors
+    }
+  
+    setStep(step + 1); // Proceed if no errors
+  };
 
   const submitToDB = initObj
     ? (body) =>
@@ -105,13 +137,14 @@ const InspectionForm = ({ initObj, addInspection, updateInspection, activeHoneyP
   return (
     <div>
       {isEditing ? (
-        <StyledForm onSubmit={formik.handleSubmit}>
-          <h3>{initObj ? "Inspection Details" : "Add New Inspection"}</h3>
+        <ModForm onSubmit={formik.handleSubmit}>
+          <h2>{initObj ? "Inspection Details" : "Add New Inspection"}</h2>
           <br />
         {step === 1 && (
           <>
-            <p>Basic Information</p>
+            <h3>Basic Information</h3>
             <span>{`Honey Pull ID: ${activeHoneyPull.id}`}</span>
+            <br />
             <div className="form-input">
               <label htmlFor="dateChecked">Date</label>
               <input
@@ -126,12 +159,8 @@ const InspectionForm = ({ initObj, addInspection, updateInspection, activeHoneyP
                 <Error>{formik.errors.dateChecked}</Error>
               )}
             </div>
-          </>
-        )}
-
-        {step === 2 && (
-          <>
-            <p>Hive Conditions</p>
+            <hr />
+            <h3>Hive Conditions</h3>
             <div className="form-input">
               <label htmlFor="bias">Bias (Number of frames with brood)</label>
               <input
@@ -146,34 +175,36 @@ const InspectionForm = ({ initObj, addInspection, updateInspection, activeHoneyP
                 <Error>{formik.errors.bias}</Error>
               )}
             </div>
-            <div className="form-input">
-              <label htmlFor="hasEggs">Eggs Present</label>
-              <input
-                type="checkbox"
-                id="hasEggs"
-                name="hasEggs"
-                checked={formik.values.hasEggs}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-            </div>
-            <div className="form-input">
-              <label htmlFor="hasLarvae">Larva Present</label>
-              <input
-                type="checkbox"
-                id="hasLarvae"
-                name="hasLarvae"
-                checked={formik.values.hasLarvae}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
+            <div className="checkbox-area">
+              <div className="form-input">
+                <label htmlFor="hasEggs">Eggs Present</label>
+                <input
+                  type="checkbox"
+                  id="hasEggs"
+                  name="hasEggs"
+                  checked={formik.values.hasEggs}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+              </div>
+              <div className="form-input">
+                <label htmlFor="hasLarvae">Larva Present</label>
+                <input
+                  type="checkbox"
+                  id="hasLarvae"
+                  name="hasLarvae"
+                  checked={formik.values.hasLarvae}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+              </div>
             </div>
           </>
         )}
 
-        {step === 3 && (
+        {step === 2 && (
           <>
-            <p>Weather</p>
+            <h3>Weather</h3>
             <div className="form-input">
               <label htmlFor="temp">Temperature</label>
               <input
@@ -224,91 +255,93 @@ const InspectionForm = ({ initObj, addInspection, updateInspection, activeHoneyP
             </div>
           </>
         )}
-        {step === 4 && (
+        {step === 3 && (
           <>
-            <p>Pests</p>
-            <div className="form-input">
-              <label htmlFor="antsPresent">Ants Present</label>
-              <input
-                type="checkbox"
-                id="antsPresent"
-                name="antsPresent"
-                checked={formik.values.antsPresent}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-            </div>
-            <div className="form-input">
-              <label htmlFor="slugsPresent">Slugs Present</label>
-              <input
-                type="checkbox"
-                id="slugsPresent"
-                name="slugsPresent"
-                checked={formik.values.slugsPresent}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-            </div>
-            <div className="form-input">
-              <label htmlFor="hiveBeetlesPresent">Hive Beetles Present</label>
-              <input
-                type="checkbox"
-                id="hiveBeetlesPresent"
-                name="hiveBeetlesPresent"
-                checked={formik.values.hiveBeetlesPresent}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-            </div>
-            <div className="form-input">
-              <label htmlFor="waxMothsPresent">Wax Moths Present</label>
-              <input
-                type="checkbox"
-                id="waxMothsPresent"
-                name="waxMothsPresent"
-                checked={formik.values.waxMothsPresent}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-            </div>
-            <div className="form-input">
-              <label htmlFor="waspsHornetsPresent">Wasps/Hornets Present</label>
-              <input
-                type="checkbox"
-                id="waspsHornetsPresent"
-                name="waspsHornetsPresent"
-                checked={formik.values.waspsHornetsPresent}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-            </div>
-            <div className="form-input">
-              <label htmlFor="micePresent">Mice Present</label>
-              <input
-                type="checkbox"
-                id="micePresent"
-                name="micePresent"
-                checked={formik.values.micePresent}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-            </div>
-            <div className="form-input">
-              <label htmlFor="robberBeesPresent">Robber Bees Present</label>
-              <input
-                type="checkbox"
-                id="robberBeesPresent"
-                name="robberBeesPresent"
-                checked={formik.values.robberBeesPresent}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
+            <h3>Pests</h3>
+            <div className="checkbox-area">
+              <div className="form-input">
+                <label htmlFor="antsPresent">Ants Present</label>
+                <input
+                  type="checkbox"
+                  id="antsPresent"
+                  name="antsPresent"
+                  checked={formik.values.antsPresent}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+              </div>
+              <div className="form-input">
+                <label htmlFor="slugsPresent">Slugs Present</label>
+                <input
+                  type="checkbox"
+                  id="slugsPresent"
+                  name="slugsPresent"
+                  checked={formik.values.slugsPresent}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+              </div>
+              <div className="form-input">
+                <label htmlFor="hiveBeetlesPresent">Hive Beetles Present</label>
+                <input
+                  type="checkbox"
+                  id="hiveBeetlesPresent"
+                  name="hiveBeetlesPresent"
+                  checked={formik.values.hiveBeetlesPresent}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+              </div>
+              <div className="form-input">
+                <label htmlFor="waxMothsPresent">Wax Moths Present</label>
+                <input
+                  type="checkbox"
+                  id="waxMothsPresent"
+                  name="waxMothsPresent"
+                  checked={formik.values.waxMothsPresent}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+              </div>
+              <div className="form-input">
+                <label htmlFor="waspsHornetsPresent">Wasps/Hornets Present</label>
+                <input
+                  type="checkbox"
+                  id="waspsHornetsPresent"
+                  name="waspsHornetsPresent"
+                  checked={formik.values.waspsHornetsPresent}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+              </div>
+              <div className="form-input">
+                <label htmlFor="micePresent">Mice Present</label>
+                <input
+                  type="checkbox"
+                  id="micePresent"
+                  name="micePresent"
+                  checked={formik.values.micePresent}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+              </div>
+              <div className="form-input">
+                <label htmlFor="robberBeesPresent">Robber Bees Present</label>
+                <input
+                  type="checkbox"
+                  id="robberBeesPresent"
+                  name="robberBeesPresent"
+                  checked={formik.values.robberBeesPresent}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+              </div>
             </div>
           </>
         )}
-        {step === 5 && (
+        {step === 4 && (
           <>
-            <p>Active Hive Management</p>
+            <h3>Active Hive Management</h3>
             <div className="form-input">
               <label htmlFor="numPollenPatties">Number of Pollen Patties</label>
               <input
@@ -375,22 +408,11 @@ const InspectionForm = ({ initObj, addInspection, updateInspection, activeHoneyP
                 onBlur={formik.handleBlur}
               />
             </div>
-            <div className="form-input">
-              <label htmlFor="hasTwistedLarvae">Has Twisted Larvae?</label>
-              <input
-                type="checkbox"
-                id="hasTwistedLarvae"
-                name="hasTwistedLarvae"
-                checked={formik.values.hasTwistedLarvae}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-            </div>
           </>
         )}
-        {step === 6 && (
+        {step === 5 && (
           <>
-            <p>Outcomes</p>
+            <h2>Outcomes</h2>
             <div className="form-input">
               <label htmlFor="fate">Fate</label>
               <select
@@ -411,17 +433,6 @@ const InspectionForm = ({ initObj, addInspection, updateInspection, activeHoneyP
               )}
             </div>
             <div className="form-input">
-              <label htmlFor="hasChalkbrood">Has Chalkbrood?</label>
-              <input
-                type="checkbox"
-                id="hasChalkbrood"
-                name="hasChalkbrood"
-                checked={formik.values.hasChalkbrood}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-            </div>
-            <div className="form-input">
               <label htmlFor="varroaMiteCount">Varroa Mite Count</label>
               <input
                 type="number"
@@ -432,11 +443,32 @@ const InspectionForm = ({ initObj, addInspection, updateInspection, activeHoneyP
                 onBlur={formik.handleBlur}
               />
             </div>
-          </>
-        )}
-        {step === 7 && (
-          <>
-            <p>Additional Notes</p>
+            <div className="checkbox-area">
+              <div className="form-input">
+                <label htmlFor="hasTwistedLarvae">Has Twisted Larvae?</label>
+                <input
+                  type="checkbox"
+                  id="hasTwistedLarvae"
+                  name="hasTwistedLarvae"
+                  checked={formik.values.hasTwistedLarvae}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+              </div>
+              <div className="form-input">
+                <label htmlFor="hasChalkbrood">Has Chalkbrood?</label>
+                <input
+                  type="checkbox"
+                  id="hasChalkbrood"
+                  name="hasChalkbrood"
+                  checked={formik.values.hasChalkbrood}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+              </div>
+            </div>
+            <hr />
+            <h2>Additional Notes</h2>
             <div className="form-input">
               <label htmlFor="activitySurroundingHive">Activity Surrounding Hive</label>
               <select
@@ -483,10 +515,10 @@ const InspectionForm = ({ initObj, addInspection, updateInspection, activeHoneyP
                 onBlur={formik.handleBlur}
               />
             </div>
+            <Button type="submit">{initObj ? "Update Inspection" : "Submit New Inspection"}</Button>
           </>
         )}
-          <Button type="submit">{initObj ? "Update Inspection" : "Add Inspection"}</Button>
-        </StyledForm>
+        </ModForm>
       ) : (
         <StyledSubmit>
           <h1>Inspection Details</h1>
