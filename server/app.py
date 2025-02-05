@@ -11,7 +11,7 @@ from datetime import datetime
 # from flask_migrate import Migrate
 from flask import request, session
 from flask_restful import  Resource
-from experience_study import create_model, add_predicted_values
+from experience_study import create_model, add_predicted_values, pull_explanatory_variables
 
 @app.route('/')
 def index():
@@ -517,8 +517,15 @@ class FateStudy(Resource):
         joblib_loc = f'fate_study_{uuid.uuid4().hex}.joblib'
 
         try:
+            import data_processing as dclean
+
             # If the model does not exist, create it
-            create_model(joblib_loc)
+            hives = [hive.to_dict() for hive in Hive.query.all()]
+            df_normalized, df_aggregated = dclean.process_data_for_analysis(hives, actuals=False)
+            explanatory_variables = pull_explanatory_variables(df_aggregated)
+            joblib_loc = f'exp_study_{uuid.uuid4().hex}.joblib'
+
+            create_model(df_aggregated, explanatory_variables, joblib_loc)
 
             # Save metadata for new model to database
             new_study = ModelHistory(

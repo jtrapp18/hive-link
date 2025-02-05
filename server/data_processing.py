@@ -1,5 +1,6 @@
 import os
 import joblib
+import copy
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -18,18 +19,17 @@ def collect_data(app):
     return hives
 
 def rename_ids(hives):
-    hives_mod = [{
-        **hive,
-        'hive_id': hive.pop('id')
-    } for hive in hives]
+    # Use deep copy to ensure that nested objects are also copied
+    hives_mod = [copy.deepcopy(hive) for hive in hives]
 
-    hives_mod = [{
-    **hive,
-    'honey_pulls': [{
-        **honey_pull,
-        'honey_pull_id': honey_pull.pop('id')  # Rename 'id' to 'honey_pull_id' using pop
-    } for honey_pull in hive['honey_pulls']]
-    } for hive in hives_mod]
+    # Rename 'id' to 'hive_id' in each hive
+    for hive in hives_mod:
+        hive['hive_id'] = hive.pop('id')
+
+        # Rename 'id' to 'honey_pull_id' in the nested honey_pulls
+        if 'honey_pulls' in hive:
+            for honey_pull in hive['honey_pulls']:
+                honey_pull['honey_pull_id'] = honey_pull.pop('id', None)
 
     return hives_mod
 
@@ -74,6 +74,7 @@ def filter_data(df_normalized, actuals=True):
         df_filtered = df.loc[~not_yet_pulled].copy()
     else:
         df_filtered = df.loc[not_yet_pulled].copy()
+        df_filtered.drop(columns=['weight', 'date_pulled'], inplace=True)
 
     return df_filtered
 
@@ -89,13 +90,14 @@ def aggregate_data(df_filtered):
     df['season'] = df['date_checked'].dt.month % 12 // 3 + 1  # 1=Winter, 2=Spring, 3=Summer, 4=Fall
 
     hive_columns = ['hive_id', 'date_added', 'city', 'state']
-    honey_pull_columns = ['honey_pull_id', 'date_reset', 'date_pulled', 'weight']
-    
+    honey_pull_columns_1 = ['honey_pull_id', 'date_reset']
+    honey_pull_columns_2 = ['weight', 'date_pulled'] if 'weight' in df.columns else []
+
     # Identifying material columns dynamically
     material_columns = [col for col in df.columns if col.startswith('material_')]
 
     # # Aggregating by honey_pull_id
-    df_aggregated = df.groupby(hive_columns+honey_pull_columns).agg({
+    df_aggregated = df.groupby(hive_columns+honey_pull_columns_1+honey_pull_columns_2).agg({
         'count': 'sum',
         'temp': 'mean',
         'bias': 'mean',
@@ -115,7 +117,8 @@ def aggregate_data(df_filtered):
         **{col: 'sum' for col in material_columns}
     }).reset_index()
 
-    df_aggregated['days'] = (pd.to_datetime(df_aggregated['date_pulled']) - pd.to_datetime(df_aggregated['date_reset'])).dt.days
+    date_end = pd.to_datetime(df_aggregated['date_pulled']) if 'date_pulled' in df_aggregated.columns else pd.to_datetime('today')
+    df_aggregated['days'] = (date_end - pd.to_datetime(df_aggregated['date_reset'])).dt.days
 
     return df_aggregated
 
