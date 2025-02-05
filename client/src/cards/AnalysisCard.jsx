@@ -7,6 +7,15 @@ import Error from '../styles/Error';
 import { Alert } from '../MiscStyling';
 
 const StyledCard = styled.article`
+
+    .hive-summary {
+        display: flex;
+        justify-content: space-between;
+
+        .hive-card {
+            zoom: .5;
+        }
+    }
     
     section {
 
@@ -55,22 +64,22 @@ const AnalysisCard = ({ hive }) => {
 
     return (
         <StyledCard className="hive-card">
-            <section className='img-section'>
-                <HiveCard {...hive}/>
-            </section>
-            <section>
-                <span><strong>No. Honey Pulls: </strong>{honeyPulls.length}</span>
-                <h3>Latest Round</h3>
-                <div className='inspection-row'>
-                    <p><strong>Start Date: </strong>{latestHoneyPull.dateReset}</p>
-                </div>
-                <div className='inspection-row'>
-                    <p><strong>Pull Date: </strong>{latestHoneyPull.datePulled ? latestHoneyPull.datePulled : 'n/a'}</p>
+            <div className='hive-summary'>
+                <section>
+                    <span><strong>No. Honey Pulls: </strong>{honeyPulls.length}</span>
+                    <h3>Latest Round</h3>
+                    <div className='inspection-row'>
+                        <p><strong>Start Date: </strong>{latestHoneyPull.dateReset}</p>
                     </div>
-                <div className='inspection-row'>
-                    <p><strong>Honey Pull Weight (lbs): </strong>{latestHoneyPull.weight ? latestHoneyPull.weight : 'n/a'}</p>
-                </div>
-            </section>
+                    <div className='inspection-row'>
+                        <p><strong>Pull Date: </strong>{latestHoneyPull.datePulled ? latestHoneyPull.datePulled : 'n/a'}</p>
+                        </div>
+                    <div className='inspection-row'>
+                        <p><strong>Honey Pull Weight (lbs): </strong>{latestHoneyPull.weight ? latestHoneyPull.weight : 'n/a'}</p>
+                    </div>
+                </section>
+                <HiveCard {...hive}/>
+            </div>
             <hr />
             <section>
                 <span><strong>No. Inspections: </strong>{inspectionCount}</span>
