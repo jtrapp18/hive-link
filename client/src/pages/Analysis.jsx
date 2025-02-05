@@ -19,10 +19,27 @@ const ButtonContainer = styled.div`
   padding: 50px;
 `
 
+const FeaturesContainer = styled.div`
+    width: 85%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    li, p {
+        color: gray;
+    }
+
+    ol {
+        width: 100%;
+        column-count: 3;
+        column-gap: space-between;  
+    }
+`
+
 const Analysis = () => {
     const { user } = useContext(UserContext);
     const { graphData, graphDataUser } = useOutletContext();
-    const [activeTab, setActiveTab] = useState('healthAll');
+    const [activeTab, setActiveTab] = useState(!user ? 'honeyAll' : 'hivesUser');
     const [studyResults, setStudyResults] = useState({});
 
     // Fetching study results
@@ -67,12 +84,14 @@ const Analysis = () => {
             }
             {activeTab==='honeyAll' &&
                 <>
-                    <div>
-                        <p>Top impacts on honey production:</p>
+                    <FeaturesContainer>
+                        <p><strong>Top impacts on honey production </strong>(Based on all available user data to date):</p>
                         <ol>
-                            {<li></li>}
+                            {studyResults.map(result=>
+                                <li>{result.Feature}</li>
+                            )}
                         </ol>
-                    </div>
+                    </FeaturesContainer>
                     <AnalysisHoney
                         filters={[]}
                         graphData={graphData.aggregated}

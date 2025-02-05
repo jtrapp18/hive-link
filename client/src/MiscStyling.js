@@ -282,7 +282,7 @@ const StyledCard = styled.article`
 
 const PlotContainer = styled.div`
   width: 100%;
-  overflow: hidden;
+  // overflow: hidden;
   background: black;
 
   .gtitle {

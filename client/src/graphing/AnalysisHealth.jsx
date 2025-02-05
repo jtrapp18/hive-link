@@ -18,7 +18,6 @@ const AnalysisHealth = ({graphData, label, filters}) => {
     return (
         <StyledAnalysis>
             <h2>{label}</h2>
-            <br />
             {isUserOnly &&
                 <>
                     <GraphSectionHeader>Hive Statistics over Time</GraphSectionHeader>

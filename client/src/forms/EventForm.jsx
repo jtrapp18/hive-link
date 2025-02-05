@@ -33,7 +33,6 @@ const EventForm = ({ initObj, addEvent, updateEvent, cancelEvent, deleted }) => 
     initialValues: initObj || { title: "", eventDate: "", descr: "", zipcode: "" },
     validationSchema,
     onSubmit: (values) => {
-      console.log("submitting form");
       const body = {
         ...values,
         userId: user.id,

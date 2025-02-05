@@ -61,6 +61,7 @@ const StyledNavLink = styled(NavLink)`
   &.active {
     text-decoration: overline;
     text-decoration-thickness: 2px;
+    color: black;
   }
 
   &:hover {

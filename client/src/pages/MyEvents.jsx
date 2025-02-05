@@ -143,7 +143,7 @@ const MyEvents = () => {
 
     addToKey(event.id, "signups", signup)
   };
-  
+   
   const cancelSignup = (event) => {
     const eventId = event.id
     const signup = event.signups.filter(signup=>signup.userId===user.id)[0]

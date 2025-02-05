@@ -22,7 +22,6 @@ const AnalysisHoney = ({graphData, label, filters}) => {
     return (
         <StyledAnalysis>
             <h2>{label}</h2>
-            <br />
             <GraphSectionHeader>Basic Statistics</GraphSectionHeader>
             <div className='graph-container'>
                 <PieChart

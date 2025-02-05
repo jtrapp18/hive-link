@@ -17,7 +17,6 @@ const AnalysisUser = () => {
     return (
       <StyledAnalysis>
         <h2>Recommendations for My Hives</h2>
-        <br />
         <CardContainer>
           {userHives.map(hive=>
             <AnalysisCard

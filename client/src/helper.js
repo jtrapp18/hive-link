@@ -109,7 +109,7 @@ function patchJSONToDb(dbKey, Id, jsonObj) {
 
     const snake_object = camelToSnake(jsonObj);
 
-    fetch(`/api/${dbKey}/${Id}`, {
+    return fetch(`/api/${dbKey}/${Id}`, {
     method: 'PATCH',
     headers: {
         'Content-Type': 'application/json'
@@ -122,8 +122,6 @@ function patchJSONToDb(dbKey, Id, jsonObj) {
       }
       return res.json();
     })
-    .then(data => console.log("EDITED", data))
-    .catch(e => console.error(e));
 }
 
 function deleteJSONFromDb(dbKey, Id) {

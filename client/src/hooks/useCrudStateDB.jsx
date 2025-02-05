@@ -6,24 +6,27 @@ import useCrudState from "./useCrudState";
 const useCrudStateDB = (setState, dbKey, optionalFunc=null, addFunc=null) => {
 
     const {addToState, updateState, deleteFromState, addToKeyInState, deleteFromKeyInState} = 
-    useCrudState(setState, optionalFunc);
+    useCrudState(setState, optionalFunc, addFunc);
 
     const addItem = (item) => {
       postJSONToDb(dbKey, item)
       .then(json => {
         const jsonTransformed = snakeToCamel(json)
         addToState(jsonTransformed)
-
-        if (addFunc) {
-          addFunc(jsonTransformed)
-        }
       })
     };
     
     const updateItem = (itemId, item) => {
       console.log(dbKey, itemId, item)
       patchJSONToDb(dbKey, itemId, item)
-      updateState(itemId, item)
+      .then(json => {
+        const jsonTransformed = snakeToCamel(json)
+        updateState(itemId, jsonTransformed)
+
+        console.log("EDITED", jsonTransformed)
+      })
+      .catch(e => console.error(e));
+      
     }
       
     const deleteItem = (itemId) => {

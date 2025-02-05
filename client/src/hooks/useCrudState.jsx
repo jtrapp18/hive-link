@@ -2,13 +2,17 @@
 import { useState } from "react";
 import { postJSONToDb } from "../helper";
  
-const useCrudState = (setState, optionalFunc=null) => {
+const useCrudState = (setState, optionalFunc=null, addFunc=null) => {
     const addToState = (item) => {
         setState(prevItems => {
             const updatedState = [...prevItems, item]
             
             if (optionalFunc) {
                 optionalFunc(updatedState)
+            }
+
+            if (addFunc) {
+              addFunc(item)
             }
 
             return updatedState
@@ -23,7 +27,10 @@ const useCrudState = (setState, optionalFunc=null) => {
 
           if (optionalFunc) {
             optionalFunc(updatedState)
-            console.log(updatedState)
+          }
+
+          if (addFunc) {
+            addFunc(updatedItem)
           }
 
           return updatedState
