@@ -1,4 +1,3 @@
-import experience_study as exp
 import os
 import joblib
 import pandas as pd
@@ -61,28 +60,42 @@ def normalize_data(hives_mod):
     df_normalized = df_normalized.rename(columns={'id': 'inspection_id'})
     df_normalized = df_normalized.replace({np.nan: None})
 
-    categorical_columns = ['fate', 'activity_surrounding_hive', 'stability_in_hive']
+    categorical_columns = ['fate', 'material', 'activity_surrounding_hive', 'stability_in_hive']
     df_normalized = pd.get_dummies(df_normalized, columns=categorical_columns, drop_first=True)
 
     return df_normalized
 
-def aggregate_data(df_normalized):
+def filter_data(df_normalized, actuals=True):
     df = df_normalized.copy()
-    df_filtered = df.loc[~df['date_pulled'].isna()].copy()
 
-    df_filtered['count'] = 1
+    not_yet_pulled = df['date_pulled'].isna()
+
+    if actuals:
+        df_filtered = df.loc[~not_yet_pulled].copy()
+    else:
+        df_filtered = df.loc[not_yet_pulled].copy()
+
+    return df_filtered
+
+def aggregate_data(df_filtered):
+    df = df_filtered.copy()
+
+    df['count'] = 1
 
     # convert to datetime
-    df_filtered['date_checked'] = pd.to_datetime(df_filtered['date_checked'])
+    df['date_checked'] = pd.to_datetime(df['date_checked'])
 
     # Add season column based on month of inspection
-    df_filtered['season'] = df_filtered['date_checked'].dt.month % 12 // 3 + 1  # 1=Winter, 2=Spring, 3=Summer, 4=Fall
+    df['season'] = df['date_checked'].dt.month % 12 // 3 + 1  # 1=Winter, 2=Spring, 3=Summer, 4=Fall
 
-    hive_columns = ['hive_id', 'date_added', 'material', 'city', 'state']
+    hive_columns = ['hive_id', 'date_added', 'city', 'state']
     honey_pull_columns = ['honey_pull_id', 'date_reset', 'date_pulled', 'weight']
+    
+    # Identifying material columns dynamically
+    material_columns = [col for col in df.columns if col.startswith('material_')]
 
     # # Aggregating by honey_pull_id
-    df_aggregated = df_filtered.groupby(hive_columns+honey_pull_columns).agg({
+    df_aggregated = df.groupby(hive_columns+honey_pull_columns).agg({
         'count': 'sum',
         'temp': 'mean',
         'bias': 'mean',
@@ -98,17 +111,24 @@ def aggregate_data(df_normalized):
         'mice_present': 'sum',
         'robber_bees_present': 'sum',
         'has_chalkbrood': 'sum',
-        'has_twisted_larvae': 'sum'
+        'has_twisted_larvae': 'sum',
+        **{col: 'sum' for col in material_columns}
     }).reset_index()
 
     df_aggregated['days'] = (pd.to_datetime(df_aggregated['date_pulled']) - pd.to_datetime(df_aggregated['date_reset'])).dt.days
 
     return df_aggregated
 
-def process_data_for_graphing(hives):
+def process_data_for_analysis(hives, actuals=True):
     hives_mod = rename_ids(hives)
     df_normalized = normalize_data(hives_mod)
-    df_aggregated = aggregate_data(df_normalized)
+    df_filtered = filter_data(df_normalized, actuals)
+    df_aggregated = aggregate_data(df_filtered)
+
+    return df_normalized, df_aggregated
+
+def process_data_for_graphing(hives):
+    df_normalized, df_aggregated = process_data_for_analysis(hives)
 
     json_normalized = df_normalized.to_dict(orient='list')
     json_aggregated = df_aggregated.to_dict(orient='list')
@@ -117,6 +137,3 @@ def process_data_for_graphing(hives):
         'normalized': json_normalized,
         'aggregated': json_aggregated
     }
-
-
-
