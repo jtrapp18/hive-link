@@ -21,8 +21,10 @@ class Inspection(db.Model, SerializerMixin):
     super_count = db.Column(db.Integer, nullable=True)
     hive_body_count = db.Column(db.Integer, nullable=True)
 
-# hive conditions (can probably be grouped together)
+# hive conditions
     bias = db.Column(db.Integer, nullable=False)
+    has_eggs = db.Column(db.Boolean, nullable=False, default=False)
+    has_larvae = db.Column(db.Boolean, nullable=False, default=False)
 
 # presence of pests
     ants_present = db.Column(db.Boolean, nullable=False, default=False)
@@ -99,7 +101,7 @@ class Inspection(db.Model, SerializerMixin):
     @validates('fate')
     def validate_fate(self, key, value):
         """Validates the hive fate."""
-        valid_fates = ['Dead', 'Swarmed', 'Split', 'Thriving']
+        valid_fates = ['Dead', 'Swarmed', 'Split', 'Active']
         if value not in valid_fates:
             raise ValueError(f"Fate must be one of {', '.join(valid_fates)}.")
         return value
