@@ -514,7 +514,7 @@ class ExperienceStudy(Resource):
     def post(self):
 
         try:
-            # If the model does not exist, create it
+            # run experienece study and save results
             hives = [hive.to_dict() for hive in Hive.query.all()]
             
             df_normalized, df_aggregated = dclean.process_data_for_analysis(hives, actuals=False)
@@ -549,7 +549,7 @@ class Predictions(Resource):
             joblib_loc = get_latest_joblib()
             df_normalized, df_prediction_input = dclean.process_data_for_analysis(hives, actuals=False)
             predicted_values = run_predictions(df_prediction_input, joblib_loc)
-            predictions_only = predicted_values[['hive_id', 'predictions']].set_index('hive_id')
+            predictions_only = predicted_values[['hive_id', 'predicted']].set_index('hive_id')
 
             prediction_dict = predictions_only.to_dict()
 
@@ -606,9 +606,8 @@ api.add_resource(Inspections, '/inspections', endpoint='inspections')
 api.add_resource(InspectionById, '/inspections/<int:inspection_id>')
 api.add_resource(Queens, '/queens', endpoint='queens')
 api.add_resource(QueenById, '/queens/<int:queen_id>')
-api.add_resource(FateStudy, '/fate_study', endpoint='fate_study')
-api.add_resource(PriorStudy, '/prior_study', endpoint='prior_study')
-api.add_resource(PredictStudy, '/predict_study', endpoint='predict_study')
+api.add_resource(ExperienceStudy, '/exp_study', endpoint='exp_study')
+api.add_resource(Predictions, '/predictions', endpoint='predictions')
 api.add_resource(Events, '/events', endpoint='events')
 api.add_resource(EventById, '/events/<int:event_id>')
 api.add_resource(Signups, '/signups', endpoint='signups')
