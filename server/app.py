@@ -19,12 +19,13 @@ from experience_study import create_model, run_predictions, pull_explanatory_var
 def index():
     return app.send_static_file('index.html')
 
-@app.before_request
-def check_if_logged_in():
-    if not session.get('user_id') \
-    and request.endpoint in ['spongebob']:
-    # and request.endpoint in ['hives', 'inspections', 'queens']:
-        return {'error': 'Unauthorized'}, 401
+# @app.before_request
+# def check_if_logged_in():
+#     app.logger.debug(f"Request endpoint: {request.endpoint}")
+#     if not session.get('user_id') \
+#     and request.endpoint in ['spongebob']:
+#     # and request.endpoint in ['hives', 'inspections', 'queens']:
+#         return {'error': 'Unauthorized'}, 401
     
 class ClearSession(Resource):
 
@@ -503,10 +504,10 @@ class ExperienceStudy(Resource):
             joblib_loc = get_latest_joblib()
 
             # If the model exists, load it from the file
-            joblib_data = joblib.load(joblib_loc)
+            joblib_data = joblib.load(fr'joblib/{joblib_loc}')
             test_results = joblib_data['importance_df']
 
-            return test_results.to_dict(), 200
+            return test_results.to_dict(orient='records'), 200
         
         except Exception as e:
             return {'error': 'An error occurred while fetching the model results.'}, 500

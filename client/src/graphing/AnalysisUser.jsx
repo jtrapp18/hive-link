@@ -11,7 +11,7 @@ import { UserContext } from '../context/userProvider';
 
 const AnalysisUser = () => {
     const { user } = useContext(UserContext);
-    const { hives } = useOutletContext();
+    const { hives, predictions } = useOutletContext();
     const userHives = hives.filter((hive) => hive.userId === user.id)
 
     return (
@@ -23,6 +23,7 @@ const AnalysisUser = () => {
             <AnalysisCard
                 key={hive.id}
                 hive={hive}
+                prediction={predictions[hive.id]}
             />
           )}
         </CardContainer>

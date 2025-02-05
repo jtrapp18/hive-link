@@ -8,6 +8,9 @@ import { Alert } from '../MiscStyling';
 
 const StyledCard = styled.article`
 
+    border-bottom: 3px double var(--honey);
+    padding: 5% 0% 5% 0%;
+
     .hive-summary {
         display: flex;
         justify-content: space-between;
@@ -37,6 +40,14 @@ const StyledCard = styled.article`
                 strong {
                     color: white;
                 }
+
+                &.honey-prediction {
+                    color: var(--yellow);
+
+                    strong {
+                        color: rgb(40, 203, 215);
+                    }
+                }
             }
 
             &.at-risk {
@@ -48,10 +59,9 @@ const StyledCard = styled.article`
     }
 `
 
-const AnalysisCard = ({ hive }) => {
+const AnalysisCard = ({ hive, prediction }) => {
     const navigate = useNavigate();
 
-    console.log(hive)
     const { id, honeyPulls } = hive
     const latestHoneyPull = honeyPulls[honeyPulls.length - 1];
     const latestInspection = latestHoneyPull.inspections[latestHoneyPull.inspections.length - 1];
@@ -63,7 +73,7 @@ const AnalysisCard = ({ hive }) => {
     const inspectionCount = honeyPulls.reduce((accum, honeyPull) => honeyPull.inspections.length + accum, 0)
 
     return (
-        <StyledCard className="hive-card">
+        <StyledCard>
             <div className='hive-summary'>
                 <section>
                     <span><strong>No. Honey Pulls: </strong>{honeyPulls.length}</span>
@@ -75,7 +85,10 @@ const AnalysisCard = ({ hive }) => {
                         <p><strong>Pull Date: </strong>{latestHoneyPull.datePulled ? latestHoneyPull.datePulled : 'n/a'}</p>
                         </div>
                     <div className='inspection-row'>
-                        <p><strong>Honey Pull Weight (lbs): </strong>{latestHoneyPull.weight ? latestHoneyPull.weight : 'n/a'}</p>
+                        {latestHoneyPull.weight ?
+                            <p><strong>Honey Pull Weight (lbs): </strong>{latestHoneyPull.weight.toFixed(4)}</p> :
+                            <p className='honey-prediction'><strong>Predicted Honey Pull Weight (lbs): </strong>{prediction.toFixed(4)} (Based on pull date of today)</p>
+                        }
                     </div>
                 </section>
                 <HiveCard {...hive}/>

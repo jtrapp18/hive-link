@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import TrendChart from '../graphing/TrendChart';
 import {useOutletContext} from "react-router-dom";
 import { prepareDataForPlot } from '../graphing/dataProcessing';
@@ -10,6 +10,7 @@ import AnalysisHealth from '../graphing/AnalysisHealth';
 import { Button, HexagonButton } from '../MiscStyling';
 import { UserContext } from '../context/userProvider';
 import AnalysisUser from '../graphing/AnalysisUser';
+import { getJSON, snakeToCamel } from '../helper';
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -22,6 +23,18 @@ const Analysis = () => {
     const { user } = useContext(UserContext);
     const { graphData, graphDataUser } = useOutletContext();
     const [activeTab, setActiveTab] = useState('healthAll');
+    const [studyResults, setStudyResults] = useState({});
+
+    // Fetching study results
+    useEffect(() => {
+        console.log('logging study results...')
+        getJSON("exp_study")
+          .then((data) => {
+            const dataTransformed = snakeToCamel(data);
+            setStudyResults(dataTransformed)
+            console.log(dataTransformed)
+          });
+      }, []);
 
     if (graphData.length===0) return <Loading />
 
@@ -53,11 +66,19 @@ const Analysis = () => {
                 />
             }
             {activeTab==='honeyAll' &&
-                <AnalysisHoney
-                    filters={[]}
-                    graphData={graphData.aggregated}
-                    label='Honey Statistics for All Users'
-                />
+                <>
+                    <div>
+                        <p>Top impacts on honey production:</p>
+                        <ol>
+                            {<li></li>}
+                        </ol>
+                    </div>
+                    <AnalysisHoney
+                        filters={[]}
+                        graphData={graphData.aggregated}
+                        label='Honey Statistics for All Users'
+                    />
+                </>
             }
             {activeTab==='healthAll' &&
                 <AnalysisHealth

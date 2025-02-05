@@ -25,7 +25,9 @@ def add_predicted_values(explanatory_variables, data, model, scaler=None):
     # Ensure all explanatory variables are present in the data
     missing_vars = [var for var in explanatory_variables if var not in data.columns]
     if missing_vars:
-        raise ValueError(f"Missing explanatory variables: {missing_vars}")
+        # For simplicity, replace missing variables with zeros
+        for var in missing_vars:
+            data[var] = 0  # Add missing columns with zero values
 
     # Extract the explanatory variables from the data
     X = data[explanatory_variables]
@@ -43,7 +45,9 @@ def add_predicted_values(explanatory_variables, data, model, scaler=None):
     return data
 
 def pull_explanatory_variables(aggregated_data):
-    metadata = {'hive_id', 'honey_pull_id', 'city', 'state', 'data_added', 'date_reset', 'date_pulled', 'count', 'days', 'date_added'}
+    metadata = {'hive_id', 'honey_pull_id', 'city', 'state', 
+                'data_added', 'date_reset', 
+                'date_pulled', 'count', 'days', 'date_added'}
     outcomes = {'bias', 'weight'}
 
     remaining_col = set(aggregated_data.columns) - metadata - outcomes
@@ -69,7 +73,8 @@ class ExperienceStudy:
     def bifurcate_data(self, aggregated_data, test_size=0.3):
 
         # Splitting the data into train and test sets (30% test, 70% train)
-        self.train_data, self.test_data = train_test_split(aggregated_data, test_size=test_size, random_state=42)
+        self.train_data, self.test_data = train_test_split(aggregated_data, 
+                                                           test_size=test_size, random_state=42)
     
     def find_scaler(self):
 
@@ -78,7 +83,8 @@ class ExperienceStudy:
         self.scaler.fit(self.train_data[self.explanatory_variables])
 
         # Scale train data
-        self.train_data[self.explanatory_variables] = self.scaler.transform(self.train_data[self.explanatory_variables])
+        self.train_data[self.explanatory_variables] = self.scaler.transform(
+            self.train_data[self.explanatory_variables])
 
         self.joblib_data['scaler'] = self.scaler
     
@@ -105,7 +111,8 @@ class ExperienceStudy:
         from sklearn.inspection import permutation_importance
 
         # Ensure all explanatory variables are present in the data
-        missing_vars = [var for var in self.explanatory_variables if var not in self.test_data.columns]
+        missing_vars = [var for var in self.explanatory_variables if 
+                        var not in self.test_data.columns]
         if missing_vars:
             raise ValueError(f"Missing explanatory variables: {missing_vars}")
 
@@ -117,8 +124,12 @@ class ExperienceStudy:
         X_scaled = self.scaler.transform(X)
         X_scaled_df = pd.DataFrame(X_scaled, columns=self.explanatory_variables)
 
-        result = permutation_importance(self.model, X_scaled_df, y, n_repeats=10, random_state=42)
-        importance_df = pd.DataFrame({'Feature': X_scaled_df.columns, 'Importance': result.importances_mean})
+        result = permutation_importance(self.model, 
+                                        X_scaled_df, y, n_repeats=10, random_state=42)
+        importance_df = pd.DataFrame({
+            'Feature': X_scaled_df.columns, 
+            'Importance': result.importances_mean
+            })
         importance_df = importance_df.sort_values(by='Importance', ascending=False)
 
         self.joblib_data['importance_df'] = importance_df
@@ -144,7 +155,9 @@ def create_model(aggregated_data, explanatory_variables, joblib_loc):
 
     importance_df = exp_study.get_feature_importance()
 
-    test_results = add_predicted_values(explanatory_variables, exp_study.test_data, exp_study.model, exp_study.scaler)
+    test_results = add_predicted_values(explanatory_variables, 
+                                        exp_study.test_data, 
+                                        exp_study.model, exp_study.scaler)
     exp_study.joblib_data['test_results'] = test_results
 
     try:
@@ -163,7 +176,8 @@ def run_predictions(df_prediction_input, joblib_loc):
     explanatory_variables = joblib_data['explanatory_variables']
 
     # Make predictions using the active model
-    predicted_values = add_predicted_values(explanatory_variables, df_prediction_input, model, scaler)
+    predicted_values = add_predicted_values(explanatory_variables, 
+                                            df_prediction_input, model, scaler)
 
     return predicted_values
 
