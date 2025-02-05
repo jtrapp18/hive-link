@@ -7,8 +7,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network import MLPRegressor
 from sklearn.linear_model import LinearRegression
-
-from models import Hive, ExplanatoryVariable
 from datetime import datetime
 
 def binarize_data(data, categorical_columns=None):
@@ -130,3 +128,16 @@ def create_model(aggregated_data, explanatory_variables, joblib_loc):
         raise
 
     return model, test_results
+
+def run_predictions(df_prediction_input, joblib_loc):
+
+    # Load the model, scaler, and explanatory variables from the joblib file
+    joblib_data = joblib.load(joblib_loc)
+    model = joblib_data['model']
+    scaler = joblib_data['scaler']
+    explanatory_variables = joblib_data['explanatory_variables']
+
+    # Make predictions using the active model
+    predicted_values = add_predicted_values(explanatory_variables, df_prediction_input, model, scaler)
+
+    return predicted_values
