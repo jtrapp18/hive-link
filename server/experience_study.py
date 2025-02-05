@@ -8,6 +8,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network import MLPRegressor
 from sklearn.linear_model import LinearRegression
 from datetime import datetime
+from config import app, db
+from models import ModelHistory
 
 def binarize_data(data, categorical_columns=None):
 
@@ -18,7 +20,7 @@ def binarize_data(data, categorical_columns=None):
     binarized_data = pd.get_dummies(data, columns=categorical_columns, drop_first=True)
 
     return binarized_data
-
+    
 def add_predicted_values(explanatory_variables, data, model, scaler=None):
     # Ensure all explanatory variables are present in the data
     missing_vars = [var for var in explanatory_variables if var not in data.columns]
@@ -56,6 +58,9 @@ class ExperienceStudy:
         self.explanatory_variables = explanatory_variables
         self.aggregated_data = aggregated_data
 
+        self.scaler = None
+        self.model = None
+
         self.joblib_data = {
             'target_variable': self.target_variable,
             'explanatory_variables': self.explanatory_variables
@@ -64,41 +69,61 @@ class ExperienceStudy:
     def bifurcate_data(self, aggregated_data, test_size=0.3):
 
         # Splitting the data into train and test sets (30% test, 70% train)
-        train_data, test_data = train_test_split(aggregated_data, test_size=test_size, random_state=42)
-        
-        return train_data, test_data
+        self.train_data, self.test_data = train_test_split(aggregated_data, test_size=test_size, random_state=42)
     
-    def find_scaler(self, train_data):
+    def find_scaler(self):
 
         # Initialize scaler and fit on training data only
-        scaler = StandardScaler()
-        scaler.fit(train_data[self.explanatory_variables])
+        self.scaler = StandardScaler()
+        self.scaler.fit(self.train_data[self.explanatory_variables])
 
-        # Scale both train and test data
-        train_data[self.explanatory_variables] = scaler.transform(train_data[self.explanatory_variables])
+        # Scale train data
+        self.train_data[self.explanatory_variables] = self.scaler.transform(self.train_data[self.explanatory_variables])
 
-        self.joblib_data['scaler'] = scaler
-        
-        return scaler
+        self.joblib_data['scaler'] = self.scaler
     
-    def run_experience_study(self, train_data, scaler):
+    def run_experience_study(self):
         # binarized_data = binarize_data(train_data)
 
-        X_scaled = scaler.transform(train_data[self.explanatory_variables])
+        X_scaled = self.scaler.transform(self.train_data[self.explanatory_variables])
         X_scaled_df = pd.DataFrame(X_scaled, columns=self.explanatory_variables)
 
-        y = train_data[self.target_variable]
+        y = self.train_data[self.target_variable]
         
         # Train the neural network
-        model = MLPRegressor(hidden_layer_sizes=(100,), max_iter=500, random_state=42)
+        self.model = MLPRegressor(hidden_layer_sizes=(100,), max_iter=500, random_state=42)
         # model = LinearRegression()
-        model.fit(X_scaled_df, y)
+        self.model.fit(X_scaled_df, y)
         
         # Save important objects to joblib data
         self.joblib_data.update({
             'run_date': datetime.now(),
-            'model': model
+            'model': self.model
         })
+
+    def get_feature_importance(self):
+        from sklearn.inspection import permutation_importance
+
+        # Ensure all explanatory variables are present in the data
+        missing_vars = [var for var in self.explanatory_variables if var not in self.test_data.columns]
+        if missing_vars:
+            raise ValueError(f"Missing explanatory variables: {missing_vars}")
+
+        # Extract the explanatory variables from the data
+        X = self.test_data[self.explanatory_variables]
+        y = self.test_data[self.target_variable]
+
+        # Scale the explanatory variables
+        X_scaled = self.scaler.transform(X)
+        X_scaled_df = pd.DataFrame(X_scaled, columns=self.explanatory_variables)
+
+        result = permutation_importance(self.model, X_scaled_df, y, n_repeats=10, random_state=42)
+        importance_df = pd.DataFrame({'Feature': X_scaled_df.columns, 'Importance': result.importances_mean})
+        importance_df = importance_df.sort_values(by='Importance', ascending=False)
+
+        self.joblib_data['importance_df'] = importance_df
+        
+        return importance_df
 
 def create_model(aggregated_data, explanatory_variables, joblib_loc):
 
@@ -109,16 +134,17 @@ def create_model(aggregated_data, explanatory_variables, joblib_loc):
         )
 
     # Data processing
-    train_data, test_data = exp_study.bifurcate_data(aggregated_data)   
+    exp_study.bifurcate_data(aggregated_data)   
 
     # Calculate scalar
-    scaler = exp_study.find_scaler(train_data)
+    exp_study.find_scaler()
 
     # Fit model
-    exp_study.run_experience_study(train_data, scaler)
-    model = exp_study.joblib_data['model']
+    exp_study.run_experience_study()
 
-    test_results = add_predicted_values(explanatory_variables, test_data, model, scaler)
+    importance_df = exp_study.get_feature_importance()
+
+    test_results = add_predicted_values(explanatory_variables, exp_study.test_data, exp_study.model, exp_study.scaler)
     exp_study.joblib_data['test_results'] = test_results
 
     try:
@@ -126,7 +152,7 @@ def create_model(aggregated_data, explanatory_variables, joblib_loc):
     except Exception as e:
         raise
 
-    return model, test_results
+    return exp_study.model, test_results, importance_df
 
 def run_predictions(df_prediction_input, joblib_loc):
 
@@ -140,3 +166,33 @@ def run_predictions(df_prediction_input, joblib_loc):
     predicted_values = add_predicted_values(explanatory_variables, df_prediction_input, model, scaler)
 
     return predicted_values
+
+def get_latest_joblib():
+    try:
+        # Fetch the latest model in a single context
+        with app.app_context():
+            # First, attempt to fetch the model with both conditions (active model)
+            model_record = ModelHistory.query.filter(
+                ModelHistory.end_date == None, 
+                ModelHistory.start_date != None
+            ).first()
+
+            if not model_record:
+                print('No active model found, saving most recent model...')
+
+                # Fetch the model without the start date condition
+                model_record = ModelHistory.query.filter(
+                    ModelHistory.end_date == None, 
+                ).first()
+
+                # Set the start date
+                model_record.start_date = date.today()
+
+                # Commit changes to the database
+                db.session.commit()
+
+            joblib_loc = model_record.joblib_loc
+    except:
+        raise ValueError('No models found')
+        
+    return joblib_loc
