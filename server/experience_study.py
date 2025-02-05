@@ -36,8 +36,7 @@ def add_predicted_values(explanatory_variables, data, model, scaler=None):
         # If no scaler, just use the raw data (no scaling)
         X_scaled_df = X
 
-    # Make predictions
-    data['predictions'] = model.predict(X_scaled_df)
+    data['predicted'] = model.predict(X_scaled_df)
 
     return data
 
@@ -91,8 +90,8 @@ class ExperienceStudy:
         y = train_data[self.target_variable]
         
         # Train the neural network
-        # model = MLPRegressor(hidden_layer_sizes=(100,), max_iter=500, random_state=42)
-        model = LinearRegression()
+        model = MLPRegressor(hidden_layer_sizes=(100,), max_iter=500, random_state=42)
+        # model = LinearRegression()
         model.fit(X_scaled_df, y)
         
         # Save important objects to joblib data
@@ -123,7 +122,7 @@ def create_model(aggregated_data, explanatory_variables, joblib_loc):
     exp_study.joblib_data['test_results'] = test_results
 
     try:
-        joblib.dump(exp_study.joblib_data, joblib_loc)
+        joblib.dump(exp_study.joblib_data, fr'joblib/{joblib_loc}')
     except Exception as e:
         raise
 
@@ -132,7 +131,7 @@ def create_model(aggregated_data, explanatory_variables, joblib_loc):
 def run_predictions(df_prediction_input, joblib_loc):
 
     # Load the model, scaler, and explanatory variables from the joblib file
-    joblib_data = joblib.load(joblib_loc)
+    joblib_data = joblib.load(fr'joblib/{joblib_loc}')
     model = joblib_data['model']
     scaler = joblib_data['scaler']
     explanatory_variables = joblib_data['explanatory_variables']
