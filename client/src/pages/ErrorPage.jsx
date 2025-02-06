@@ -1,11 +1,14 @@
 import styled from 'styled-components';
 import { NavLink } from "react-router-dom";
 
-const StyledMain = styled.main`
+const StyledContainer = styled.div`
   height: 100vh;
+  width: 100vw;
   padding: 0;
   margin: 0;
   justify-content: center;
+  align-items: center;
+  display: flex;
 
   /* Background image */
   background-image: url('/images/swarm.jpeg');
@@ -36,7 +39,7 @@ const StyledMain = styled.main`
 
 function ErrorPage() {
   return (
-    <StyledMain>
+    <StyledContainer>
         <div>
           <h3>An error has occured!</h3>
         <NavLink
@@ -46,7 +49,7 @@ function ErrorPage() {
             continue to site    
         </NavLink>
         </div>
-    </StyledMain>
+    </StyledContainer>
   );
 }
 

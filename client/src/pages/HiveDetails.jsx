@@ -14,7 +14,7 @@ import HoneyForm from '../forms/HoneyForm'
 import InspectionForm from '../forms/InspectionForm'
 import Loading from './Loading'
 import styled from 'styled-components';
-import { Button, HexagonButton } from '../MiscStyling';
+import { Button, HexagonButton, StyledContainer } from '../MiscStyling';
 import HiveToast from '../styles/HiveToast';
 
 const BackButton = styled.button`
@@ -88,7 +88,7 @@ const HiveDetails = () => {
   }
 
   return (
-    <main>
+    <StyledContainer>
       <h1>Hive Details</h1>
       <BackButton onClick={() => navigate(-1)}>Back to Hives</BackButton>
       <HiveCardContainer onClick={clickEdit} className={shrinkCard ? "shrunken" : ""}>
@@ -156,7 +156,7 @@ const HiveDetails = () => {
           </CardContainer>
         </>
       }
-    </main>
+    </StyledContainer>
   );
 };
 

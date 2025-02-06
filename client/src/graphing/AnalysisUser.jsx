@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import TrendChart from './TrendChart';
 import MultiLine from './MultiLine';
 import Loading from '../pages/Loading'
-import { StyledAnalysis } from '../MiscStyling';
+import { StyledContainer } from '../MiscStyling';
 import GraphSectionHeader from '../styles/GraphSectionHeader'
 import {useOutletContext} from "react-router-dom";
 import { CardContainer } from '../MiscStyling';
@@ -15,7 +15,7 @@ const AnalysisUser = () => {
     const userHives = hives.filter((hive) => hive.userId === user.id)
 
     return (
-      <StyledAnalysis>
+      <StyledContainer>
         <h2>Recommendations for My Hives</h2>
         <CardContainer>
           {userHives.map(hive=>
@@ -26,7 +26,7 @@ const AnalysisUser = () => {
             />
           )}
         </CardContainer>
-      </StyledAnalysis>
+      </StyledContainer>
     );
 }
 

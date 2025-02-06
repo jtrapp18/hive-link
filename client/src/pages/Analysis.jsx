@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import Loading from './Loading'
 import AnalysisHoney from '../graphing/AnalysisHoney';
 import AnalysisHealth from '../graphing/AnalysisHealth';
-import { Button, HexagonButton } from '../MiscStyling';
+import { Button, HexagonButton, StyledContainer } from '../MiscStyling';
 import { UserContext } from '../context/userProvider';
 import AnalysisUser from '../graphing/AnalysisUser';
 import { getJSON, snakeToCamel } from '../helper';
@@ -53,10 +53,12 @@ const Analysis = () => {
           });
       }, []);
 
+    const toProperCase = str => str.replace(/_/g, ' ').replace(/\b\w/g, match => match.toUpperCase());
+
     if (graphData.length===0) return <Loading />
 
     return (
-        <main>
+        <StyledContainer>
             <h1>Hive Analysis</h1>
             <ButtonContainer>
                 {user && <HexagonButton isActive={activeTab==='hivesUser'} onClick={()=>setActiveTab('hivesUser')}>My Hives</HexagonButton>}
@@ -88,7 +90,7 @@ const Analysis = () => {
                         <p><strong>Top impacts on honey production </strong>(Based on all available user data to date):</p>
                         <ol>
                             {studyResults.map(result=>
-                                <li>{result.Feature}</li>
+                                <li key={result.Feature}>{toProperCase(result.Feature)}</li>
                             )}
                         </ol>
                     </FeaturesContainer>
@@ -106,7 +108,7 @@ const Analysis = () => {
                     label='Hive Statistics for All Users'
                 />
             }
-        </main>
+        </StyledContainer>
     );
 }
 

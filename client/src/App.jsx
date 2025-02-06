@@ -75,15 +75,17 @@ function App() {
   return (
     <>
       <Header/>
-      <Outlet
-          context={{
-            hives,
-            setHives,
-            graphDataUser,
-            graphData,
-            predictions
-          }}
-        />
+      <main>
+        <Outlet
+            context={{
+              hives,
+              setHives,
+              graphDataUser,
+              graphData,
+              predictions
+            }}
+          />
+        </main>
       <Footer />
     </>
   );

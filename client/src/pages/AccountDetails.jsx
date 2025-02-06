@@ -5,7 +5,7 @@ import { patchJSONToDb } from "../helper";
 import styled from "styled-components";
 import { Button } from '../MiscStyling';
 import Error from "../styles/Error";
-import { StyledForm, StyledSubmit } from "../MiscStyling";
+import { StyledForm, StyledSubmit, StyledContainer } from "../MiscStyling";
 import useCrudStateDB from '../hooks/useCrudStateDB';
 
 const AccountDetails = () => {
@@ -33,7 +33,7 @@ const AccountDetails = () => {
     setIsEditing(false);
   };
     return (
-      <main>
+      <StyledContainer>
         {!isEditing ? (
           <StyledSubmit>
             <h1>Account Details</h1>
@@ -127,7 +127,7 @@ const AccountDetails = () => {
             </div>
           </StyledForm>
         )}
-      </main>
+      </StyledContainer>
   );
 };
   

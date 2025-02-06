@@ -13,6 +13,7 @@ const StyledCard = styled.article`
 
     .hive-summary {
         display: flex;
+        align-items: end;
         justify-content: space-between;
 
         .hive-card {
@@ -120,7 +121,7 @@ const AnalysisCard = ({ hive, prediction }) => {
                         <strong>Varroa Mite Count: </strong>
                         {varroaMiteCount}
                     </p>
-                    {varroaMiteCount > 3 && <p>⚠️ High mite count! Consider immediate treatment to prevent colony collapse.</p>}
+                    {varroaMiteCount > 3 && <p className='recommendation'>⚠️ High mite count! Consider immediate treatment to prevent colony collapse.</p>}
                     {varroaMiteCount > 0 && varroaMiteCount <= 3 && <p>🔍 Monitor mite levels closely and prepare for treatment if they increase.</p>}
                 </div>
                 <div className={bias >= 3 ? 'inspection-row' : 'at-risk inspection-row'}>

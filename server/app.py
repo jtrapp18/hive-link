@@ -478,12 +478,12 @@ class NearbyZipcodes(Resource):
 
 class BeekeepingNews(Resource):
 
-    def get(self):
+    def get(self, searchQuery="beekeeping OR honeybee OR apiary"):
         url = "https://www.googleapis.com/customsearch/v1"
         params = {
             "key": os.getenv("GSEARCH_API_KEY"),
             "cx": os.getenv("GSEARCH_ENGINE_ID"),
-            "q": "beekeeping OR honeybee OR apiary",
+            "q": searchQuery,
             "sort": "date",
             "num": 10,
             "lr": "lang_en"

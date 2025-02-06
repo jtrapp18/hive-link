@@ -4,6 +4,7 @@ import SignupForm from '../forms/SignUpForm'
 import LoggedInConfirm from '../components/LoggedInConfirm';
 import Error from '../styles/Error';
 import { Button } from '../MiscStyling';
+import { StyledContainer } from '../MiscStyling';
 
 function Login({errMessage}) {
   const [showSignUp, setShowSignUp] = useState(false);
@@ -12,7 +13,7 @@ function Login({errMessage}) {
   if (showConfirm) return <main><LoggedInConfirm setShowConfirm={setShowConfirm}/></main>
 
   return (
-    <main>
+    <StyledContainer>
       
       {!showSignUp &&
         <>
@@ -37,7 +38,7 @@ function Login({errMessage}) {
           </Button>
         </>
       }
-    </main>
+    </StyledContainer>
   );
 }
 

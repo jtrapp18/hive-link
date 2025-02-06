@@ -292,6 +292,15 @@ const PlotContainer = styled.div`
   }
 `;
 
+const StyledContainer = styled.div`
+    width: 95%;
+
+    display: flex;
+    flex-direction: column;
+    padding: 0 5% 0 5%;
+    justify-content: center;
+    align-items: center;
+`
 
 const StyledAnalysis = styled.div`
     width: 95%;
@@ -323,4 +332,4 @@ const Alert = styled.span`
 
 export { StyledMenuItem, StyledNavLink, StyledLink, StyledMain, StyledForm, 
   StyledSubmit, StyledDeleted, CardContainer, BorderGlow, Button, 
-  HexagonButton, StyledCard, StyledAnalysis, PlotContainer, Alert }
+  HexagonButton, StyledCard, StyledContainer, StyledAnalysis, PlotContainer, Alert }

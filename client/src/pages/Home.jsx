@@ -1,10 +1,11 @@
 import Carousel from 'react-bootstrap/Carousel';
 import styled from 'styled-components';
 
-const StyledMain = styled.main`
+const StyledContainer = styled.div`
   height: var(--size-body);
   padding: 0;
   margin: 0;
+  width: 100vw;
   background-image: None;
 
   div {
@@ -37,7 +38,7 @@ const StyledMain = styled.main`
 
 function Home() {
   return (
-    <StyledMain>
+    <StyledContainer>
         <div>
           <h1>Hive Link</h1>
           <h3>A Beekeeper Network Focused on Building Healthier Hives</h3>
@@ -52,7 +53,7 @@ function Home() {
             src="/images/bee_analysis.jpeg" // Provide the relative or absolute path to the image
             alt="First slide"
         />
-    </StyledMain>
+    </StyledContainer>
   );
 }
 

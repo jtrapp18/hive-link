@@ -9,7 +9,8 @@ import usePopupForm from '../hooks/usePopupForm'
 import useCrudStateDB from '../hooks/useCrudStateDB';
 import Loading from './Loading';
 import styled from 'styled-components';
- 
+import { StyledContainer } from '../MiscStyling';
+
 const SearchContainer = styled.div`
     display: flex;
     flex-direction: column;
@@ -64,7 +65,7 @@ const MyEvents = () => {
   const [isFiltered, setIsFiltered] = useState(false);
 
   const eventFiltering = (events) => {
-
+ 
     const eventsHosting = !user ? [] : events.filter((event) => event.userId === user.id)
     const  eventsAttending = !user ? [] : events.reduce((acc, event) => {
         if (event.signups.some(signup => signup.userId === user.id)) {
@@ -165,7 +166,7 @@ const MyEvents = () => {
   if (!events) return <Loading />
 
   return (
-      <main>
+      <StyledContainer>
         { user &&
           <>
             <h1>My Events</h1>
@@ -224,7 +225,7 @@ const MyEvents = () => {
           events={eventsFiltered} 
           eventCardProps={eventCardProps.other}
         />
-      </main>
+      </StyledContainer>
     );
   };
   

@@ -10,6 +10,7 @@ import { CardContainer } from '../MiscStyling';
 import usePopupForm from '../hooks/usePopupForm';
 import HiveForm from '../forms/HiveForm'
 import { Button } from '../MiscStyling';
+import { StyledContainer } from '../MiscStyling';
 
 const Hives = () => {
   const { user } = useContext(UserContext);
@@ -27,7 +28,7 @@ const Hives = () => {
   }
 
   return (
-      <main>
+      <StyledContainer>
         <h1>My Hives</h1>
         <p>Click on any hives to manage details</p>
         <h3>. . . . . </h3>
@@ -44,7 +45,7 @@ const Hives = () => {
             />
           )}
         </CardContainer>
-      </main>
+      </StyledContainer>
     );
   };
   

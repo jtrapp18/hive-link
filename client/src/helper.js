@@ -158,6 +158,38 @@ function getNearbyZipcodes(zipcode, radius) {
     });
 }
 
+async function getHiveGeoPoints(zipcodes) {
+  // Function to URL encode the zipcodes
+  const encodeZipcodes = (zipcodes) => {
+    const zipStr = zipcodes.map(zip => `"${zip}"`).join(",");  // Format as quoted strings
+    return encodeURIComponent(zipStr);  // URL encode
+  };
+
+  const mainUrl = 'https://public.opendatasoft.com/'
+  const mainApi = 'api/explore/v2.1/catalog/datasets/georef-united-states-of-america-zc-point/records?'
+  const selectSmt = 'select=zip_code%2C%20usps_city%2C%20ste_name%2C%20geo_point_2d&'
+  const whereSmt = `where=zip_code%20in%20(${encodeZipcodes(zipcodes)})&limit=-1`
+
+  const url = `${mainUrl}${mainApi}${selectSmt}${whereSmt}`
+
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      console.error(`Error fetching geo points! Status: ${response.status}`);
+      return null;
+    }
+
+    if (response.status === 204) {
+      return null;
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Request failed', error);
+  }
+}
+
 function getBeekeepingNews() {
 
   // Make the API call to your Lambda (via API Gateway)
@@ -218,4 +250,4 @@ const scrollToTop = () => {
 };
 
 export {userLogout, getJSON, getJSONById, postJSONToDb, patchJSONToDb, deleteJSONFromDb, 
-  getNearbyZipcodes, getBeekeepingNews, snakeToCamel, scrollToTop};
+  getNearbyZipcodes, getHiveGeoPoints, getBeekeepingNews, snakeToCamel, scrollToTop};
