@@ -46,7 +46,6 @@ Rubik */
   color: white;
   font-family: var(--default-font);
   font-size: var(--default-font-size);
-  color: var(--font-color-2);
 }
 
 .no-scroll {
@@ -158,8 +157,12 @@ h1 {
   font-family: var(--title-font), sans-serif;
 }
 
-h1, h2, h3 {
-  color: var(--font-color-1);
+h1 {
+  color: white;
+}
+
+h2, h3 {
+  color: var(--honey);
 }
 
 h1 {

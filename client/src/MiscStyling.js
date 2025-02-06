@@ -282,8 +282,11 @@ const StyledCard = styled.article`
 
 const PlotContainer = styled.div`
   width: 100%;
-  // overflow: hidden;
-  background: black;
+  height: 400px;
+  max-height: 90vh;
+  background: white;
+  cursor: pointer;
+  border: 3px solid var(--honey);
 
   .gtitle {
     text-decoration: underline;
@@ -302,14 +305,11 @@ const StyledContainer = styled.div`
     align-items: center;
 `
 
-const StyledAnalysis = styled.div`
-    width: 95%;
+const StyledAnalysis = styled(StyledContainer)`
 
-    display: flex;
-    flex-direction: column;
-    padding: 0 5% 0 5%;
-    justify-content: center;
-    align-items: center;
+    span {
+      color: var(--honey);
+    }
 
     .graph-container {
         display: grid;

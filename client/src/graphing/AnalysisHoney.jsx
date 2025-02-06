@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TrendChart from './TrendChart';
 import PieChart from './PieChart';
 import BarChart from './BarChart';
@@ -7,88 +7,106 @@ import GraphOptions from './GraphOptions';
 import styled from 'styled-components';
 import { StyledAnalysis } from '../MiscStyling';
 import GraphSectionHeader from '../styles/GraphSectionHeader'
+import Loading from '../pages/Loading';
 
 const AnalysisHoney = ({graphData, label, filters}) => {
 
     const isUserOnly = filters.includes('user')
     const pieSplit = isUserOnly ? 'hiveId' : 'state'
+    const [selectedSlice, setSelectedSlice] = useState(null);
+    const filterLabel = !selectedSlice ? '' : `${selectedSlice.labelCol}: ${selectedSlice.labelFilter}`
 
-    if (!graphData) return <h3>Loading...</h3>
-
-    if (graphData.length===0) return <h3>Loading...</h3>
+    if (!graphData) return <Loading />
+    if (graphData.length===0) return <Loading />
 
     if (graphData.weight.length===0) return <h3>No honey pulls have been recorded</h3>
 
+    const filterIndices = !selectedSlice ? null : graphData[selectedSlice.labelCol]
+        .map((item, index) => item === selectedSlice.labelFilter ? index : -1)
+        .filter(index => index !== -1);
+
+    const filterKeys = ["temp", "weight", "humidity", "antsPresent", "slugsPresent", 
+        "hiveBeetlesPresent", "waxMothsPresent", "waspsHornetsPresent", "micePresent", "robberBeesPresent"];
+
+    const filteredData = Object.fromEntries(
+        filterKeys.map(key => [
+        key,
+        !filterIndices ? graphData[key] : filterIndices.map(index => graphData[key][index])
+        ])
+    );
+
+    const camelToProperCase = (str) => {
+        return str
+          .replace(/([A-Z])/g, ' $1') // Add space before capital letters
+          .replace(/^./, (match) => match.toUpperCase()) // Capitalize the first letter
+          .split(' ') // Split into words
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
+          .join(' '); // Rejoin words
+      };
+
     return (
         <StyledAnalysis>
-            <h2>{label}</h2>
-            <GraphSectionHeader>Basic Statistics</GraphSectionHeader>
+            <h2>{label}{filterLabel ? ` for ${camelToProperCase(filterLabel)}` : ''}</h2>
+            {/* <GraphSectionHeader>Basic Statistics</GraphSectionHeader> */}
+            <span>{!filterLabel ? 'Click slice below to filter data' : 'Click outside of pie to clear filter'}</span>
             <div className='graph-container'>
                 <PieChart
-                    data={graphData}
                     title={`Honey Production by ${pieSplit==='hiveId' ? 'Hive' : 'State'}`}
-                    labelCol={pieSplit}
-                    valueCol='weight'
+                    label={{data: graphData[pieSplit], label: pieSplit}}
+                    valueData={graphData.weight}
+                    selectedSlice={selectedSlice}
+                    setSelectedSlice={setSelectedSlice}
                 />
             </div>
             <GraphSectionHeader>Impact of Temperature</GraphSectionHeader>
             <div className='graph-container'>
                 <TrendChart
-                    data={graphData}
                     title={'Honey Production by Average Temperature'}
-                    x={{dataCol: 'temp', label: 'Average Temperature'}}
-                    y={{dataCol: 'weight', label: 'Honey Production (lbs)'}}
+                    x={{data: filteredData.temp, label: 'Average Temperature'}}
+                    y={{data: filteredData.weight, label: 'Honey Production (lbs)'}}
                 />
                 <TrendChart
-                    data={graphData}
                     title={'Honey Production by Average Humidity'}
-                    x={{dataCol: 'humidity', label: 'Average Humidity'}}
-                    y={{dataCol: 'weight', label: 'Honey Production (lbs)'}}
+                    x={{data: filteredData.humidity, label: 'Average Humidity'}}
+                    y={{data: filteredData.weight, label: 'Honey Production (lbs)'}}
                 />
             </div>
             <GraphSectionHeader>Impact of Pests</GraphSectionHeader>
             <div className='graph-container'>
                 <TrendChart
-                    data={graphData}
                     title={'Impact of Ants on Honey Production'}
-                    x={{dataCol: 'antsPresent', label: '# Inspections with Ants Present'}}
-                    y={{dataCol: 'weight', label: 'Honey Production (lbs)'}}
+                    x={{data: filteredData.antsPresent, label: 'Inspections with Ants Present'}}
+                    y={{data: filteredData.weight, label: 'Honey Production (lbs)'}}
                 />
                 <TrendChart
-                    data={graphData}
                     title={'Impact of Slugs on Honey Production'}
-                    x={{dataCol: 'slugsPresent', label: '# Inspections with Slugs Present'}}
-                    y={{dataCol: 'weight', label: 'Honey Production (lbs)'}}
+                    x={{data: filteredData.slugsPresent, label: 'Inspections with Slugs Present'}}
+                    y={{data: filteredData.weight, label: 'Honey Production (lbs)'}}
                 />
                 <TrendChart
-                    data={graphData}
                     title={'Impact of Hive Beetles on Honey Production'}
-                    x={{dataCol: 'hiveBeetlesPresent', label: '# Inspections with Hive Beetles Present'}}
-                    y={{dataCol: 'weight', label: 'Honey Production (lbs)'}}
+                    x={{data: filteredData.hiveBeetlesPresent, label: 'Inspections with Hive Beetles Present'}}
+                    y={{data: filteredData.weight, label: 'Honey Production (lbs)'}}
                 />
                 <TrendChart
-                    data={graphData}
                     title={'Impact of Wax Moths on Honey Production'}
-                    x={{dataCol: 'waxMothsPresent', label: '# Inspections with Wax Moths Present'}}
-                    y={{dataCol: 'weight', label: 'Honey Production (lbs)'}}
+                    x={{data: filteredData.waxMothsPresent, label: 'Inspections with Wax Moths Present'}}
+                    y={{data: filteredData.weight, label: 'Honey Production (lbs)'}}
                 />
                 <TrendChart
-                    data={graphData}
                     title={'Impact of Wasps on Honey Production'}
-                    x={{dataCol: 'waspsHornetsPresent', label: '# Inspections with Wasps Present'}}
-                    y={{dataCol: 'weight', label: 'Honey Production (lbs)'}}
+                    x={{data: filteredData.waspsHornetsPresent, label: 'Inspections with Wasps Present'}}
+                    y={{data: filteredData.weight, label: 'Honey Production (lbs)'}}
                 />
                 <TrendChart
-                    data={graphData}
                     title={'Impact of Mice on Honey Production'}
-                    x={{dataCol: 'micePresent', label: '# Inspections with Mice Present'}}
-                    y={{dataCol: 'weight', label: 'Honey Production (lbs)'}}
+                    x={{data: filteredData.micePresent, label: 'Inspections with Mice Present'}}
+                    y={{data: filteredData.weight, label: 'Honey Production (lbs)'}}
                 />
                 <TrendChart
-                    data={graphData}
                     title={'Impact of Robber Bees on Honey Production'}
-                    x={{dataCol: 'robberBeesPresent', label: '# Inspections with Robber Bees Present'}}
-                    y={{dataCol: 'weight', label: 'Honey Production (lbs)'}}
+                    x={{data: filteredData.robberBeesPresent, label: 'Inspections with Robber Bees Present'}}
+                    y={{data: filteredData.weight, label: 'Honey Production (lbs)'}}
                 />
             </div>
         </StyledAnalysis>

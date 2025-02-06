@@ -49,7 +49,6 @@ const Analysis = () => {
           .then((data) => {
             const dataTransformed = snakeToCamel(data);
             setStudyResults(dataTransformed)
-            console.log(dataTransformed)
           });
       }, []);
 

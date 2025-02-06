@@ -1,17 +1,20 @@
 import React from 'react';
 import Plot from 'react-plotly.js';
 import styled from 'styled-components';
+import { useResizeDetector } from 'react-resize-detector'
 import { PlotContainer } from '../MiscStyling';
 
-const TrendChart = ({ data, title, x, y }) => {
+const TrendChart = ({ title, x, y }) => {
   // Prevent rendering if data is missing or empty
-  if (!data || !data[x.dataCol] || !data[y.dataCol]) {
+  if (!x.data || !y.data) {
     return <p>Loading chart...</p>;
   }
 
+  const { width, height, ref } = useResizeDetector({})
+
   const trace = {
-    x: data[x.dataCol],
-    y: data[y.dataCol],
+    x: x.data,
+    y: y.data,
     type: 'scatter',
     mode: 'markers',
     name: title,
@@ -30,12 +33,19 @@ const TrendChart = ({ data, title, x, y }) => {
   };
 
   return (
-    <PlotContainer>
+    <PlotContainer ref={ref}>
       <Plot
-        key={JSON.stringify(data)} // Ensures re-render when data updates
+        key={JSON.stringify(x.data)} // Ensures re-render when data updates
         data={[trace]}
-        layout={layout}
         config={{ responsive: true }}
+        style={{ width: '100%', height: '100%' }}
+        layout={{
+          ...layout, 
+          ...{
+            width: width, 
+            height: height
+          }
+        }}
       />
     </PlotContainer>
   );

@@ -26,7 +26,6 @@ const HiveForm = ({ initObj, handleAdd }) => {
     : {
         dateAdded: "",
         material: "",
-        city: "",
         addressLine: "",
         city: "",
         state: "",

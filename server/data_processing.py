@@ -1,15 +1,7 @@
-import os
-import joblib
 import copy
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.neural_network import MLPClassifier
-from config import db, app
-
-from models import Hive, ExplanatoryVariable
-from datetime import datetime
+from models import Hive
 
 def collect_data(app):
     with app.app_context():
