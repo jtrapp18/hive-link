@@ -313,6 +313,7 @@ const StyledAnalysis = styled(StyledContainer)`
 
     .graph-container {
         display: grid;
+        justify-content: center;
         width: 100%;
         grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
         gap: 1%;

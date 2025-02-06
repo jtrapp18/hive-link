@@ -9,7 +9,8 @@ import { Alert } from '../MiscStyling';
 const StyledCard = styled.article`
 
     border-bottom: 3px double var(--honey);
-    padding: 5% 0% 5% 0%;
+    padding: 3%;
+    background: black;
 
     .hive-summary {
         display: flex;

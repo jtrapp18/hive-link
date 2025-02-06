@@ -9,6 +9,14 @@ import { StyledAnalysis } from '../MiscStyling';
 import GraphSectionHeader from '../styles/GraphSectionHeader'
 import Loading from '../pages/Loading';
 
+const DrippingHoney = styled.img`
+    position: fixed;
+    right: 5%;
+    top: 0;
+    width: 20vw;
+    animation: slideDown 4s ease-out forwards;
+`
+
 const AnalysisHoney = ({graphData, label, filters}) => {
 
     const isUserOnly = filters.includes('user')
@@ -46,6 +54,10 @@ const AnalysisHoney = ({graphData, label, filters}) => {
 
     return (
         <StyledAnalysis>
+            <DrippingHoney 
+                src='/images/dripping_honey.png'
+                alt='dripping honey'
+            />
             <h2>{label}{filterLabel ? ` for ${camelToProperCase(filterLabel)}` : ''}</h2>
             {/* <GraphSectionHeader>Basic Statistics</GraphSectionHeader> */}
             <span>{!filterLabel ? 'Click slice below to filter data' : 'Click outside of pie to clear filter'}</span>

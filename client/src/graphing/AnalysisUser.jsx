@@ -8,6 +8,7 @@ import {useOutletContext} from "react-router-dom";
 import { CardContainer } from '../MiscStyling';
 import AnalysisCard from '../cards/AnalysisCard';
 import { UserContext } from '../context/userProvider';
+import styled from 'styled-components';
 
 const AnalysisUser = () => {
     const { user } = useContext(UserContext);

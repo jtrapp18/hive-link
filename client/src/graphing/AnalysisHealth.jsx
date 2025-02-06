@@ -4,6 +4,14 @@ import MultiLine from './MultiLine';
 import Loading from '../pages/Loading'
 import { StyledAnalysis } from '../MiscStyling';
 import GraphSectionHeader from '../styles/GraphSectionHeader'
+import styled from 'styled-components'
+
+const Hexagons = styled.img`
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 20vw;
+`
 
 const AnalysisHealth = ({graphData, label, filters}) => {
 
@@ -25,6 +33,10 @@ const AnalysisHealth = ({graphData, label, filters}) => {
 
     return (
         <StyledAnalysis>
+            <Hexagons
+                src='/images/hexagon_design.png'
+                alt='hexagon pattern'
+            />
             <h2>{label}</h2>
             {isUserOnly &&
                 <>

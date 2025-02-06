@@ -21,6 +21,8 @@ class User(db.Model, SerializerMixin):
     hives = db.relationship('Hive', back_populates='user', cascade='all, delete-orphan')
     events = db.relationship('Event', back_populates='user', cascade='all, delete-orphan')
     signups = db.relationship('Signup', back_populates='user', cascade='all, delete-orphan')
+    forums = db.relationship('Forum', back_populates='user', cascade='all, delete-orphan')
+    messages = db.relationship('Message', back_populates='user', cascade='all, delete-orphan')
     
     @hybrid_property
     def password_hash(self):

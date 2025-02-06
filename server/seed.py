@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from faker import Faker
 from config import db, app
-from models import Hive, Inspection, HoneyPull, CountCategory, Queen, User, Event, Signup
+from models import Hive, Inspection, HoneyPull, CountCategory, User, Event, Signup, Forum, Message
 
 fake = Faker()
 
@@ -14,11 +14,12 @@ with app.app_context():
 
     print("Deleting all records...")
 
+    Message.query.delete()
+    Forum.query.delete()    
     Signup.query.delete()
     Event.query.delete()    
     Inspection.query.delete()
     HoneyPull.query.delete()
-    Queen.query.delete()
     Hive.query.delete()
     User.query.delete()
 
@@ -67,36 +68,6 @@ with app.app_context():
             hive_date += timedelta(days=randint(100, 365))
 
     db.session.add_all(hives)
-    db.session.commit()
-
-    print("Creating queens...")
-
-    queens = []
-    for hive in hives:
-        queen = Queen(
-            hive_id=hive.id,
-            status=rc(['marked', 'unmarked', 'clipped']),  # Valid statuses
-            origin='original',
-            species=rc(['Italian', 'Carniolan', 'Buckfast', 'Caucasian', 'Russian', 'Cordovan', 'Other']),  # Valid species
-            date_introduced=hive.date_added
-        )
-        queens.append(queen)
-
-        queen_date = hive.date_added + timedelta(days=randint(30, 100))
-
-        while queen_date <= datetime.now().date():
-            queen = Queen(
-                hive_id=hive.id,
-                status=rc(['marked', 'unmarked', 'clipped']),  # Valid statuses
-                origin=rc(['swarm cells', 'purchased', 'original']),  # Valid origins
-                species=rc(['Italian', 'Carniolan', 'Buckfast', 'Caucasian', 'Russian', 'Cordovan', 'Other']),  # Valid species
-                date_introduced=queen_date,
-            )
-            queens.append(queen)
-
-            queen_date += timedelta(days=randint(30, 100))
-
-    db.session.add_all(queens)
     db.session.commit()
 
     print("Creating honey pulls...")
@@ -238,6 +209,38 @@ with app.app_context():
                 signups.append(signup)
 
     db.session.add_all(signups)
+    db.session.commit()
+
+    # Creating forums...
+    print("Creating forums...")
+
+    forums = []
+    for user in users:
+        if random() > 0.7:
+            forum = Forum(
+                user_id=user.id,
+                title=fake.bs(),  # Fake name for the forum
+                category=fake.bs(),  # Fake category for the forum (optional)
+            )
+            forums.append(forum)
+
+    db.session.add_all(forums)
+    db.session.commit()
+
+    print("Creating messages...")
+
+    messages = []
+    for forum in forums:
+        for user in users:
+            if random() > 0.6 and forum.user_id != user.id:
+                message = Message(
+                    user_id=user.id,
+                    forum_id=forum.id,
+                    message_text=fake.text(max_nb_chars=255),  # Fake message text for the message
+                )
+                messages.append(message)
+
+    db.session.add_all(messages)
     db.session.commit()
 
 

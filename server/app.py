@@ -6,7 +6,7 @@ import requests
 import uuid
 import pandas as pd
 from datetime import date
-from models import Queen, Hive, Inspection, HoneyPull, User, Event, Signup, ModelHistory
+from models import Hive, Inspection, HoneyPull, User, Event, Signup, ModelHistory, Forum, Message
 from config import app, db, api
 from datetime import datetime
 # from flask_migrate import Migrate
@@ -456,6 +456,117 @@ class SignupById(Resource):
         db.session.commit()
         return {}, 204
 
+class Forums(Resource):
+    def get(self):
+        forums = [forum.to_dict() for forum in Forum.query.all()]
+        return forums, 200
+
+    def post(self):
+        try:
+            # Get data from the request
+            data = request.get_json()
+
+            # Create new forum
+            new_forum = Forum(
+                user_id=data['user_id'],  # Link the forum to the user
+                title=data['title'],
+                category=data['category']
+            )
+
+            # Add the new forum to the database and commit
+            db.session.add(new_forum)
+            db.session.commit()
+
+            # Return the created forum as a response
+            return new_forum.to_dict(), 201
+        except Exception as e:
+            db.session.rollback()
+            return {'error': f'An error occurred: {str(e)}'}, 500
+
+
+class ForumById(Resource):
+    def get(self, forum_id):
+        forum = Forum.query.get(forum_id)
+        if not forum:
+            return {'error': 'Forum not found'}, 404
+        return forum.to_dict(), 200
+
+    def patch(self, forum_id):
+        forum = Forum.query.get(forum_id)
+        if not forum:
+            return {'error': 'Forum not found'}, 404
+        data = request.get_json()
+
+        for attr in data:
+            setattr(forum, attr, data.get(attr))
+
+        db.session.commit()
+        return forum.to_dict(), 200
+
+    def delete(self, forum_id):
+        forum = Forum.query.get(forum_id)
+        if not forum:
+            return {'error': 'Forum not found'}, 404
+        db.session.delete(forum)
+        db.session.commit()
+        return {}, 204
+
+class Messages(Resource):
+    def get(self):
+        messages = [message.to_dict() for message in Message.query.all()]
+        return messages, 200
+
+    def post(self):
+        try:
+            # Get data from the request
+            data = request.get_json()
+
+            # Create new message
+            new_message = Message(
+                user_id=data['user_id'],  # Link the message to the user
+                forum_id=data['forum_id'],  # Link the message to the forum
+                message_text=data['message_text'],  # Assuming message text is sent in the request
+                message_date=datetime.now(timezone.utc)  # Automatically use current UTC time
+            )
+
+            # Add the new message to the database and commit
+            db.session.add(new_message)
+            db.session.commit()
+
+            # Return the created message as a response
+            return new_message.to_dict(), 201
+        except Exception as e:
+            db.session.rollback()
+            return {'error': f'An error occurred: {str(e)}'}, 500
+
+
+class MessageById(Resource):
+    def get(self, message_id):
+        message = Message.query.get(message_id)
+        if not message:
+            return {'error': 'Message not found'}, 404
+        return message.to_dict(), 200
+
+    def patch(self, message_id):
+        message = Message.query.get(message_id)
+        if not message:
+            return {'error': 'Message not found'}, 404
+        data = request.get_json()
+
+        for attr in data:
+            setattr(message, attr, data.get(attr))
+
+        db.session.commit()
+        return message.to_dict(), 200
+
+    def delete(self, message_id):
+        message = Message.query.get(message_id)
+        if not message:
+            return {'error': 'Message not found'}, 404
+        db.session.delete(message)
+        db.session.commit()
+        return {}, 204
+
 class NearbyZipcodes(Resource):
 
     def get(self):
@@ -615,6 +726,10 @@ api.add_resource(Events, '/events', endpoint='events')
 api.add_resource(EventById, '/events/<int:event_id>')
 api.add_resource(Signups, '/signups', endpoint='signups')
 api.add_resource(SignupById, '/signups/<int:signup_id>')
+api.add_resource(Forums, '/forums', endpoint='forums')
+api.add_resource(ForumById, '/forums/<int:forum_id>')
+api.add_resource(Messages, '/messages', endpoint='messages')
+api.add_resource(MessageById, '/signups/<int:message_id>')
 api.add_resource(NearbyZipcodes, '/zipcodes')
 api.add_resource(BeekeepingNews, '/beekeeping_news')
 api.add_resource(GraphData, '/graph_data')

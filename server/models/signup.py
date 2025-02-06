@@ -5,7 +5,7 @@ from sqlalchemy_serializer import SerializerMixin
 from config import db
 
 class Signup(db.Model, SerializerMixin):
-    __tablename__ = 'signup'
+    __tablename__ = 'signups'
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)

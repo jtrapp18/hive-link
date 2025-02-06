@@ -58,7 +58,7 @@ function About() {
             Hive Link was created for beekeepers to manage hive and inspection data, connect fellow beekeepers, and learn from our bees together. If we can create a network of beekeepers and pool our records together, we will be able to better assess which factors have the highest impact on honey production and hive health, and use these findings to cultivate happier and healthier hives.
           </p>
           <p>
-            After all, if there is one lesson we can take away from our honeybees, it is that <strong>we are stronger when we work together.</strong>
+            After all, if there is one lesson we can take away from our honeybees, it's that <strong>we are stronger together.</strong>
           </p>
         </BorderGlow>
       </StyledContainer>
