@@ -16,6 +16,7 @@ const StyledDiv = styled.div`
 const LinkContainer = styled.div`
   position: fixed;
   top: calc(var(--height-header) + 3px);
+  height: 100vh;
   
   left: 0;
   z-index: 1000;
@@ -31,7 +32,7 @@ const LinkContainer = styled.div`
   transition: transform 0.3s ease-in-out; /* Smooth fold-out animation */
 
   a {
-    height: 12vh;
+    height: 10vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -78,7 +79,7 @@ const HamburgerButton = styled.button`
   }
 
   &.open {
-    transform: rotate(45deg) translateX(20%);
+    transform: rotate(45deg) translateX(30%);
   }
 
   .icon {
@@ -153,11 +154,11 @@ const MobileNavBar = () => {
           About
         </StyledNavLink>
         <StyledNavLink
-          to="/analysis"
+          to="/news"
           className="nav-link"
           onClick={handleClick}
         >
-          Analysis
+          News
         </StyledNavLink>
         <StyledNavLink
           to="/events"
@@ -165,6 +166,20 @@ const MobileNavBar = () => {
           onClick={handleClick}
         >
           Events
+        </StyledNavLink>
+        <StyledNavLink
+          to="/hive_map"
+          className="nav-link"
+          onClick={handleClick}
+        >
+          Map
+        </StyledNavLink>
+        <StyledNavLink
+          to="/analysis"
+          className="nav-link"
+          onClick={handleClick}
+        >
+          Analysis
         </StyledNavLink>
         <StyledNavLink
           to="/account_details"

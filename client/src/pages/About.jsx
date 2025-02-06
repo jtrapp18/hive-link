@@ -24,6 +24,7 @@ const StyledContainer = styled.div`
     color: var(--honey);
     font-weight: bold;
     width: 100%;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   }
 
   h3 {
@@ -31,10 +32,17 @@ const StyledContainer = styled.div`
     color: var(--yellow);
   }
 
+  p {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  strong {
+    color: var(--honey);
+  }
+
 `;
 
 function About() {
-  if (1==1) return <HiveMap />
   return (
       <StyledContainer>
         <BorderGlow>
@@ -44,7 +52,10 @@ function About() {
             One of the first lessons I learned as a beekeeper is that having bees is easy, but keeping bees is another story…
           </p>
           <p>
-            Bees are sensitive to a variety of internal and external factors, and as such, recordkeeping is critical to understanding the patterns and needs of the hive. If we can create a network of beekeepers and pool our records together, we will be able to better assess which factors have the highest impact on hive health and use these findings to cultivate happier and healthier hives.
+            Honey bees are sensitive to a variety of factors, and as such, recordkeeping is critical to understanding the patterns and needs of the hive.
+          </p>
+          <p>
+            Hive Link was created for beekeepers to manage hive and inspection data, connect fellow beekeepers, and learn from our bees together. If we can create a network of beekeepers and pool our records together, we will be able to better assess which factors have the highest impact on honey production and hive health, and use these findings to cultivate happier and healthier hives.
           </p>
           <p>
             After all, if there is one lesson we can take away from our honeybees, it is that <strong>we are stronger when we work together.</strong>

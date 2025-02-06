@@ -478,7 +478,9 @@ class NearbyZipcodes(Resource):
 
 class BeekeepingNews(Resource):
 
-    def get(self, searchQuery="beekeeping OR honeybee OR apiary"):
+    def get(self):
+        searchQuery = request.args.get("query", "beekeeping OR honeybee OR apiary")
+
         url = "https://www.googleapis.com/customsearch/v1"
         params = {
             "key": os.getenv("GSEARCH_API_KEY"),

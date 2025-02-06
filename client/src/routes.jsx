@@ -10,6 +10,7 @@ import ErrorPage from "./pages/ErrorPage";
 import Login from './pages/Login';
 import Analysis from './pages/Analysis'
 import BeekeepingNews from "./pages/BeekeepingNews";
+import HiveMap from "./pages/HiveMap";
 
 const routes = [
   {
@@ -36,7 +37,11 @@ const routes = [
       {
         path: "news",
         element: <BeekeepingNews />,
-      },      
+      },    
+      {
+        path: "hive_map",
+        element: <HiveMap />,
+      },       
       {
         path: "events",
         element: <MyEvents />,

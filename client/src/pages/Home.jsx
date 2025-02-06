@@ -6,10 +6,9 @@ const StyledContainer = styled.div`
   padding: 0;
   margin: 0;
   width: 100vw;
-  background-image: None;
 
   div {
-    padding: 2%;
+    padding: 0%;
     display: flex;
     flex-direction: column;
     align-items: center;

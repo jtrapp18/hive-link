@@ -37,6 +37,13 @@ function NavLinks({ handleClick, setIsMenuOpen }) {
         Events
       </StyledNavLink>
       <StyledNavLink
+        to="/hive_map"
+        className="nav-link"
+        onClick={handleClick}
+      >
+        Map
+      </StyledNavLink>
+      <StyledNavLink
         to="/analysis"
         className="nav-link"
         onClick={handleClick}

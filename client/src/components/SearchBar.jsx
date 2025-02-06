@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import styled from "styled-components";
 
 const SearchContainer = styled.div`
@@ -17,28 +18,51 @@ const SearchContainer = styled.div`
         font-size: 16px;
         border: 1px solid #ccc;
         padding: 10px 15px;
+        color: black;
 
         &:hover {
             background: var(--yellow);
         }
     }
+
+    span {
+        margin: -30px;
+        color: black;
+        cursor: pointer;
+    }
 `
 
-const SearchBar = ({searchQuery, setSearchQuery}) => {
+const SearchBar = ({pullFromSearch}) => {
+
+    const [searchInput, setSearchInput] = useState('');
     
-    function handleChangeSearch(event) {
-        setSearchQuery(event.target.value);
+    const handleChangeSearch = (event) => {
+        setSearchInput(event.target.value);
     }
+
+    const handleClearSearch = (event) => {
+        setSearchInput('');
+        pullFromSearch('');
+    }
+
+    const handleKeyPress = (event) => {
+        // Check if "Enter" key is pressed
+        if (event.key === 'Enter') {
+            pullFromSearch(searchInput);
+        }
+    };
 
     return (
         <SearchContainer >
             <input 
-                value={searchQuery}
+                value={searchInput}
                 type="text"
                 id="search"
                 placeholder="Search articles..."
                 onChange={handleChangeSearch}
+                onKeyDown={handleKeyPress}
             />
+            <span onClick={handleClearSearch}>✖</span>
         </SearchContainer>
     );
 }

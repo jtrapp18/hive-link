@@ -190,10 +190,12 @@ async function getHiveGeoPoints(zipcodes) {
   }
 }
 
-function getBeekeepingNews() {
+function getBeekeepingNews(searchQuery) {
+
+  const query = !searchQuery ? "beekeeping OR honeybee OR apiary" : searchQuery
 
   // Make the API call to your Lambda (via API Gateway)
-  return fetch(`/api/beekeeping_news`)
+  return fetch(`/api/beekeeping_news?query=${query}`)
     .then(res => {
       if (!res.ok) {
         console.error(`Error fetching articles! Status: ${res.status}`);
