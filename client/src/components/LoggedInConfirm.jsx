@@ -10,7 +10,7 @@ const StyledDiv = styled.div`
   padding: 50px;
 
   a:hover {
-    font-decoration: underline;
+    font-decoration: overline;
   }
 
   img {

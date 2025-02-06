@@ -50,16 +50,19 @@ function NavLinks({ handleClick, setIsMenuOpen }) {
       >
         Analysis
       </StyledNavLink>
+      <StyledNavLink
+        to="/forums"
+        className="nav-link"
+        onClick={handleClick}
+      >
+        Forums
+      </StyledNavLink>
       <StyledAccountIcon
         className="nav-link"
         onMouseOver={()=>setIsMenuOpen(true)}
         onMouseOut={()=>setIsMenuOpen(false)}
       >
         <FaUserAlt />
-        {/* <AccountDropdown 
-          isMenuOpen={isMenuOpen}
-          setIsMenuOpen={setIsMenuOpen}
-        /> */}
       </StyledAccountIcon> 
   </>
   );

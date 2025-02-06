@@ -525,8 +525,7 @@ class Messages(Resource):
             new_message = Message(
                 user_id=data['user_id'],  # Link the message to the user
                 forum_id=data['forum_id'],  # Link the message to the forum
-                message_text=data['message_text'],  # Assuming message text is sent in the request
-                message_date=datetime.now(timezone.utc)  # Automatically use current UTC time
+                message_text=data['message_text']
             )
 
             # Add the new message to the database and commit
@@ -538,7 +537,6 @@ class Messages(Resource):
         except Exception as e:
             db.session.rollback()
             return {'error': f'An error occurred: {str(e)}'}, 500
-
 
 class MessageById(Resource):
     def get(self, message_id):

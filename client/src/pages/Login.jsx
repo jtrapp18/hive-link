@@ -10,7 +10,7 @@ function Login({errMessage}) {
   const [showSignUp, setShowSignUp] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  if (showConfirm) return <main><LoggedInConfirm setShowConfirm={setShowConfirm}/></main>
+  if (showConfirm) return <div><LoggedInConfirm setShowConfirm={setShowConfirm}/></div>
 
   return (
     <StyledContainer>

@@ -11,6 +11,8 @@ import Login from './pages/Login';
 import Analysis from './pages/Analysis'
 import BeekeepingNews from "./pages/BeekeepingNews";
 import HiveMap from "./pages/HiveMap";
+import MyForums from "./pages/MyForums";
+import ForumDetails from "./pages/ForumDetails";
 
 const routes = [
   {
@@ -51,8 +53,16 @@ const routes = [
         element: <Hives />,
       },
       {
-        path: "hive/:id",
+        path: "hives/:id",
         element: <HiveDetails />,
+      },
+      {
+        path: "forums",
+        element: <MyForums />,
+      },
+      {
+        path: "forums/:id",
+        element: <ForumDetails />,
       },
       {
         path: "account_details",
