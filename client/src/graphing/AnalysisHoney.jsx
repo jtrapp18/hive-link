@@ -8,14 +8,8 @@ import styled from 'styled-components';
 import { StyledAnalysis } from '../MiscStyling';
 import GraphSectionHeader from '../styles/GraphSectionHeader'
 import Loading from '../pages/Loading';
-
-const DrippingHoney = styled.img`
-    position: fixed;
-    right: 5%;
-    top: 0;
-    width: 20vw;
-    animation: slideDown 4s ease-out forwards;
-`
+import { camelToProperCase } from '../helper'
+import DrippingHoney from '../components/DrippingHoney'
 
 const AnalysisHoney = ({graphData, label, filters}) => {
 
@@ -43,21 +37,9 @@ const AnalysisHoney = ({graphData, label, filters}) => {
         ])
     );
 
-    const camelToProperCase = (str) => {
-        return str
-          .replace(/([A-Z])/g, ' $1') // Add space before capital letters
-          .replace(/^./, (match) => match.toUpperCase()) // Capitalize the first letter
-          .split(' ') // Split into words
-          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
-          .join(' '); // Rejoin words
-      };
-
     return (
         <StyledAnalysis>
-            <DrippingHoney 
-                src='/images/dripping_honey.png'
-                alt='dripping honey'
-            />
+            <DrippingHoney />
             <h2>{label}{filterLabel ? ` for ${camelToProperCase(filterLabel)}` : ''}</h2>
             {/* <GraphSectionHeader>Basic Statistics</GraphSectionHeader> */}
             <span>{!filterLabel ? 'Click slice below to filter data' : 'Click outside of pie to clear filter'}</span>

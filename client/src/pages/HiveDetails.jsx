@@ -1,21 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import HiveCard from '../cards/HiveCard';
 import { useNavigate } from 'react-router-dom';
 import {useOutletContext} from "react-router-dom";
 import HiveForm from '../forms/HiveForm'
 import InspectionCard from '../cards/InspectionCard'
-import QueenCard from '../cards/QueenCard'
 import HoneyCard from '../cards/HoneyCard'
 import { CardContainer } from '../MiscStyling';
 import usePopupForm from '../hooks/usePopupForm';
-import QueenForm from '../forms/QueenForm'
 import HoneyForm from '../forms/HoneyForm'
 import InspectionForm from '../forms/InspectionForm'
 import Loading from './Loading'
 import styled from 'styled-components';
 import { Button, HexagonButton, StyledContainer } from '../MiscStyling';
 import HiveToast from '../styles/HiveToast';
+import DrippingHoney from '../components/DrippingHoney'
 
 const BackButton = styled.button`
   background: none;
@@ -49,7 +48,6 @@ const HiveDetails = () => {
   const [shrinkCard, setShrinkCard] = useState(false);
   const [showToast, setShowToast] = useState(null);
   const {PopupForm: HivePopup, setActiveItem: setActiveHive, setShowNewForm: setShowNewHive} = usePopupForm(HiveForm);
-  // const {PopupForm: QueenPopup, setActiveItem: setActiveQueen, setShowNewForm: setShowNewQueen} = usePopupForm(QueenForm);
   const {PopupForm: HoneyPullPopup, setActiveItem: setActiveHoneyPull, setShowNewForm: setShowNewHoneyPull} = usePopupForm(HoneyForm);
   const {PopupForm: InspectionPopup, setActiveItem: setActiveInspection, setShowNewForm: setShowNewInspection} = usePopupForm(InspectionForm);
 
@@ -101,9 +99,12 @@ const HiveDetails = () => {
         <HexagonButton isActive={activeTab==='honeyPulls'} onClick={()=>clickOther('honeyPulls')}>Honey Pulls</HexagonButton>
         <HexagonButton isActive={activeTab==='inspections'} onClick={()=>clickOther('inspections')}>Inspections</HexagonButton>
       </ButtonContainer>
-      <HivePopup />
+      <HivePopup
+        handleSubmit={setActiveHive}
+      />
       {activeTab==='honeyPulls' &&
         <>
+          <DrippingHoney />
           <h3>Honey Pulls</h3>
           <div>
             <Button onClick={clickNewHoney}>Add Honey Pull</Button>

@@ -7,12 +7,13 @@ import { patchJSONToDb, postJSONToDb } from '../helper';
 import Error from "../styles/Error";
 import { StyledForm, StyledSubmit, Button } from '../MiscStyling'
 import useCrudStateDB from '../hooks/useCrudStateDB';
+import FormSubmit from '../components/FormSubmit'
 
-const HiveForm = ({ initObj, handleAdd }) => {
+const HiveForm = ({ initObj, handleSubmit }) => {
   const { user } = useContext(UserContext);
   const [isEditing, setIsEditing] = useState(!initObj);
   const { setHives } = useOutletContext();
-  const {addItem, updateItem} = useCrudStateDB(setHives, "hives", null, handleAdd);
+  const {addItem, updateItem} = useCrudStateDB(setHives, "hives", null, handleSubmit);
 
   const initialValues = initObj
     ? {
@@ -166,39 +167,11 @@ const HiveForm = ({ initObj, handleAdd }) => {
           <Button type="submit">{initObj ? "Update Hive" : "Add Hive"}</Button>
         </StyledForm>
       ) : (
-        <StyledSubmit>
-            <h1>Hive Details</h1>
-            <div>
-              <label>Date Added:</label>
-              <p>{formik.values.dateAdded}</p>
-            </div>
-            <div>
-              <label>Material:</label>
-              <p>{formik.values.material}</p>
-            </div>
-            <div>
-              <label>Address Line:</label>
-              <p>{formik.values.addressLine}</p>
-            </div>
-            <div>
-              <label>City:</label>
-              <p>{formik.values.city}</p>
-            </div>
-            <div>
-              <label>State:</label>
-              <p>{formik.values.state}</p>
-            </div>
-            <div>
-              <label>Zip Code:</label>
-              <p>{formik.values.postalCode}</p>
-            </div>
-            <Button 
-              type="button" 
-              onClick={() => setIsEditing(true)}
-            >
-                Edit
-            </Button>
-        </StyledSubmit>
+        <FormSubmit
+          label={'Hive Details'}
+          formValues={formik.values}
+          setIsEditing={setIsEditing}
+        />
       )}
     </div>
   );

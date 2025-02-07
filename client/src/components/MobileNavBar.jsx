@@ -19,7 +19,7 @@ const LinkContainer = styled.div`
   height: 100vh;
   
   left: 0;
-  z-index: 1000;
+  z-index: 2000;
   width: 100vw;
   text-decoration: none;
   text-align: right;
@@ -212,7 +212,7 @@ const MobileNavBar = () => {
       </LinkContainer>
       <HamburgerButton 
         className={isMenuOpen ? "open" : ""} 
-        onClick={toggleMenu} 
+        onClick={toggleMenu}
         aria-label="Toggle Menu">
         <span className={`icon ${isMenuOpen ? "open" : ""}`}>
           {isMenuOpen ? "✕" : "☰"}

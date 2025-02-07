@@ -210,6 +210,9 @@ function getBeekeepingNews(searchQuery) {
     });
 }
 
+//****************************************************************************************************
+// Conversion between cases
+
 // Utility to convert snake_case to camelCase
 const snakeToCamel = (obj) => {
   if (Array.isArray(obj)) {
@@ -244,6 +247,18 @@ const camelToSnake = (obj) => {
   return obj;
 };
 
+const camelToProperCase = (str) => {
+  return str
+    .replace(/([A-Z])/g, ' $1') // Add space before capital letters
+    .replace(/^./, (match) => match.toUpperCase()) // Capitalize the first letter
+    .split(' ') // Split into words
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
+    .join(' '); // Rejoin words
+};
+
+//****************************************************************************************************
+// Other utilities
+
 const scrollToTop = () => {
   window.scrollTo({
     top: 0,
@@ -252,4 +267,4 @@ const scrollToTop = () => {
 };
 
 export {userLogout, getJSON, getJSONById, postJSONToDb, patchJSONToDb, deleteJSONFromDb, 
-  getNearbyZipcodes, getHiveGeoPoints, getBeekeepingNews, snakeToCamel, scrollToTop};
+  getNearbyZipcodes, getHiveGeoPoints, getBeekeepingNews, snakeToCamel, camelToProperCase, scrollToTop};

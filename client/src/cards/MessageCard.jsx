@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from '../context/userProvider';
 import { StyledCard } from '../MiscStyling';
 
-const HiveCard = ({ id,  dateAdded, material, city, state }) => {
+const HiveCard = ({ id,  dateAdded, material, city, state}) => {
     const navigate = useNavigate();
     const { user } = useContext(UserContext);
 
     function handleClick() {
-        navigate(`/hives/${id}`);
+        navigate(`/hive/${id}`);
     }
 
     return (

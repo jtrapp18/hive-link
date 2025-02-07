@@ -27,7 +27,7 @@ const Wrapper = styled.div`
   top: calc(var(--height-header) + 1%);
   left: 50%;
   transform: translateX(-50%);
-  border: 1px solid var(--honey);
+  border: 3px double var(--honey);
   background: gray;
   margin: 0;
   padding: 0;

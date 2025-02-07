@@ -31,6 +31,8 @@ const useCrudState = (setState, optionalFunc=null, addFunc=null) => {
 
           if (addFunc) {
             addFunc(updatedItem)
+            console.log('ran', addFunc)
+            console.log('values', updatedItem)
           }
 
           return updatedState

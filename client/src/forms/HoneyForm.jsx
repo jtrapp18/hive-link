@@ -8,13 +8,14 @@ import { patchJSONToDb, postJSONToDb } from "../helper";
 import Error from "../styles/Error";
 import { StyledForm, StyledSubmit, Button } from "../MiscStyling";
 import useCrudStateDB from '../hooks/useCrudStateDB';
+import FormSubmit from '../components/FormSubmit'
 
 const HoneyForm = ({ initObj }) => {
   const { user } = useContext(UserContext);
   const [isEditing, setIsEditing] = useState(!initObj);
   const { id: hiveId } = useParams(); // Get hive ID from URL
   const { setHives } = useOutletContext();
-  const {addToKey, deleteFromKey} = useCrudStateDB(setHives, "hives");
+  const {addToKey, updateKey} = useCrudStateDB(setHives, "hives");
 
   const initialValues = initObj
     ? {
@@ -30,10 +31,10 @@ const HoneyForm = ({ initObj }) => {
 
   const submitToDB = initObj
     ? (body) =>
-        updateKey(hive.id, "honeyPulls", initObj.id, body)
+        updateKey(hiveId, "honey_pulls", initObj.id, body)
     : (body) =>
-        addToKey(hive.id, "honeyPulls", body)
-
+        addToKey(hiveId, "honey_pulls", body)
+ 
   // Validation schema matching backend
   const validationSchema = Yup.object({
     dateReset: Yup.date()
@@ -44,8 +45,8 @@ const HoneyForm = ({ initObj }) => {
       .typeError("Invalid date format"),
     weight: Yup.number()
       .nullable()
-      .min(-10, "Weight cannot be below 0")
-      .max(50, "Weight cannot exceed 200")
+      .min(0, "Weight cannot be below 0")
+      .max(200, "Weight cannot exceed 200")
       .typeError("Weight must be a number"),
   });
 
@@ -56,7 +57,6 @@ const HoneyForm = ({ initObj }) => {
       const body = {
         ...values,
         hiveId: hiveId,
-        userId: user.id,
       };
 
       submitToDB(body);
@@ -115,24 +115,11 @@ const HoneyForm = ({ initObj }) => {
           <Button type="submit">{initObj ? "Update" : "Add"}</Button>
         </StyledForm>
       ) : (
-        <StyledSubmit>
-          <h1>Honey Pull Details</h1>
-          <div>
-            <label>Start Date: </label>
-            <p>{formik.values.dateReset}</p>
-          </div>
-          <div>
-            <label>Date Pulled: </label>
-            <p>{formik.values.datePulled}</p>
-          </div>
-          <div>
-            <label>Weight: </label>
-            <p>{formik.values.weight || "N/A"}</p>
-          </div>
-          <Button type="button" onClick={() => setIsEditing(true)}>
-            Edit
-          </Button>
-        </StyledSubmit>
+        <FormSubmit
+          label={'Honey Pull Details'}
+          formValues={formik.values}
+          setIsEditing={setIsEditing}
+        />
       )}
     </div>
   );

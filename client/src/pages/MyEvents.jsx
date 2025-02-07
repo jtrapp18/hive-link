@@ -10,46 +10,7 @@ import useCrudStateDB from '../hooks/useCrudStateDB';
 import Loading from './Loading';
 import styled from 'styled-components';
 import { StyledContainer } from '../MiscStyling';
-
-const SearchContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-  p {
-    margin: 0;
-  }
-  
-  span {
-    color: var(--honey);
-  }
-
-  section {
-    display: flex;
-    justify-content: center;
-
-  }
-
-  input, button {
-    margin: 5px;
-  }
-
-  input {
-    color: black;
-
-    &:hover {
-      background: var(--yellow);
-    }
-
-    &#zipcode {
-      width: 100px;
-    }
-
-    &#radius {
-      width: 50px;
-    }
-  }
-`
+import EventSearch from '../components/EventSearch';
 
 const MyEvents = () => {
   const { user } = useContext(UserContext);
@@ -59,10 +20,7 @@ const MyEvents = () => {
   const [eventsAttending, setEventsAttending] = useState([]);
   const [eventsFiltered, setEventsFiltered] = useState([]);
   const {PopupForm, setActiveItem, setShowNewForm, setShowDeleted} = usePopupForm(EventForm);
-  const [filterZip, setFilterZip] = useState(!user ? '' : user.zipcode);
-  const [filterRadius, setFilterRadius] = useState(5);
   const [nearbyZipcodes, setNearbyZipcodes] = useState([]);
-  const [isFiltered, setIsFiltered] = useState(false);
 
   const eventFiltering = (events) => {
  
@@ -106,19 +64,6 @@ const MyEvents = () => {
   const {addItem, updateItem, deleteItem, addToKey, deleteFromKey} = useCrudStateDB(setEvents, "events", 
     eventFiltering, setActiveItem);
 
-  function apiZipcodeCall() {
-    if (filterZip) {
-      getNearbyZipcodes(filterZip, filterRadius).then((json) => {
-        const zipcodesTransformed = snakeToCamel(json);
-        const zipcodeList = zipcodesTransformed.zipCodes.map(z=>z.zipCode);
-        setNearbyZipcodes(zipcodeList);
-        setIsFiltered(true);
-
-        console.log("Nearby Zipcodes:", zipcodeList)
-      });
-    }
-  }
-
   const addEvent = (event) => {
     addItem(event);
     setShowNewForm(false);
@@ -157,12 +102,6 @@ const MyEvents = () => {
     other: {role: "Other", btnLabel: "Sign Up", handleEventBtn: signupEvent},
   }
 
-  const clearFilters = () => {
-    setNearbyZipcodes([]);
-    setIsFiltered(false);
-    setFilterZip('');
-  }
-
   if (!events) return <Loading />
 
   return (
@@ -191,35 +130,9 @@ const MyEvents = () => {
           </>
         }
         <h1>Find Events</h1>
-        <SearchContainer>
-          <p htmlFor='zipcode'>Search near Zipcode: 
-            <input
-              id='zipcode'
-              name='zipcode'
-              onChange={(event)=>setFilterZip(event.target.value)}
-              value={filterZip}
-            >
-            </input>
-
-            within
-
-            <input
-              id='radius'
-              type="number"
-              name='radius'
-              onChange={(event)=>setFilterRadius(event.target.value)}
-              value={filterRadius}
-            >
-            </input>
-            miles
-          </p>
-          {/* Manually click button to avoid making too many API calls */}
-          <section>
-            <Button onClick={apiZipcodeCall}>Submit</Button>
-            <Button onClick={clearFilters}>Clear</Button>
-          </section>
-          {isFiltered ? <span>{`Filtered on events within ${filterRadius} miles of ${filterZip}`}</span> : <span>No Filters Applied</span>}
-        </SearchContainer>
+        <EventSearch
+          setNearbyZipcodes={setNearbyZipcodes}
+        />
         <h3>. . . . . </h3>
         <Events
           events={eventsFiltered} 

@@ -8,6 +8,7 @@ import * as Yup from "yup"; // Validation library
 import Error from "../styles/Error";
 import { StyledForm, StyledSubmit, Button } from '../MiscStyling';
 import FormFooter from "../components/FormFooter";
+import FormSubmit from '../components/FormSubmit'
 
 const ModForm = styled(StyledForm)`
   height: 70vh;
@@ -520,16 +521,11 @@ const InspectionForm = ({ initObj, addInspection, updateInspection, activeHoneyP
         )}
         </ModForm>
       ) : (
-        <StyledSubmit>
-          <h1>Inspection Details</h1>
-          <div>
-            <label>Fate:</label>
-            <p>{formik.values.fate}</p>
-          </div>
-          <Button type="button" onClick={() => setIsEditing(true)}>
-            Edit Inspection Details
-          </Button>
-        </StyledSubmit>
+        <FormSubmit
+          label={'Inspection Details'}
+          formValues={formik.values}
+          setIsEditing={setIsEditing}
+        />
       )}
       <FormFooter
         step={step}

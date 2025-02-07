@@ -13,6 +13,7 @@ const StyledMap = styled(MapContainer)`
   height: 600px;
   max-height: 70vh;
   border: 4px double var(--honey);
+  z-index: 0;
 `
 
 const HiveMap = () => {

@@ -9,8 +9,9 @@ const StyledDiv = styled.div`
   max-width: 90vw;
   padding: 50px;
 
-  a:hover {
-    font-decoration: overline;
+  a.nav-link:hover {
+    text-decoration: overline;
+    color: var(--bright-blue);
   }
 
   img {

@@ -20,7 +20,7 @@ const Hives = () => {
 
   if (!user) return <Login errMessage="Must be logged in to view hives"/>
 
-  const userHives = hives.filter((hive) => hive.userId === user.id)
+  const userHives = hives.filter((hive) => hive.userId === user.id) 
 
   const handleAdd = (hive) => {
     setShowNewForm(false);
@@ -36,9 +36,10 @@ const Hives = () => {
         <br />
         <CardContainer>
           <PopupForm
-            handleAdd={handleAdd}
+            handleSubmit={handleAdd}
           />
-          {userHives.map(hive=>
+          {userHives.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded))
+          .map(hive=>
             <HiveCard
                 key={hive.id}
                 {...hive}

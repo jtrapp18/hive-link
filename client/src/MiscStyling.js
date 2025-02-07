@@ -49,8 +49,8 @@ const StyledForm = styled.form`
   width: 500px;
   max-width: 90vw;
   padding: 50px;
-  border: 3px double var(--yellow);
-  overflow-y: scroll;
+  // border: 3px double var(--yellow);
+  overflow-y: auto;
 
   h1 {
     padding: 5px;
