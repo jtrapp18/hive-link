@@ -16,8 +16,21 @@ class Message(db.Model, SerializerMixin):
     user = db.relationship('User', back_populates='messages')
     forum = db.relationship('Forum', back_populates='messages')
 
-    serialize_rules = ('-user', '-forum')  # Exclude user and forum from serialization for security
+    # serialize_rules = ('-user', '-forum')  # Exclude user and forum from serialization for security
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'forum_id': self.forum_id,
+            'message_text': self.message_text,
+            'message_date': self.message_date.isoformat(),
+            'user': {
+                'id': self.user.id,
+                'username': self.user.username
+            }
+        }
+    
     def __repr__(self):
         return f'<Message {self.id}, User ID: {self.user_id}, Forum ID: {self.forum_id}>'
 

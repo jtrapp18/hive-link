@@ -1,52 +1,107 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { UserContext } from '../context/userProvider';
-import { StyledCard } from '../MiscStyling';
+import styled from 'styled-components';
 
-const HiveCard = ({ id,  dateAdded, material, city, state}) => {
-    const navigate = useNavigate();
-    const { user } = useContext(UserContext);
+const Message = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin: 10px;
+    width: 100%;
 
-    function handleClick() {
-        navigate(`/hive/${id}`);
+    .message-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .option-dots {
+            cursor: pointer;
+            color: var(--honey);
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            right: 0;
+            top: 100%;
+
+            button {
+                background: var(--yellow);
+                border: 1px solid var(--honey);
+            }
+        }
     }
 
+    .message-main {
+        width: 80%;
+    }
+
+    &.self {
+        align-items: end;
+    }
+
+    span {
+        color: gray;
+    }  
+
+    section {
+        border: 1px solid var(--honey);
+        padding: 10px;
+        border-radius: 20px;
+        background: white;
+
+        p {
+            color: black;
+        }
+    }
+`
+
+const MessageCard = ({ id,  userId, user: msgUser, messageDate, messageText}) => {
+    const { user } = useContext(UserContext);
+    const myMessage = userId===user.id
+    const [showOptions, setShowOptions] = useState(false);
+
+    const toggleOptions = () => {
+        setShowOptions(prev=>!prev)
+    }
+
+    const formattedTime = new Date(messageDate).toLocaleString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true
+    });
+
     return (
-        <StyledCard className="hive-card">
-            <div 
-                className="main-container"
-                onClick={handleClick}
-            >
-                <section className='img-section'>
-                    <img
-                        src='images/hive.png'
-                        alt='bee hive'
-                    />
+        <Message className={myMessage ? 'self' : ''}>
+            <div className='message-main'>
+                <div className='message-info'>
+                    <span>{msgUser.username} | {formattedTime}</span>
+                    {myMessage &&
+                        <h3
+                            className='option-dots'
+                            onClick={toggleOptions}
+                        >
+                            ...
+                        </h3>                    
+                    }
+                    {showOptions &&
+                        <div className='options-container'>
+                            <button>Edit Message</button>
+                            <button>Delete Message</button>
+                        </div>
+                    }
+                </div>
+                <section>
+                    <p>{messageText}</p>
                 </section>
-                <section className='info-section'>
-                    <div>
-                        <label>Material: </label>
-                        <p>{material}</p>
-                    </div>
-                    <div>
-                        <label>Added: </label>
-                        <p>{dateAdded}</p>
-                    </div>
-                    <div>
-                        <label>City: </label>
-                        <p>{city}</p>
-                    </div>
-                    <div>
-                        <label>State: </label>
-                        <p>{state}</p>
-                    </div>
-                </section>  
             </div>
-            <div className="bottom-container">
-                <span>{`Hive ID: ${id}`}</span>
-            </div>
-        </StyledCard>
+        </Message>
     );
 }
 
-export default HiveCard;
+export default MessageCard;
