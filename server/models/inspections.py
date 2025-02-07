@@ -62,8 +62,7 @@ class Inspection(db.Model, SerializerMixin):
     # queen = db.relationship('Queen', back_populates='inspections')
     honey_pull = db.relationship('HoneyPull', back_populates='inspections')
 
-    # serialize_rules = ('-activity_surrounding', '-pests_surrounding', '-feeding', '-treatment', 
-                    #    '-stores', '-fate', '-local_bloom', '-weather_conditions', '-chalkbrood_presence', '-varroa_mites')
+    serialize_rules = ('-honey_pull',)
 
     def __repr__(self):
         return f'<Inspection {self.id}, Hive ID: {self.hive_id}, Honey Pull ID: {self.honey_pull}, Date: {self.date_checked}>'
@@ -92,11 +91,11 @@ class Inspection(db.Model, SerializerMixin):
     @validates('activity_surrounding_hive', 'stability_in_hive')
     def validate_count_category(self, key, value):
         """Validates that the count categories are one of the valid options."""
-        valid_categories = [CountCategory.LOW, CountCategory.MEDIUM, CountCategory.HIGH]
-        # Convert value to uppercase to match database enum values
-        if value.upper() not in [category.name for category in valid_categories]:
-            raise ValueError(f"{key} must be one of {', '.join([category.value for category in valid_categories])}.")
-        return value
+        try:
+            return CountCategory(value)  # Convert the input to an Enum
+        except ValueError:
+            valid_values = ', '.join([category.value for category in CountCategory])
+            raise ValueError(f"{key} must be one of {valid_values}.")
 
     @validates('fate')
     def validate_fate(self, key, value):

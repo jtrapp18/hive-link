@@ -44,23 +44,23 @@ const InspectionForm = ({ initObj, honeyPullId, viewInspection }) => {
   const prevStep = () => setStep((prev) => prev - 1);
 
   const nextStep = async () => {
-    const errors = await formik.validateForm();
+    // const errors = await formik.validateForm();
   
-    if (Object.keys(errors).length > 0) {
-      formik.setTouched(
-        Object.keys(errors).reduce((acc, key) => ({ ...acc, [key]: true }), {})
-      );
-      return; // Stop navigation if there are errors
-    }
+    // if (Object.keys(errors).length > 0) {
+    //   formik.setTouched(
+    //     Object.keys(errors).reduce((acc, key) => ({ ...acc, [key]: true }), {})
+    //   );
+    //   return; // Stop navigation if there are errors
+    // }
   
     setStep(step + 1); // Proceed if no errors
   };
 
   const submitToDB = initObj
     ? (body) =>
-      updateNestedKey = (hiveId, "honey_pulls", honeyPullId, "inspections", initObj.id, body)
+      updateNestedKey(hiveId, "honey_pulls", honeyPullId, "inspections", initObj.id, body)
     : (body) => {
-      addNestedKey = (hiveId, "honey_pulls", "inspections", body)
+      addNestedKey(hiveId, "honey_pulls", "inspections", body)
     }
 
   // Validation schema
@@ -69,9 +69,9 @@ const InspectionForm = ({ initObj, honeyPullId, viewInspection }) => {
     bias: Yup.number().required("Bias is required").min(0, "Must be a non-negative number"),
     hasEggs: Yup.boolean(),
     hasLarvae: Yup.boolean(),    
-    fate: Yup.string().required("Fate is required").oneOf(["Dead", "Swarmed", "Split", "Thriving"]),
-    activitySurroundingHive: Yup.string().oneOf(["Low", "Medium", "High"]),
-    stabilityInHive: Yup.string().oneOf(["Low", "Medium", "High"]),
+    fate: Yup.string().required("Fate is required").oneOf(["Dead", "Swarmed", "Split", "Active"]),
+    activitySurroundingHive: Yup.string().nullable().oneOf(["Low", "Medium", "High"]),
+    stabilityInHive: Yup.string().nullable().oneOf(["Low", "Medium", "High"]),
     temp: Yup.number().min(-10, "Temperature must be between -10 and 50").max(50, "Temperature must be between -10 and 50"),
     humidity: Yup.number().min(0, "Humidity must be between 0 and 100").max(100, "Humidity must be between 0 and 100"),
     weatherConditions: Yup.string().oneOf(["Sunny", "Overcast", "Rainy", "Snowy", "Windy"]),
@@ -95,7 +95,7 @@ const InspectionForm = ({ initObj, honeyPullId, viewInspection }) => {
 
   const formik = useFormik({
       enableReinitialize: true,
-      initialValues: initObj || { 
+      initialValues: {...initObj, notes: !initObj.notes ? "" : initObj.notes} || { 
       dateChecked: "", 
       bias: "", 
       hasEggs: false,      
@@ -433,7 +433,7 @@ const InspectionForm = ({ initObj, honeyPullId, viewInspection }) => {
                 <option value="Dead">Dead</option>
                 <option value="Swarmed">Swarmed</option>
                 <option value="Split">Split</option>
-                <option value="Thriving">Thriving</option>
+                <option value="Active">Active</option>
               </select>
               {formik.touched.fate && formik.errors.fate && (
                 <Error>{formik.errors.fate}</Error>

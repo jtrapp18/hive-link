@@ -5,7 +5,8 @@ import useCrudState from "./useCrudState";
  
 const useCrudStateDB = (setState, dbKey, optionalFunc=null, addFunc=null) => {
 
-    const {addToState, updateState, deleteFromState, addToKeyInState, updateKeyInState, deleteFromKeyInState} = 
+    const {addToState, updateState, deleteFromState, addToKeyInState, updateKeyInState, 
+      deleteFromKeyInState, addNestedToKeyInState, updateNestedKeyInState} = 
     useCrudState(setState, optionalFunc, addFunc);
 
     const addItem = (item) => {

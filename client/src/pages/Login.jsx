@@ -14,7 +14,6 @@ function Login({errMessage}) {
 
   return (
     <StyledContainer>
-      
       {!showSignUp &&
         <>
           {errMessage && <Error>{errMessage}</Error>}        

@@ -101,7 +101,7 @@ with app.app_context():
     print("Creating inspections...")
 
     inspections = []
-    count_categories = [option.name for option in CountCategory]
+    count_categories = [option.value for option in CountCategory]
 
     for honey_pull in honey_pulls:
         hive = honey_pull.hive
@@ -186,7 +186,7 @@ with app.app_context():
 
     events = []
     for user in users:
-        if random()>.7:
+        if random()>.5:
             event = Event(
                 user_id=user.id,
                 title=fake.bs(),  # Fake name for the event
@@ -204,7 +204,7 @@ with app.app_context():
     signups = []
     for event in events:
         for user in users:
-            if random()>.6 and event.user_id != user.id:
+            if random()>.5 and event.user_id != user.id:
                 signup = Signup(user_id=user.id, event_id=event.id)
                 signups.append(signup)
 
@@ -216,7 +216,7 @@ with app.app_context():
 
     forums = []
     for user in users:
-        if random() > 0.7:
+        if random() > 0.3:
             forum = Forum(
                 user_id=user.id,
                 title=fake.bs(),  # Fake name for the forum
@@ -232,7 +232,7 @@ with app.app_context():
     messages = []
     for forum in forums:
         for user in users:
-            if random() > 0.6 and forum.user_id != user.id:
+            if random() > 0.1 and forum.user_id != user.id:
                 message = Message(
                     user_id=user.id,
                     forum_id=forum.id,
