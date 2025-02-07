@@ -9,11 +9,11 @@ import { StyledForm, StyledSubmit, Button } from '../MiscStyling'
 import useCrudStateDB from '../hooks/useCrudStateDB';
 import FormSubmit from '../components/FormSubmit'
 
-const HiveForm = ({ initObj, handleSubmit }) => {
+const HiveForm = ({ initObj, viewHive }) => {
   const { user } = useContext(UserContext);
   const [isEditing, setIsEditing] = useState(!initObj);
   const { setHives } = useOutletContext();
-  const {addItem, updateItem} = useCrudStateDB(setHives, "hives", null, handleSubmit);
+  const {addItem, updateItem} = useCrudStateDB(setHives, "hives", null, viewHive);
 
   const initialValues = initObj
     ? {

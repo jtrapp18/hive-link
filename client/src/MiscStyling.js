@@ -79,8 +79,8 @@ const StyledForm = styled.form`
 `
 
 const StyledSubmit = styled.div`
-  width: fit-content;
-  max-width: 90vw;
+  width: 500px;
+  max-width: 95vw;
   padding: 50px;
   display: flex;
   flex-direction: column;

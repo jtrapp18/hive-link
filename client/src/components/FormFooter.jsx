@@ -5,6 +5,22 @@ const StyledFooter = styled.footer`
     display: flex;
     align-items: center;
     justify-content: space-between;
+    position: absolute;
+    bottom:0;
+    left: 0;
+    width: 100%;
+    background: black;
+    padding-top: 2%;
+    box-shadow: 0px -4px 10px rgba(115, 108, 108, 0.5);
+
+    .page-count {
+        cursor: pointer;
+
+        &:hover {
+            color: var(--bright-blue);
+            text-decoration: underline;
+        }
+    }
 
     button {
         background: black;
@@ -16,7 +32,7 @@ const StyledFooter = styled.footer`
     }
 `
 
-const FormFooter = ({step, prevStep, nextStep}) => {
+const FormFooter = ({step, setStep, prevStep, nextStep}) => {
 
     return (
         <StyledFooter id="footer">
@@ -27,7 +43,7 @@ const FormFooter = ({step, prevStep, nextStep}) => {
             >
                 Prev Page
             </button>
-            <p>{`Page ${step} of 5`}</p>
+            <p className='page-count' onClick={()=>setStep(0)}>{step===0 ? 'Index' : `Page ${step} of 5`}</p>
             <button 
                 type='button' 
                 onClick={nextStep}

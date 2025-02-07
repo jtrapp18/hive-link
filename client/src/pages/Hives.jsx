@@ -22,7 +22,7 @@ const Hives = () => {
 
   const userHives = hives.filter((hive) => hive.userId === user.id) 
 
-  const handleAdd = (hive) => {
+  const viewHive = (hive) => {
     setShowNewForm(false);
     setActiveItem(hive);
   }
@@ -36,7 +36,7 @@ const Hives = () => {
         <br />
         <CardContainer>
           <PopupForm
-            handleSubmit={handleAdd}
+            viewHive={viewHive}
           />
           {userHives.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded))
           .map(hive=>

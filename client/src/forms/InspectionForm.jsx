@@ -6,9 +6,11 @@ import { useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup"; // Validation library
 import Error from "../styles/Error";
-import { StyledForm, StyledSubmit, Button } from '../MiscStyling';
+import { StyledForm, Button } from '../MiscStyling';
 import FormFooter from "../components/FormFooter";
-import FormSubmit from '../components/FormSubmit'
+import FormSubmit from '../components/FormSubmit';
+import useCrudStateDB from '../hooks/useCrudStateDB';
+import InspectionIndex from "../components/InspectionIndex";
 
 const ModForm = styled(StyledForm)`
   height: 70vh;
@@ -30,13 +32,14 @@ const ModForm = styled(StyledForm)`
   }
 `
 
-const InspectionForm = ({ initObj, addInspection, updateInspection, activeHoneyPull }) => {
-  const { id: hiveId } = useParams(); // Get hive ID from URL
-  const { hives } = useOutletContext();
+const InspectionForm = ({ initObj, honeyPullId, viewInspection }) => {
+  const { user } = useContext(UserContext);
   const [isEditing, setIsEditing] = useState(!initObj);
+  const { id } = useParams(); // Get hive ID from URL
+  const { setHives } = useOutletContext();
+  const {addNestedKey, updateNestedKey} = useCrudStateDB(setHives, "hives", null, viewInspection);
+  const hiveId = parseInt(id);
   const [step, setStep] = useState(1);
-
-  const hive = hives.find(hive=>hive.id===parseInt(hiveId))
 
   const prevStep = () => setStep((prev) => prev - 1);
 
@@ -55,9 +58,9 @@ const InspectionForm = ({ initObj, addInspection, updateInspection, activeHoneyP
 
   const submitToDB = initObj
     ? (body) =>
-      updateInspection(initObj.id, body)
+      updateNestedKey = (hiveId, "honey_pulls", honeyPullId, "inspections", initObj.id, body)
     : (body) => {
-      addInspection(body)
+      addNestedKey = (hiveId, "honey_pulls", "inspections", body)
     }
 
   // Validation schema
@@ -127,7 +130,7 @@ const InspectionForm = ({ initObj, addInspection, updateInspection, activeHoneyP
     onSubmit: (values) => {
       const body = {
         ...values,
-        honeyPullId: activeHoneyPull.id,
+        honeyPullId: honeyPullId,
       };
 
       submitToDB(body);
@@ -141,10 +144,13 @@ const InspectionForm = ({ initObj, addInspection, updateInspection, activeHoneyP
         <ModForm onSubmit={formik.handleSubmit}>
           <h2>{initObj ? "Inspection Details" : "Add New Inspection"}</h2>
           <br />
+        {step ===0 && (
+          <InspectionIndex setStep={setStep}/>
+        )}
         {step === 1 && (
           <>
             <h3>Basic Information</h3>
-            <span>{`Honey Pull ID: ${activeHoneyPull.id}`}</span>
+            <span>{`Honey Pull ID: ${honeyPullId}`}</span>
             <br />
             <div className="form-input">
               <label htmlFor="dateChecked">Date</label>
@@ -519,6 +525,12 @@ const InspectionForm = ({ initObj, addInspection, updateInspection, activeHoneyP
             <Button type="submit">{initObj ? "Update Inspection" : "Submit New Inspection"}</Button>
           </>
         )}
+          <FormFooter
+            step={step}
+            setStep={setStep}
+            prevStep={prevStep} 
+            nextStep={nextStep}
+          />
         </ModForm>
       ) : (
         <FormSubmit
@@ -527,11 +539,6 @@ const InspectionForm = ({ initObj, addInspection, updateInspection, activeHoneyP
           setIsEditing={setIsEditing}
         />
       )}
-      <FormFooter
-        step={step}
-        prevStep={prevStep} 
-        nextStep={nextStep}
-      />
     </div>
   );
 };

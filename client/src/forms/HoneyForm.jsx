@@ -4,19 +4,19 @@ import { useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup"; // Validation library
 import { UserContext } from "../context/userProvider";
-import { patchJSONToDb, postJSONToDb } from "../helper";
 import Error from "../styles/Error";
-import { StyledForm, StyledSubmit, Button } from "../MiscStyling";
+import { StyledForm, Button } from "../MiscStyling";
 import useCrudStateDB from '../hooks/useCrudStateDB';
 import FormSubmit from '../components/FormSubmit'
 
-const HoneyForm = ({ initObj }) => {
+const HoneyForm = ({ initObj, viewHoney }) => {
   const { user } = useContext(UserContext);
   const [isEditing, setIsEditing] = useState(!initObj);
-  const { id: hiveId } = useParams(); // Get hive ID from URL
+  const { id } = useParams(); // Get hive ID from URL
   const { setHives } = useOutletContext();
-  const {addToKey, updateKey} = useCrudStateDB(setHives, "hives");
-
+  const {addToKey, updateKey} = useCrudStateDB(setHives, "hives", null, viewHoney);
+  const hiveId = parseInt(id);
+ 
   const initialValues = initObj
     ? {
         dateReset: initObj.dateReset || "",
@@ -55,7 +55,9 @@ const HoneyForm = ({ initObj }) => {
     validationSchema,
     onSubmit: (values) => {
       const body = {
-        ...values,
+        ...Object.fromEntries(
+          Object.entries(values).map(([key, value]) => [key, value === "" ? null : value])
+        ),
         hiveId: hiveId,
       };
 

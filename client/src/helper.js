@@ -215,16 +215,23 @@ function getBeekeepingNews(searchQuery) {
 
 // Utility to convert snake_case to camelCase
 const snakeToCamel = (obj) => {
+  const singleReplace = (str) => str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+
   if (Array.isArray(obj)) {
     return obj.map(snakeToCamel);
   }
 
   if (obj && typeof obj === 'object') {
     return Object.keys(obj).reduce((result, key) => {
-      const camelCaseKey = key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+      const camelCaseKey = singleReplace(key);
       result[camelCaseKey] = snakeToCamel(obj[key]);
       return result;
     }, {});
+  }
+
+  if (obj && typeof obj === 'string') {
+    // Ensure we don't try to change an already camelCase string
+    return obj !== singleReplace(obj) ? singleReplace(obj) : obj;
   }
 
   return obj;

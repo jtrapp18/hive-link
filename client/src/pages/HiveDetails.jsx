@@ -41,7 +41,7 @@ const HiveCardContainer = styled.article`
 
 const HiveDetails = () => {
   const { id } = useParams(); // Get the ID from the URL
-  const { hives } = useOutletContext();
+  const { hives, setHives } = useOutletContext();
   const navigate = useNavigate();
   const hive = hives.find((hive) => hive.id === parseInt(id));
   const [activeTab, setActiveTab] = useState(null);
@@ -54,7 +54,17 @@ const HiveDetails = () => {
   if (!hive) {return <Loading />}
 
   const inspections = hive.honeyPulls.reduce((inspections, honeyPull) => [...inspections, ...honeyPull.inspections], [])
-  const activeHoneyPull = hive.honeyPulls.find(honeyPull=>!honeyPull.pullDate)
+  const activeHoneyPull = hive.honeyPulls.find(honeyPull=>!honeyPull.datePulled)
+
+  const viewHoney = (honeyPull) => {
+    setShowNewHoneyPull(false);
+    setActiveHoneyPull(honeyPull);
+  }
+
+  const viewInspection = (inspection) => {
+    setShowNewInspection(false);
+    setActiveInspection(inspection);
+  }
 
   const clickNewHoney = () => {
     if (activeHoneyPull) {
@@ -100,7 +110,7 @@ const HiveDetails = () => {
         <HexagonButton isActive={activeTab==='inspections'} onClick={()=>clickOther('inspections')}>Inspections</HexagonButton>
       </ButtonContainer>
       <HivePopup
-        handleSubmit={setActiveHive}
+        viewHive={setActiveHive}
       />
       {activeTab==='honeyPulls' &&
         <>
@@ -117,7 +127,9 @@ const HiveDetails = () => {
             }
           </div>
           <CardContainer>
-            <HoneyPullPopup />
+            <HoneyPullPopup
+              viewHoney={viewHoney}
+            />
             {hive.honeyPulls
             .sort((a, b) => new Date(b.dateReset) - new Date(a.dateReset)) // Sort by date in descending order
             .map((honeyPull) => (
@@ -144,7 +156,10 @@ const HiveDetails = () => {
             }
           </div>
           <CardContainer>
-            <InspectionPopup activeHoneyPull={activeHoneyPull}/>
+            <InspectionPopup 
+              honeyPullId={activeHoneyPull.id}
+              viewInspection={viewInspection}
+            />
             {inspections
             .sort((a, b) => new Date(b.dateChecked) - new Date(a.dateChecked)) // Sort by date in descending order
             .map((inspection) => (
