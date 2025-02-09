@@ -320,58 +320,25 @@ class InspectionById(Resource):
         db.session.delete(inspection)
         db.session.commit()
         return {}, 204
-
-class Queens(Resource):
-    def post(self):
-        try:
-            # Get data from the request
-            data = request.get_json()
-
-            # Create new queen
-            new_queen = Queen(
-                hive_id=data['hive_id'],  # Link the queen to a hive
-                status=data['status'],
-                origin=data['origin'],
-                species=data['species'],
-                date_introduced=data['date_introduced'],
-                replacement_cause=data.get('replacement_cause')  # Optional field
-            )
-
-            # Add the new queen to the database and commit
-            db.session.add(new_queen)
-            db.session.commit()
-
-            # Return the created queen as a response
-            return new_queen.to_dict(), 201
-        except Exception as e:
-            db.session.rollback()
-            return {'error': f'An error occurred: {str(e)}'}, 500
-
-class QueenById(Resource):
-    def patch(self, queen_id):
-        queen = Queen.query.get(queen_id)
-        if not queen:
-            return {'error': 'Queen not found'}, 404
-        data = request.get_json()
-
-        for attr in data:
-            setattr(queen, attr, data.get(attr))
-
-        db.session.commit()
-        return queen.to_dict(), 200
-
-    def delete(self, queen_id):
-        queen = Queen.query.get(queen_id)
-        if not queen:
-            return {'error': 'Queen not found'}, 404
-        db.session.delete(queen)
-        db.session.commit()
-        return {}, 204
     
 class Events(Resource):
     def get(self):
-        events = [event.to_dict() for event in Event.query.all()]
-        return events, 200
+        user_id = session.get('user_id')  # Returns None if no user is signed in
+        events = Event.query.all()  # Get all events
+
+        def transform_event(event):
+            # Set flags to False if no user is logged in
+            is_hosted_by_user = event.user_id == user_id if user_id else False
+            is_attended_by_user = any(signup.user_id == user_id for signup in event.signups) if user_id else False
+
+            # Convert event to dict
+            event_data = event.to_dict()
+            event_data["is_hosted_by_user"] = is_hosted_by_user
+            event_data["is_attended_by_user"] = is_attended_by_user
+            return event_data
+
+        events_data = [transform_event(event) for event in events]
+        return events_data, 200
 
     def post(self):
         try:
@@ -458,9 +425,27 @@ class SignupById(Resource):
         return {}, 204
 
 class Forums(Resource):
+
     def get(self):
-        forums = [forum.to_dict() for forum in Forum.query.all()]
-        return forums, 200
+        user_id = session.get('user_id')  # Ensure 'user_id' is in the session
+        if not user_id:
+            return {"error": "User not authenticated"}, 401  # Handle unauthenticated users
+        
+        forums = Forum.query.all()  # Fetch all forums
+        
+        def transform_forum(forum):
+            return {
+                "id": forum.id,
+                "title": forum.title,
+                "category": forum.category,
+                "created_at": forum.created_at.isoformat(),
+                "user": forum.user.to_dict(),  # Assuming forum has a 'user' relation
+                "is_started_by_user": forum.user_id == user_id,
+                "is_participated_by_user": any(message.user_id == user_id for message in forum.messages)
+            }
+        
+        forums_data = [transform_forum(forum) for forum in forums]
+        return forums_data, 200
 
     def post(self):
         try:
@@ -773,8 +758,6 @@ api.add_resource(HoneyPulls, '/honey_pulls', endpoint='honey_pulls')
 api.add_resource(HoneyPullById, '/honey_pulls/<int:honey_pull_id>')
 api.add_resource(Inspections, '/inspections', endpoint='inspections')
 api.add_resource(InspectionById, '/inspections/<int:inspection_id>')
-api.add_resource(Queens, '/queens', endpoint='queens')
-api.add_resource(QueenById, '/queens/<int:queen_id>')
 api.add_resource(ExperienceStudy, '/exp_study', endpoint='exp_study')
 api.add_resource(Predictions, '/predictions', endpoint='predictions')
 api.add_resource(Events, '/events', endpoint='events')

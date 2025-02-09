@@ -12,7 +12,7 @@ const EventForm = ({ initObj, addEvent, updateEvent, cancelEvent, deleted }) => 
 
   const submitToDB = initObj
     ? (body) =>
-      updateEvent(initObj.id, body)
+      updateEvent(body, initObj.id)
     : (body) => {
       addEvent(body)
     }

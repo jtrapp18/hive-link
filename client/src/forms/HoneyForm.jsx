@@ -31,9 +31,9 @@ const HoneyForm = ({ initObj, viewHoney }) => {
 
   const submitToDB = initObj
     ? (body) =>
-        updateKey(hiveId, "honey_pulls", initObj.id, body)
+        updateKey("honey_pulls", initObj.id, body, hiveId)
     : (body) =>
-        addToKey(hiveId, "honey_pulls", body)
+        addToKey("honey_pulls", body, hiveId)
  
   // Validation schema matching backend
   const validationSchema = Yup.object({

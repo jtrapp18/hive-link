@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 import { useOutletContext } from "react-router-dom";
 import { UserContext } from '../context/userProvider';
+import { ForumContext } from '../context/forumProvider';
 import styled from 'styled-components';
 import { formattedTime } from '../helper';
 import { FaPlusCircle, FaMinusCircle } from 'react-icons/fa';
@@ -41,10 +42,10 @@ const CardContainer = styled.div`
 
 const MessageCard = ({ id,  forumId, userId, user: msgUser, messageDate, messageText, replies}) => {
     const { user } = useContext(UserContext);
-    const { setForums } = useOutletContext();
+    const { setForum } = useContext(ForumContext);
     const [newReply, setNewReply] = useState(false);
     const [showReplies, setShowReplies] = useState(false);
-    const {updateKey, deleteFromKey, addNestedKey, updateNestedKey} = useCrudStateDB(setForums, "forums");
+    const {updateKey, deleteFromKey, addNestedKey, updateNestedKey} = useCrudStateDB(setForum, "forums");
 
     const updateMessage = (updatedText) => {
         const message = ({
@@ -53,11 +54,11 @@ const MessageCard = ({ id,  forumId, userId, user: msgUser, messageDate, message
           forumId: forumId,
         })
 
-        updateKey(forumId, "messages", id, message);
+        updateKey("messages", id, message);
       };
        
       const deleteMessage = (messageId) => {
-        deleteFromKey(forumId, "messages", messageId);
+        deleteFromKey("messages", messageId);
       };   
     
       const addReply = (newReply) => {
@@ -67,7 +68,7 @@ const MessageCard = ({ id,  forumId, userId, user: msgUser, messageDate, message
           messageId: id,
         })
     
-        addNestedKey(forumId, "messages", "replies", reply);
+        addNestedKey("messages", "replies", reply);
       };
     
       const updateReply = (updatedReply, replyId) => {
@@ -77,7 +78,7 @@ const MessageCard = ({ id,  forumId, userId, user: msgUser, messageDate, message
           messageId: id,
         })
     
-        updateNestedKey(forumId, "messages", id, "replies", replyId, reply);
+        updateNestedKey("messages", id, "replies", replyId, reply);
       }
 
     return (

@@ -24,19 +24,9 @@ const MyEvents = () => {
 
   const eventFiltering = (events) => {
  
-    const eventsHosting = !user ? [] : events.filter((event) => event.userId === user.id)
-    const  eventsAttending = !user ? [] : events.reduce((acc, event) => {
-        if (event.signups.some(signup => signup.userId === user.id)) {
-          acc.push(event);
-        }
-        return acc;
-      }, []);
-
-      const eventsOther = !user
-      ? events
-      : events.filter(event =>
-          !eventsHosting.includes(event) && !eventsAttending.includes(event)
-        );
+    const eventsHosting = events.filter(event => event.isHostedByUser);
+    const eventsAttending = events.filter(event => event.isAttendedByUser);
+    const eventsOther = events.filter(event => !event.isHostedByUser && !event.isAttendedByUser);
 
       const eventsFiltered = nearbyZipcodes.length===0
       ? eventsOther
@@ -56,10 +46,6 @@ const MyEvents = () => {
       eventFiltering(eventsTransformed);
     });
   }, []);
-
-  useEffect(() => {
-    eventFiltering(events);
-  }, [user]);
 
   const {addItem, updateItem, deleteItem, addToKey, deleteFromKey} = useCrudStateDB(setEvents, "events", 
     eventFiltering, setActiveItem);
@@ -87,13 +73,13 @@ const MyEvents = () => {
       eventId: event.id
     })
 
-    addToKey(event.id, "signups", signup)
+    addToKey("signups", signup, event.id)
   };
    
   const cancelSignup = (event) => {
     const eventId = event.id
     const signup = event.signups.filter(signup=>signup.userId===user.id)[0]
-    deleteFromKey(eventId, "signups", signup.id)
+    deleteFromKey("signups", signup.id, eventId)
   };
 
   const eventCardProps = {

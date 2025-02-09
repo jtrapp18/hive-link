@@ -11,7 +11,7 @@ const ForumForm = ({ initObj, addForum, updateForum, deleteForum, deleted }) => 
   const [isEditing, setIsEditing] = useState(!initObj);
 
   const submitToDB = initObj
-    ? (body) => updateForum(initObj.id, body)
+    ? (body) => updateForum(body, initObj.id)
     : (body) => addForum(body);
 
   // Validation schema

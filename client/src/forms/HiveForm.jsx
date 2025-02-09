@@ -35,7 +35,7 @@ const HiveForm = ({ initObj, viewHive }) => {
 
       const submitToDB = initObj
       ? (body) =>
-        updateItem(initObj.id, body)
+        updateItem(body, initObj.id)
       : (body) => {
         addItem(body)
       }

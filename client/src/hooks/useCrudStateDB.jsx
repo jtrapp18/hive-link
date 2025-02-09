@@ -17,12 +17,12 @@ const useCrudStateDB = (setState, dbKey, optionalFunc=null, addFunc=null) => {
       })
     };
     
-    const updateItem = (itemId, item) => {
+    const updateItem = (item, itemId=null) => {
 
-      patchJSONToDb(dbKey, itemId, item)
+      patchJSONToDb(dbKey, item, itemId=null)
       .then(json => {
         const jsonTransformed = snakeToCamel(json);
-        updateState(itemId, jsonTransformed);
+        updateState(jsonTransformed, itemId);
 
         console.log("EDITED", jsonTransformed);
       })
@@ -35,40 +35,40 @@ const useCrudStateDB = (setState, dbKey, optionalFunc=null, addFunc=null) => {
       deleteFromState(itemId)
     };
     
-    const addToKey = (itemId, arrayKey, body) => {
+    const addToKey = (arrayKey, body, itemId=null) => {
       postJSONToDb(arrayKey, body)
       .then(json => {
         const jsonTransformed = snakeToCamel(json);
-        addToKeyInState(itemId, arrayKey, jsonTransformed);
+        addToKeyInState(arrayKey, jsonTransformed, itemId);
       });
     };
 
-    const updateKey = (itemId, arrayKey, arrayId, body) => {
+    const updateKey = (arrayKey, arrayId, body, itemId=null) => {
       patchJSONToDb(arrayKey, arrayId, body)
       .then(json => {
         const jsonTransformed = snakeToCamel(json);
-        updateKeyInState(itemId, arrayKey, jsonTransformed);
+        updateKeyInState(arrayKey, jsonTransformed, itemId);
       });
     };
 
-    const deleteFromKey = (itemId, arrayKey, arrayId) => {
+    const deleteFromKey = (arrayKey, arrayId, itemId=null) => {
       deleteJSONFromDb(arrayKey, arrayId);
-      deleteFromKeyInState(itemId, arrayKey, arrayId);
+      deleteFromKeyInState(arrayKey, arrayId, itemId);
     };
     
-    const addNestedKey = (itemId, arrayKey, nestedKey, body) => {
+    const addNestedKey = (arrayKey, nestedKey, body, itemId=null) => {
       postJSONToDb(arrayKey, body)
       .then(json => {
         const jsonTransformed = snakeToCamel(json);
-        addNestedToKeyInState(itemId, arrayKey, nestedKey, jsonTransformed);
+        addNestedToKeyInState(arrayKey, nestedKey, jsonTransformed, itemId);
       });
     };
 
-    const updateNestedKey = (itemId, arrayKey, arrayId, nestedKey, nestedId, body) => {
+    const updateNestedKey = (arrayKey, arrayId, nestedKey, nestedId, body, itemId=null) => {
       patchJSONToDb(nestedKey, nestedId, body)
       .then(json => {
         const jsonTransformed = snakeToCamel(json);
-        updateNestedKeyInState(itemId, arrayKey, arrayId, nestedKey, jsonTransformed);
+        updateNestedKeyInState(arrayKey, arrayId, nestedKey, jsonTransformed, itemId);
       });
     };
 

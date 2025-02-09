@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useParams, useNavigate, useLocation, useOutletContext } from 'react-router-dom';
+import { useParams, useNavigate, NavLink, useOutletContext } from 'react-router-dom';
 import { getJSONById, snakeToCamel } from '../helper';
 import Loading from './Loading';
 import { StyledContainer } from '../MiscStyling';
@@ -9,8 +9,9 @@ import NewMessage from '../forms/NewMessage';
 import { BackButton } from '../MiscStyling';
 import {UserContext} from '../context/userProvider'
 import useCrudStateDB from '../hooks/useCrudStateDB';
+import { ForumProvider } from '../context/forumProvider';
 
-const NewMessageContainer = styled.div`
+const NewMessageContainer = styled(NavLink)`
     width: 100%;
     position: fixed;
     bottom: 0;
@@ -22,13 +23,20 @@ const NewMessageContainer = styled.div`
 `
 
 const ForumDetails = () => {
-    const location = useLocation();
+    const { id } = useParams();
     const { user } = useContext(UserContext);
-    const forum = location.state?.forum; // Access the passed data
+    const [forum, setForum] = useState(null);
     const navigate = useNavigate();
-    const { setForums } = useOutletContext();
 
-    const { addToKey} = useCrudStateDB(setForums, "forums");
+    useEffect(() => {
+        getJSONById("forums", id)
+        .then(json => {
+            const jsonTransformed = snakeToCamel(json);
+            setForum(jsonTransformed);
+        })
+    }, []);
+
+    const { addToKey } = useCrudStateDB(setForum, "forums");
 
         const addMessage = (newMessage) => {
             const message = ({
@@ -37,32 +45,34 @@ const ForumDetails = () => {
               forumId: forum.id,
             })
         
-            addToKey(forum.id, "messages", message);
+            addToKey("messages", message);
           };
 
     if (!forum) return <Loading />
 
     return (
-        <StyledContainer>
-            <h1>Discussion</h1>
-            <h3>{forum.title}</h3>
-            <p>Category: {forum.category}</p>
-            <p>{forum.user.username}</p>
-            <BackButton onClick={() => navigate(-1)}>Back to Forums</BackButton>
-            <div>
-                {forum.messages.map(message=>
-                    <MessageCard
-                        key={message.id}
-                        {...message} 
+        <ForumProvider value={{ forum, setForum }}>
+            <StyledContainer>
+                <h1>Discussion</h1>
+                <h3>{forum.title}</h3>
+                <p>Category: {forum.category}</p>
+                <p>{forum.user.username}</p>
+                <BackButton onClick={() => navigate(-1)}>Back to Forums</BackButton>
+                <div>
+                    {forum.messages.map(message=>
+                        <MessageCard
+                            key={message.id}
+                            {...message} 
+                        />
+                    )}
+                </div>
+                <NewMessageContainer>
+                    <NewMessage
+                        handleAdd={addMessage}
                     />
-                )}
-            </div>
-            <NewMessageContainer>
-                <NewMessage
-                    handleAdd={addMessage}
-                />
-            </NewMessageContainer>
-        </StyledContainer>
+                </NewMessageContainer>
+            </StyledContainer>
+        </ForumProvider>
     );
 }
 

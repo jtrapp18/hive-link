@@ -15,7 +15,7 @@ import Login from './Login'
 
 const MyForums = () => {
   const { user } = useContext(UserContext);
-  const { forums, setForums } = useOutletContext();
+  const [forums, setForums] = useState([]);
   const { isMobile } = useContext(WindowWidthContext);
   const [forumsStarted, setForumsStarted] = useState([]);
   const [forumsParticipated, setForumsParticipated] = useState([]);
@@ -23,36 +23,23 @@ const MyForums = () => {
   const {PopupForm, setActiveItem, setShowNewForm, setShowDeleted} = usePopupForm(ForumForm);
 
   const forumFiltering = (forums) => {
+    const forumsStarted = forums.filter(forum => forum.isStartedByUser);
+    const forumsParticipated = forums.filter(forum => forum.isParticipatedByUser);
+    const forumsOther = forums.filter(forum => !forum.isStartedByUser && !forum.isParticipatedByUser);
   
-    const forumsStarted = !user ? [] : forums.filter((forum) => forum.userId === user.id)
-    const  forumsParticipated = !user ? [] : forums.reduce((acc, forum) => {
-        if (forum.messages.some(message => message.userId === user.id)) {
-          acc.push(forum);
-        }
-        return acc;
-      }, []);
-
-      const forumsOther = !user
-      ? forums
-      : forums.filter(forum =>
-          !forumsStarted.includes(forum) && !forumsParticipated.includes(forum)
-        );
-
-      setForumsStarted(forumsStarted);
-      setForumsParticipated(forumsParticipated);
-      setForumsOther(forumsOther);
-  }
+    setForumsStarted(forumsStarted);
+    setForumsParticipated(forumsParticipated);
+    setForumsOther(forumsOther);
+  };
 
   useEffect(() => {
-    getJSON("forums").then((forums) => {
-      const forumsTransformed = snakeToCamel(forums);
-      setForums(forumsTransformed);
-      forumFiltering(forumsTransformed);
-    });
-  }, []);
-
-  useEffect(() => {
-    forumFiltering(forums);
+    if (user) {
+      getJSON("forums").then((forums) => {
+        const forumsTransformed = snakeToCamel(forums);
+        setForums(forumsTransformed);
+        forumFiltering(forumsTransformed);
+      });
+    }
   }, [user]);
 
   const {addItem, updateItem, deleteItem} = useCrudStateDB(setForums, "forums", 

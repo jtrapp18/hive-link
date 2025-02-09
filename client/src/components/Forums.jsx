@@ -1,9 +1,6 @@
-import { CardContainer } from '../MiscStyling';
 import styled from 'styled-components';
 import { NavLink } from "react-router-dom";
 import { StyledContainer } from '../MiscStyling';
-import { useNavigate } from "react-router-dom";
-import useCrudStateDB from '../hooks/useCrudStateDB'
 
 const StyledArticle = styled.article`
   width: 800px;
@@ -16,18 +13,13 @@ const StyledArticle = styled.article`
   }
 `
 
-const StyledNavLink = styled.h3`
+const StyledNavLink = styled(NavLink)`
   color: var(--bright-blue);
   text-decoration: underline;
   cursor: pointer;
 `
 
 const Forums = ({ forums }) => {
-  const navigate = useNavigate();
-
-  const handleNavigation = (forum) => {
-    navigate(`/forums/${forum.id}`, { state: { forum } });
-  };
 
   return (
       <StyledContainer>
@@ -36,7 +28,11 @@ const Forums = ({ forums }) => {
           (forums.map(forum=>
             <StyledArticle key={forum.title}>
               <span>{forum.user.username}</span>
-              <StyledNavLink onClick={()=>handleNavigation(forum)}>{forum.title}</StyledNavLink>
+              <StyledNavLink
+                to={`${forum.id}`}
+              >
+                <h3>{forum.title}</h3>
+              </StyledNavLink>
               <p><strong>Category: </strong>{forum.category}</p>
             </StyledArticle>
           ))

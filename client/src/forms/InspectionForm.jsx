@@ -58,9 +58,9 @@ const InspectionForm = ({ initObj, honeyPullId, viewInspection }) => {
 
   const submitToDB = initObj
     ? (body) =>
-      updateNestedKey(hiveId, "honey_pulls", honeyPullId, "inspections", initObj.id, body)
+      updateNestedKey("honey_pulls", honeyPullId, "inspections", initObj.id, body, hiveId)
     : (body) => {
-      addNestedKey(hiveId, "honey_pulls", "inspections", body)
+      addNestedKey("honey_pulls", "inspections", body, hiveId)
     }
 
   // Validation schema
