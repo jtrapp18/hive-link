@@ -1,11 +1,12 @@
 import { useContext, useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import { UserContext } from '../context/userProvider';
 import styled from 'styled-components';
 import { formattedTime } from '../helper';
 import { FaPlusCircle, FaMinusCircle } from 'react-icons/fa';
 import Message from '../components/Message';
 import NewMessage from '../forms/NewMessage';
+import useCrudStateDB from '../hooks/useCrudStateDB';
 
 const CardContainer = styled.div`
     .reply-container {
@@ -38,22 +39,57 @@ const CardContainer = styled.div`
     }
 `
 
-const MessageCard = ({ id,  userId, user: msgUser, messageDate, messageText, replies}) => {
+const MessageCard = ({ id,  forumId, userId, user: msgUser, messageDate, messageText, replies}) => {
     const { user } = useContext(UserContext);
+    const { setForums } = useOutletContext();
     const [newReply, setNewReply] = useState(false);
     const [showReplies, setShowReplies] = useState(false);
+    const {updateKey, deleteFromKey, addNestedKey, updateNestedKey} = useCrudStateDB(setForums, "forums");
 
-    const toggleOptions = () => {
-        setShowOptions(prev=>!prev)
-    }
+    const updateMessage = (updatedText) => {
+        const message = ({
+          messageText: updatedText,
+          userId: user.id,
+          forumId: forumId,
+        })
+
+        updateKey(forumId, "messages", id, message);
+      };
+       
+      const deleteMessage = (messageId) => {
+        deleteFromKey(forumId, "messages", messageId);
+      };   
+    
+      const addReply = (newReply) => {
+        const reply = ({
+          ...newReply,
+          userId: user.id,
+          messageId: id,
+        })
+    
+        addNestedKey(forumId, "messages", "replies", reply);
+      };
+    
+      const updateReply = (updatedReply, replyId) => {
+        const reply = ({
+          ...updatedReply,
+          userId: user.id,
+          messageId: id,
+        })
+    
+        updateNestedKey(forumId, "messages", id, "replies", replyId, reply);
+      }
 
     return (
         <CardContainer>
             <Message 
+                id={id}
                 userId={userId}
                 msgUser={msgUser}
                 messageDate={messageDate}
                 messageText={messageText}
+                handleUpdate={updateMessage}
+                handleDelete={deleteMessage}
             />
             <section className='reply-buttons'>
                 <div
@@ -70,6 +106,7 @@ const MessageCard = ({ id,  userId, user: msgUser, messageDate, messageText, rep
             {newReply && 
                 <NewMessage
                     setShow={setNewReply}
+                    handleAdd={addReply}
                 />
             }
             {showReplies &&
@@ -77,11 +114,15 @@ const MessageCard = ({ id,  userId, user: msgUser, messageDate, messageText, rep
                     <div className='reply-line'></div>
                     <div>
                         {replies.map(reply =>
-                            <Message 
-                                userId={userId}
+                            <Message
+                                key={reply.id}
+                                id={reply.id}
+                                userId={reply.userId}
                                 msgUser={reply.user}
                                 messageDate={reply.replyDate}
                                 messageText={reply.replyText}
+                                handleUpdate={updateReply}
+                                // handleDelete={deleteReply}
                             />
                         )}
                     </div>

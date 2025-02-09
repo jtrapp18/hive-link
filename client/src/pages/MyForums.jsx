@@ -1,4 +1,5 @@
 import { useContext, useState, useEffect } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import {WindowWidthContext} from "../context/windowSize";
 import {UserContext} from '../context/userProvider'
 import Forums from '../components/Forums';
@@ -14,15 +15,15 @@ import Login from './Login'
 
 const MyForums = () => {
   const { user } = useContext(UserContext);
+  const { forums, setForums } = useOutletContext();
   const { isMobile } = useContext(WindowWidthContext);
-  const [forums, setForums] = useState([]);
   const [forumsStarted, setForumsStarted] = useState([]);
   const [forumsParticipated, setForumsParticipated] = useState([]);
   const [forumsOther, setForumsOther] = useState([]);
   const {PopupForm, setActiveItem, setShowNewForm, setShowDeleted} = usePopupForm(ForumForm);
 
   const forumFiltering = (forums) => {
- 
+  
     const forumsStarted = !user ? [] : forums.filter((forum) => forum.userId === user.id)
     const  forumsParticipated = !user ? [] : forums.reduce((acc, forum) => {
         if (forum.messages.some(message => message.userId === user.id)) {
@@ -54,7 +55,7 @@ const MyForums = () => {
     forumFiltering(forums);
   }, [user]);
 
-  const {addItem, updateItem, deleteItem, addToKey, deleteFromKey} = useCrudStateDB(setForums, "forums", 
+  const {addItem, updateItem, deleteItem} = useCrudStateDB(setForums, "forums", 
     forumFiltering, setActiveItem);
 
   const addForum = (forum) => {
@@ -73,27 +74,6 @@ const MyForums = () => {
     deleteItem(forum);
     setShowDeleted(true);
   };
-  
-  const addMessage = (forum) => {
-    const message = ({
-      userId: user.id,
-      forumId: forum.id
-    })
-
-    addToKey(forum.id, "messages", message)
-  };
-   
-  const deleteMessage = (forum) => {
-    const forumId = forum.id
-    const message = forum.messages.filter(message=>message.userId===user.id)[0]
-    deleteFromKey(forumId, "messages", message.id)
-  };
-
-  const forumCardProps = {
-    started: {btnLabel: "Manage forum", handleforumBtn: viewForum},
-    participated: {role: "Participated", btnLabel: "Remove forum", handleforumBtn: deleteMessage},
-    other: {role: "Other", btnLabel: "Sign Up", handleForumBtn: addMessage},
-  }
 
   if (!user) return <Login errMessage="Must be logged in to view forums"/>
   if (!Forums) return <Loading />
@@ -114,12 +94,10 @@ const MyForums = () => {
             <h3>Created by Me</h3>
             <Forums
               forums={forumsStarted}
-              forumCardProps={forumCardProps.started}
             />
-            <h3>Active Forums</h3>
+            <h3>My Active Forums</h3>
             <Forums
               forums={forumsParticipated}
-              forumCardProps={forumCardProps.participated}
             />
           </>
         }
@@ -127,7 +105,6 @@ const MyForums = () => {
         <h3>. . . . . </h3>
         <Forums
           forums={forumsOther} 
-          forumCardProps={forumCardProps.other}
         />
       </StyledContainer>
     );

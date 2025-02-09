@@ -12,6 +12,7 @@ function App() {
   const [graphData, setGraphData] = useState([]);
   const [graphDataUser, setGraphDataUser] = useState([]);
   const [predictions, setPredictions] = useState({});
+  const [forums, setForums] = useState([]);
 
   console.log('reloading app page...')
 
@@ -80,6 +81,7 @@ function App() {
             context={{
               hives,
               setHives,
+              setForums,
               graphDataUser,
               graphData,
               predictions

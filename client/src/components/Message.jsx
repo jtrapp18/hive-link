@@ -85,14 +85,29 @@ const StyledMessage = styled.div`
     }
 `
 
-const Message = ({ id,  userId, msgUser, messageDate, messageText}) => {
+const Message = ({ id,  userId, msgUser, messageDate, messageText, handleUpdate, handleDelete}) => {
     const { user } = useContext(UserContext);
-    const myMessage = userId===user.id
     const [showOptions, setShowOptions] = useState(false);
+    const [editMode, setEditMode] = useState(false);
+    const [editMsg, setEditMsg] = useState(messageText);
 
     const toggleOptions = () => {
         setShowOptions(prev=>!prev)
     }
+
+    const submitEdit = () => {
+        handleUpdate(editMsg);
+    }
+
+    const submitDelete = () => {
+        handleDelete(id);
+    }
+
+    const handleChange = (e) => {
+        setEditMsg(e.target.value);
+      };
+
+    const myMessage = !user ? false : userId===user.id
 
     return (
         <StyledMessage className={myMessage ? 'self' : ''}>
@@ -110,12 +125,20 @@ const Message = ({ id,  userId, msgUser, messageDate, messageText}) => {
                     {showOptions &&
                         <div className='options-container'>
                             <button>Edit Message</button>
-                            <button>Delete Message</button>
+                            <button onClick={submitDelete}>Delete Message</button>
                         </div>
                     }
                 </div>
                 <section className='message-bubble'>
-                    <p>{messageText}</p>
+                    {editMode ?
+                        <textarea
+                            id="messageText"
+                            name="messageText"
+                            value={formData.messageText}
+                            onChange={handleChange}
+                        /> :
+                        <p>{messageText}</p>
+                    }
                 </section>
             </div>
         </StyledMessage>

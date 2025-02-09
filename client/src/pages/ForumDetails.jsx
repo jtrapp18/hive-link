@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { useParams, useNavigate, useLocation, useOutletContext } from 'react-router-dom';
 import { getJSONById, snakeToCamel } from '../helper';
 import Loading from './Loading';
 import { StyledContainer } from '../MiscStyling';
 import MessageCard from '../cards/MessageCard';
 import styled from 'styled-components';
 import NewMessage from '../forms/NewMessage';
+import { BackButton } from '../MiscStyling';
+import {UserContext} from '../context/userProvider'
+import useCrudStateDB from '../hooks/useCrudStateDB';
 
 const NewMessageContainer = styled.div`
     width: 100%;
@@ -19,16 +22,23 @@ const NewMessageContainer = styled.div`
 `
 
 const ForumDetails = () => {
-    const { id } = useParams();
-    const [forum, setForum] = useState('');
+    const location = useLocation();
+    const { user } = useContext(UserContext);
+    const forum = location.state?.forum; // Access the passed data
+    const navigate = useNavigate();
+    const { setForums } = useOutletContext();
 
-    useEffect(()=> {
-        getJSONById("forums", id)
-        .then(forum => {
-            const forumTransformed = snakeToCamel(forum);
-            setForum(forumTransformed);
-        })
-    }, [])
+    const { addToKey} = useCrudStateDB(setForums, "forums");
+
+        const addMessage = (newMessage) => {
+            const message = ({
+              ...newMessage,
+              userId: user.id,
+              forumId: forum.id,
+            })
+        
+            addToKey(forum.id, "messages", message);
+          };
 
     if (!forum) return <Loading />
 
@@ -38,6 +48,7 @@ const ForumDetails = () => {
             <h3>{forum.title}</h3>
             <p>Category: {forum.category}</p>
             <p>{forum.user.username}</p>
+            <BackButton onClick={() => navigate(-1)}>Back to Forums</BackButton>
             <div>
                 {forum.messages.map(message=>
                     <MessageCard
@@ -47,7 +58,9 @@ const ForumDetails = () => {
                 )}
             </div>
             <NewMessageContainer>
-                <NewMessage />
+                <NewMessage
+                    handleAdd={addMessage}
+                />
             </NewMessageContainer>
         </StyledContainer>
     );

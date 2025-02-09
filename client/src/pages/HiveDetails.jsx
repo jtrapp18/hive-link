@@ -12,16 +12,9 @@ import HoneyForm from '../forms/HoneyForm'
 import InspectionForm from '../forms/InspectionForm'
 import Loading from './Loading'
 import styled from 'styled-components';
-import { Button, HexagonButton, StyledContainer } from '../MiscStyling';
+import { Button, HexagonButton, BackButton, StyledContainer } from '../MiscStyling';
 import HiveToast from '../styles/HiveToast';
 import DrippingHoney from '../components/DrippingHoney'
-
-const BackButton = styled.button`
-  background: none;
-  color: #00A3FF;
-  text-decoration: underline;
-  border: none;
-`
 
 const ButtonContainer = styled.div`
   display: flex;

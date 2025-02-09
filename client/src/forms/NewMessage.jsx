@@ -18,6 +18,7 @@ const Message = styled.div`
 
       &:hover {
         background: var(--light-yellow);
+        color: black;
       }
   }
 
@@ -28,9 +29,8 @@ const Message = styled.div`
     }
 `
 
-const NewMessage = ({ setShow }) => {
+const NewMessage = ({ setShow, handleAdd }) => {
     const { user } = useContext(UserContext);
-    const [showOptions, setShowOptions] = useState(false);
     const [formData, setFormData] = useState({
         messageText: "",
       });
@@ -39,12 +39,12 @@ const NewMessage = ({ setShow }) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
       };
-      const handleSubmit = (e) => {
-        e.preventDefault();
-        // patchJSONToDb("users", user.id, formData)
-        // setUser((prevUser) => ({ ...prevUser, ...formData }));
-        // setIsEditing(false);
-      };
+      
+    const handleSubmit = (e) => {
+      e.preventDefault();
+
+      handleAdd(formData);
+    };
 
     return (
         <Message>
