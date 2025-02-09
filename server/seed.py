@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-from seed_models import generate_weather_data, pest_likelihood, varroa_mite_model, treatment_dosages
+from seed_models import *
 from random import randint, choice as rc, random
 from sqlalchemy import text
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from faker import Faker
 from config import db, app
-from models import Hive, Inspection, HoneyPull, CountCategory, User, Event, Signup, Forum, Message
+from models import Hive, Inspection, HoneyPull, CountCategory, User, Event, Signup, Forum, Message, Reply
 
 fake = Faker()
 
@@ -86,7 +86,6 @@ with app.app_context():
                 hive_id=hive.id,
                 date_reset=reset_date,
                 date_pulled=pull_date,                
-                weight=random()*200 if pull_date is not None else None
             )
             honey_pulls.append(honey_pull)
 
@@ -104,40 +103,38 @@ with app.app_context():
     count_categories = [option.value for option in CountCategory]
 
     for honey_pull in honey_pulls:
-        hive = honey_pull.hive
-
-        # set initial values
-
+        # set initial dates
         start_date = honey_pull.date_reset
         stop_date = honey_pull.date_pulled if honey_pull.date_pulled else datetime.now().date()
-        inspection_date = start_date
+        inspection_date = start_date + relativedelta(weeks=1)
 
+        # set initial values
         starting_supers = randint(1, 3)
         starting_bodies = randint(2, 4)
 
-        # set initial values
         weather_data = generate_weather_data(inspection_date)
         temp = weather_data['temp']
-        varroa_mite_count = varroa_mite_model(temp, 0, 0, 0, 0, honey_pull.weight)
+        varroa_mite_count = varroa_mite_model(0, 0, 0, 0, 0, starting_mite_count=None, hive_age_weeks=1)
         treatment = None
         dosage=(0, 0, 0, 0)
         treatment_streak=0
         fate='Active'
 
+        # keep track of honey per interval
+        honey_accum = 0
+        hive_age_weeks = 1
+
         while inspection_date <= stop_date:
 
             # Get pest probabilities based on temperature
-            pests = pest_likelihood(temp, honey_pull.weight)
+            pests = pest_likelihood(temp)
 
             # Randomize treatment application
             dosage, treatment, treatment_streak = treatment_dosages(varroa_mite_count, treatment, dosage, treatment_streak)
             oxalic, formic, thymol, apistan = dosage
 
-            # Calculate mite count based on treatment & temp
-            varroa_mite_count = varroa_mite_model(temp, oxalic, formic, thymol, apistan, honey_pull.weight)
-
-            has_larvae = rc([True] * 1 + [False] * 10)  # 1 in 11 chance of larvae
-            has_eggs = has_larvae or rc([True] * 3 + [False] * 7) 
+            has_larvae = rc([True] * 15 + [False] * 1)
+            has_eggs = has_larvae or rc([True] * 10 + [False] * 1) 
 
             # Create Inspection instance
             inspection = Inspection(
@@ -166,10 +163,13 @@ with app.app_context():
 
             inspections.append(inspection)
 
+            # updated values
+
             inspection_date += relativedelta(weeks=1)
+            hive_age_weeks += 1
 
             if fate=='Active':
-                fate = rc(["Dead", "Swarmed", "Split"]*1 + ["Active"]*10)
+                fate = rc(["Dead", "Swarmed", "Split"]*1 + ["Active"]*20)
             else:
                 fate='Active'
 
@@ -177,6 +177,25 @@ with app.app_context():
             weather_data = generate_weather_data(inspection_date)
             temp = weather_data['temp']
 
+            # Calculate mite count based on treatment & temp
+            varroa_mite_count = varroa_mite_model(temp, oxalic, formic, thymol, apistan, starting_mite_count=varroa_mite_count, hive_age_weeks=hive_age_weeks)
+
+            # calculate and update new honey pull amount
+            honey = calculate_weekly_honey(
+                temp=temp,
+                varroa_mite_count=varroa_mite_count,
+                super_count=starting_supers,
+                has_larvae=has_larvae,
+                has_eggs=has_eggs,
+                treatment_factor=(1 if treatment is None else 0.8),  # Treatments may slow production slightly
+                pests=pests
+            )
+
+            honey_accum += honey
+
+            print(f"Honey produced this week: {honey}")
+
+        honey_pull.weight = honey_accum if honey_pull.date_pulled else None 
 
     db.session.add_all(inspections)
     db.session.commit()

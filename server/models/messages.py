@@ -15,6 +15,7 @@ class Message(db.Model, SerializerMixin):
 
     user = db.relationship('User', back_populates='messages')
     forum = db.relationship('Forum', back_populates='messages')
+    replies = db.relationship('Reply', back_populates='message', cascade='all, delete-orphan')
 
     # serialize_rules = ('-user', '-forum')  # Exclude user and forum from serialization for security
 
@@ -28,7 +29,8 @@ class Message(db.Model, SerializerMixin):
             'user': {
                 'id': self.user.id,
                 'username': self.user.username
-            }
+            },
+            'replies': [reply.to_dict() for reply in self.replies]  # Ensure replies also use a safe serialization method
         }
     
     def __repr__(self):

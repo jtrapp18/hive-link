@@ -11,6 +11,10 @@ const ArticleContainer = styled.div`
     display: flex;
     flex-direction: column;
     padding: 0 5% 0 5%;
+
+    a {
+      color: var(--bright-blue);
+    }
 `
 
 const BeekeepingNews = () => {

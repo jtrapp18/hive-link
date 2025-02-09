@@ -6,7 +6,7 @@ import requests
 import uuid
 import pandas as pd
 from datetime import date
-from models import Hive, Inspection, HoneyPull, User, Event, Signup, ModelHistory, Forum, Message
+from models import Hive, Inspection, HoneyPull, User, Event, Signup, ModelHistory, Forum, Message, Reply
 from config import app, db, api
 from datetime import datetime
 # from flask_migrate import Migrate

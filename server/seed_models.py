@@ -42,34 +42,42 @@ def generate_weather_data(date_checked):
         "humidity": round(humidity, 1),
     }
 
-def pest_likelihood(temp, honey_weight=None):
-    """Adjust pest presence based on temperature and honey weight."""
-    honey_factor = 1 if honey_weight is None else max(0.5, min(1.5, 50 / (honey_weight + 1)))  # Less honey = more pests
+def pest_likelihood(temp):
+    """Adjust pest presence probabilities based on temperature (Celsius)"""
 
     return {
-        "ants_present": random() < honey_factor * (0.2 + 0.03 * temp),
-        "slugs_present": random() < honey_factor * (0.3 - 0.01 * temp),
-        "hive_beetles_present": random() < honey_factor * (0.1 + 0.02 * temp),
-        "wax_moths_present": random() < honey_factor * 0.1,
-        "wasps_hornets_present": random() < honey_factor * (0.05 + 0.02 * temp),
-        "mice_present": random() < honey_factor * (0.3 - 0.02 * temp),
-        "robber_bees_present": random() < honey_factor * 0.2,
+        "ants_present": random() < (0.2 + 0.005 * (temp - 15)),   # Increase in warmth
+        "slugs_present": random() < (0.3 - 0.002 * (temp - 15)),  # Decrease in warmth
+        "hive_beetles_present": random() < (0.1 + 0.004 * (temp - 15)),  # Thrive in warmth
+        "wax_moths_present": random() < 0.1,  # Mostly constant
+        "wasps_hornets_present": random() < (0.05 + 0.003 * (temp - 15)), # Slight increase
+        "mice_present": random() < (0.3 - 0.005 * (temp - 15)),  # Less likely in warmth
+        "robber_bees_present": random() < 0.2,  # Constant for now
     }
 
-def varroa_mite_model(temp, oxalic, formic, thymol, apistan, honey_weight=None):
-    """Model mite growth based on temperature, treatments, and honey weight."""
-    base_mites = randint(0, 80)
-    temp_factor = 1.1 ** (temp / 10)
+def varroa_mite_model(temp, oxalic, formic, thymol, apistan, starting_mite_count=None, hive_age_weeks=52):
+    """Model mite growth based on temperature, treatments, and hive age (in weeks)."""
 
-    honey_factor = 1 if honey_weight is None else max(0.5, min(1.5, 50 / (honey_weight + 1)))  # Less honey = more mites
+    # Initialize mites based on hive age
+    if starting_mite_count is not None:
+        base_mites = starting_mite_count
+    else:
+        mite_probability = 0.8 if hive_age_weeks > 24 else 0.4  # Older hives more likely to have mites
+        base_mites = randint(5, 40) if random() < mite_probability else 0  
 
-    treatment_effect = 0.7 * oxalic + 0.8 * formic + 0.6 * thymol + 0.9 * apistan
-    
-    mite_count = max(0, int(base_mites * temp_factor * honey_factor - treatment_effect))
-    mite_count = max(mite_count, base_mites // 10)  # Never fully zero unless mites started as 0
+    # Temperature scaling (mites reproduce more in warmth)
+    temp_factor = 1.02 ** (temp - 15)
+
+    # Treatment effect (stronger impact to control mites)
+    treatment_effect = 1.2 * oxalic + 1.3 * formic + 1.1 * thymol + 1.4 * apistan  
+
+    # Mite population change
+    mite_count = max(0, int(base_mites * temp_factor - treatment_effect))
+
+    # Ensure low but persistent mites if they were present before
+    mite_count = max(mite_count, base_mites // 10) if base_mites > 0 else 0  
 
     return mite_count
-
 
 def treatment_dosages(mite_count, prev_treatment=None, prev_dosage=(0, 0, 0, 0), treatment_streak=0):
     """Determine treatment dosage based on mite count and ensure treatments last for a reasonable duration."""
@@ -108,3 +116,45 @@ def treatment_dosages(mite_count, prev_treatment=None, prev_dosage=(0, 0, 0, 0),
     new_treatment_streak = treatment_streak + 1 if primary_treatment == prev_treatment else 1
 
     return tuple(treatment_doses[t] for t in treatments), primary_treatment, new_treatment_streak
+
+def calculate_weekly_honey(temp, varroa_mite_count, super_count, has_larvae, has_eggs, treatment_factor, pests):
+
+    print('temp', temp)
+    print('varroa_mite_count', varroa_mite_count)
+    print('super count', super_count)
+    print('has_larvae', has_larvae)
+    print('has_eggs', has_eggs)
+    print('treatment_factor', treatment_factor)
+    print('pests', pests)
+
+    """Estimate weekly honey production based on key hive conditions, now factoring in pests."""
+    base_honey = random() * 5  # Base random production (e.g., 0-5 lbs per week)
+
+    # Temperature effect: More honey in ideal temps (65-85°F)
+    temp_factor = max(0.2, 1 - abs(temp - 25) / 15)  # Scales from 0 to 1
+
+    # Mite effect: Reduce production if infestation is high
+    mite_factor = max(0.5, 1 - varroa_mite_count / 100)  # If mites > 100, production is halved
+
+    # Super count effect: More supers → more room for honey
+    super_factor = 1 + (super_count * 0.1)  
+
+    # Brood effect: If larvae and eggs present, hive is active and likely producing well
+    brood_factor = 1.2 if has_larvae or has_eggs else 1
+
+    # Treatment impact (if applicable)
+    treatment_factor = max(0.5, treatment_factor)  
+
+    # Pest impact: Scale honey reduction based on severity
+    pest_penalty = 1 - (
+        (0.2 if pests["ants_present"] else 0) +
+        (0.1 if pests["slugs_present"] else 0) +
+        (0.3 if pests["hive_beetles_present"] else 0) +
+        (0.4 if pests["wax_moths_present"] else 0) +
+        (0.3 if pests["wasps_hornets_present"] else 0) +
+        (0.5 if pests["mice_present"] else 0) +
+        (0.4 if pests["robber_bees_present"] else 0)
+    )
+    pest_penalty = max(0.3, pest_penalty)  # Ensure honey production isn't completely zeroed out
+
+    return base_honey * temp_factor * mite_factor * super_factor * brood_factor * treatment_factor * pest_penalty
