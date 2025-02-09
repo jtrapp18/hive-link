@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 from sqlalchemy import Column, Integer, String, Date, Float, ForeignKey
 from sqlalchemy.orm import relationship, validates
 from sqlalchemy_serializer import SerializerMixin
-from config import db
+from lib.config import db
 
 class Forum(db.Model, SerializerMixin):
     __tablename__ = 'forums'

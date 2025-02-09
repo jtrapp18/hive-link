@@ -6,14 +6,15 @@ import requests
 import uuid
 import pandas as pd
 from datetime import date
-from models import Hive, Inspection, HoneyPull, User, Event, Signup, ModelHistory, Forum, Message, Reply
-from config import app, db, api
 from datetime import datetime
 # from flask_migrate import Migrate
 from flask import request, session
 from flask_restful import  Resource
-import data_processing as dclean
-from experience_study import create_model, run_predictions, pull_explanatory_variables, get_latest_joblib
+
+from lib.config import app, db, api
+from lib.models import Hive, Inspection, HoneyPull, User, Event, Signup, ModelHistory, Forum, Message, Reply
+from lib.experience_data import process_data_for_analysis, process_data_for_graphing
+from lib.experience_data import create_model, run_predictions, pull_explanatory_variables, get_latest_joblib
 
 @app.route('/')
 def index():
@@ -617,8 +618,16 @@ class ExperienceStudy(Resource):
             # If the model exists, load it from the file
             joblib_data = joblib.load(fr'joblib/{joblib_loc}')
             test_results = joblib_data['importance_df']
+            test_results_dict = test_results.to_dict(orient='records')
 
-            return test_results.to_dict(orient='records'), 200
+            test_metrics = joblib_data['test_metrics']
+            run_date = joblib_data['run_date']
+
+            exp_study_dict = {"run_date": run_date,
+                              "test_metrics": test_metrics,
+                              "test_results": test_results}
+
+            return exp_study_dict, 200
         
         except Exception as e:
             return {'error': 'An error occurred while fetching the model results.'}, 500
@@ -629,7 +638,7 @@ class ExperienceStudy(Resource):
             # run experienece study and save results
             hives = [hive.to_dict() for hive in Hive.query.all()]
             
-            df_normalized, df_aggregated = dclean.process_data_for_analysis(hives, actuals=False)
+            df_normalized, df_aggregated = process_data_for_analysis(hives, actuals=False)
             explanatory_variables = pull_explanatory_variables(df_aggregated)
             joblib_loc = f'exp_study_{uuid.uuid4().hex}.joblib'
 
@@ -659,7 +668,7 @@ class Predictions(Resource):
 
         try:
             joblib_loc = get_latest_joblib()
-            df_normalized, df_prediction_input = dclean.process_data_for_analysis(hives, actuals=False)
+            df_normalized, df_prediction_input = process_data_for_analysis(hives, actuals=False)
             predicted_values = run_predictions(df_prediction_input, joblib_loc)
             predictions_only = predicted_values[['hive_id', 'predicted']].set_index('hive_id')
 
@@ -679,7 +688,7 @@ class GraphData(Resource):
         hives = [hive.to_dict() for hive in Hive.query.all()]
 
         try:
-            graphing_data = dclean.process_data_for_graphing(hives)
+            graphing_data = process_data_for_graphing(hives)
 
             return graphing_data, 200
         
@@ -689,14 +698,11 @@ class GraphData(Resource):
 class GraphDataUser(Resource):
 
     def get(self):
-
-        import data_processing as dclean
-        
         user_id = session['user_id']
         hives = [hive.to_dict() for hive in Hive.query.filter_by(user_id=user_id)]
 
         try:
-            graphing_data = dclean.process_data_for_graphing(hives)
+            graphing_data = process_data_for_graphing(hives)
 
             return graphing_data, 200
         

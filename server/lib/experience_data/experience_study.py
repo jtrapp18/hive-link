@@ -8,8 +8,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network import MLPRegressor
 from sklearn.linear_model import LinearRegression
 from datetime import datetime
-from config import app, db
-from models import ModelHistory
+from lib.config import app, db
+from lib.models import ModelHistory
 
 def binarize_data(data, categorical_columns=None):
 
@@ -40,15 +40,39 @@ def add_predicted_values(explanatory_variables, data, model, scaler=None):
         # If no scaler, just use the raw data (no scaling)
         X_scaled_df = X
 
-    data['predicted'] = model.predict(X_scaled_df)
+    data['avg_predicted'] = model.predict(X_scaled_df)
+    data['predicted'] = data['days']*data['avg_predicted']
 
     return data
+
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+import numpy as np
+
+def calculate_metrics(actual, predicted):
+    # R²
+    r2 = r2_score(actual, predicted)
+    
+    # MAE (Mean Absolute Error)
+    mae = mean_absolute_error(actual, predicted)
+    
+    # MSE (Mean Squared Error)
+    mse = mean_squared_error(actual, predicted)
+    
+    # RMSE (Root Mean Squared Error)
+    rmse = np.sqrt(mse)
+    
+    return {
+        'R²': r2,
+        'MAE': mae,
+        'MSE': mse,
+        'RMSE': rmse
+    }
 
 def pull_explanatory_variables(aggregated_data):
     metadata = {'hive_id', 'honey_pull_id', 'city', 'state', 
                 'data_added', 'date_reset', 
                 'date_pulled', 'count', 'days', 'date_added'}
-    outcomes = {'bias', 'weight'}
+    outcomes = {'bias', 'weight', 'avg_daily_weight'}
 
     remaining_col = set(aggregated_data.columns) - metadata - outcomes
     explanatory_variables = list(remaining_col)
@@ -97,8 +121,12 @@ class ExperienceStudy:
         y = self.train_data[self.target_variable]
         
         # Train the neural network
-        self.model = MLPRegressor(hidden_layer_sizes=(100,), max_iter=500, random_state=42)
-        # model = LinearRegression()
+        self.model = MLPRegressor(hidden_layer_sizes=(100,), 
+                                  max_iter=500, 
+                                  alpha=0.01, 
+                                  random_state=42, 
+                                  solver='lbfgs'
+                                  )
         self.model.fit(X_scaled_df, y)
         
         # Save important objects to joblib data
@@ -139,7 +167,7 @@ class ExperienceStudy:
 def create_model(aggregated_data, explanatory_variables, joblib_loc):
 
     exp_study = ExperienceStudy(
-        target_variable='weight', 
+        target_variable='avg_daily_weight', 
         explanatory_variables=explanatory_variables, 
         aggregated_data=aggregated_data
         )
@@ -159,6 +187,14 @@ def create_model(aggregated_data, explanatory_variables, joblib_loc):
                                         exp_study.test_data, 
                                         exp_study.model, exp_study.scaler)
     exp_study.joblib_data['test_results'] = test_results
+
+    # Calcuate metrics
+    actual_values = test_results['weight']
+    predicted_values = test_results['predicted']
+
+    test_metrics = calculate_metrics(actual_values, predicted_values)
+
+    exp_study.joblib_data['test_metrics'] = test_metrics
 
     try:
         joblib.dump(exp_study.joblib_data, fr'joblib/{joblib_loc}')

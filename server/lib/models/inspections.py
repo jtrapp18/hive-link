@@ -3,7 +3,7 @@ from datetime import datetime, date
 from sqlalchemy import Enum
 from sqlalchemy.orm import validates
 from sqlalchemy_serializer import SerializerMixin
-from config import db
+from lib.config import db
 
 class CountCategory(enum.Enum):
     LOW = "Low"

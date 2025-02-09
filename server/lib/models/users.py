@@ -3,7 +3,7 @@ from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.orm import validates
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import CheckConstraint
-from config import db, bcrypt
+from lib.config import db, bcrypt
 import re
 
 class User(db.Model, SerializerMixin):

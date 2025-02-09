@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-from seed_models import *
+from lib.seeding import generate_weather_data, pest_likelihood, varroa_mite_model, treatment_dosages, calculate_weekly_honey
 from random import randint, choice as rc, random
-from sqlalchemy import text
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from faker import Faker
-from config import db, app
-from models import Hive, Inspection, HoneyPull, CountCategory, User, Event, Signup, Forum, Message, Reply
+from lib.config import db, app
+from lib.models import Hive, Inspection, HoneyPull, CountCategory, User, Event, Signup, Forum, Message, Reply
 
 fake = Faker()
 
@@ -14,6 +13,7 @@ with app.app_context():
 
     print("Deleting all records...")
 
+    Reply.query.delete()
     Message.query.delete()
     Forum.query.delete()    
     Signup.query.delete()
@@ -192,8 +192,6 @@ with app.app_context():
             )
 
             honey_accum += honey
-
-            print(f"Honey produced this week: {honey}")
 
         honey_pull.weight = honey_accum if honey_pull.date_pulled else None 
 

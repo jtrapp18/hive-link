@@ -3,7 +3,7 @@ from sqlalchemy import Column, Integer, String, Date, Float
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.orm import validates
 from sqlalchemy.ext.associationproxy import association_proxy
-from config import db
+from lib.config import db
 
 class Hive(db.Model, SerializerMixin):
     __tablename__ = 'hives'

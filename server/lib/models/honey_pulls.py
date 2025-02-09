@@ -1,7 +1,7 @@
 from datetime import datetime, date
 from sqlalchemy.orm import validates
 from sqlalchemy_serializer import SerializerMixin
-from config import db
+from lib.config import db
 
 class HoneyPull(db.Model, SerializerMixin):
     __tablename__ = 'honey_pulls'

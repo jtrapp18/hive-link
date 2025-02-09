@@ -119,14 +119,6 @@ def treatment_dosages(mite_count, prev_treatment=None, prev_dosage=(0, 0, 0, 0),
 
 def calculate_weekly_honey(temp, varroa_mite_count, super_count, has_larvae, has_eggs, treatment_factor, pests):
 
-    print('temp', temp)
-    print('varroa_mite_count', varroa_mite_count)
-    print('super count', super_count)
-    print('has_larvae', has_larvae)
-    print('has_eggs', has_eggs)
-    print('treatment_factor', treatment_factor)
-    print('pests', pests)
-
     """Estimate weekly honey production based on key hive conditions, now factoring in pests."""
     base_honey = random() * 5  # Base random production (e.g., 0-5 lbs per week)
 

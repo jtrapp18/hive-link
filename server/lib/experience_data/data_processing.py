@@ -1,7 +1,7 @@
 import copy
 import pandas as pd
 import numpy as np
-from models import Hive
+from lib.models import Hive
 
 def collect_data(app):
     with app.app_context():
@@ -111,6 +111,7 @@ def aggregate_data(df_filtered):
 
     date_end = pd.to_datetime(df_aggregated['date_pulled']) if 'date_pulled' in df_aggregated.columns else pd.to_datetime('today')
     df_aggregated['days'] = (date_end - pd.to_datetime(df_aggregated['date_reset'])).dt.days
+    df_aggregated['avg_daily_weight'] = df_aggregated['weight'] / df_aggregated['days'] if 'date_pulled' in df_aggregated.columns else None
 
     return df_aggregated
 

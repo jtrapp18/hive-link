@@ -1,4 +1,4 @@
-from config import db
+from lib.config import db
 from datetime import date
 
 class ModelHistory(db.Model):
