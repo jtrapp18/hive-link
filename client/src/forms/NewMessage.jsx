@@ -2,15 +2,33 @@ import { useContext, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { UserContext } from '../context/userProvider';
 import styled from 'styled-components';
+import { Button } from '../MiscStyling';
 
 const Message = styled.div`
-    position: fixed;
-    left: 0;
-    width: 100vw;
-    bottom: 0;
+    textarea {
+      width: 100%;
+      border: 1px solid var(--honey);
+      padding: 10px;
+      border-radius: 20px;
+      background: white;
+
+      p {
+          color: black;
+      }
+
+      &:hover {
+        background: var(--light-yellow);
+      }
+  }
+
+    .btn-container {
+      display: flex;
+      justify-content: end;
+
+    }
 `
 
-const NewMessage = ({ id,  forumId}) => {
+const NewMessage = ({ setShow }) => {
     const { user } = useContext(UserContext);
     const [showOptions, setShowOptions] = useState(false);
     const [formData, setFormData] = useState({
@@ -30,18 +48,21 @@ const NewMessage = ({ id,  forumId}) => {
 
     return (
         <Message>
-          <StyledForm onSubmit={handleSubmit}>
-            <h1>New Message</h1>
-            <div>
-                <label htmlFor="messageText">Message Text</label>
-                <textarea
-                    id="messageText"
-                    name="messageText"
-                    value={formData.messageText}
-                    onChange={handleChange}
-                />
-            </div>
-            <div>
+          <form onSubmit={handleSubmit}>
+              <textarea
+                  id="messageText"
+                  name="messageText"
+                  value={formData.messageText}
+                  onChange={handleChange}
+              />
+            <div className='btn-container'>
+              <Button 
+                  type="button" 
+                  onClick={()=>setShow(false)}
+                >
+                  Cancel
+                
+              </Button>
               <Button 
                 type="submit" 
               >
@@ -49,7 +70,7 @@ const NewMessage = ({ id,  forumId}) => {
                 
               </Button>
             </div>
-          </StyledForm>
+          </form>
         </Message>
     );
 }

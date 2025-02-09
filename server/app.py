@@ -566,6 +566,57 @@ class MessageById(Resource):
         db.session.commit()
         return {}, 204
 
+class Replies(Resource):
+
+    def post(self):
+        try:
+            # Get data from the request
+            data = request.get_json()
+
+            # Create new reply
+            new_reply = Reply(
+                user_id=data['user_id'],  # Link the message to the user
+                message_id=data['message_id'],  # Link the message to the forum
+                reply_text=data['reply_text']
+            )
+
+            # Add the new message to the database and commit
+            db.session.add(new_reply)
+            db.session.commit()
+
+            # Return the created message as a response
+            return new_reply.to_dict(), 201
+        except Exception as e:
+            db.session.rollback()
+            return {'error': f'An error occurred: {str(e)}'}, 500
+
+class ReplyById(Resource):
+    def get(self, reply_id):
+        reply = Reply.query.get(reply_id)
+        if not reply:
+            return {'error': 'Reply not found'}, 404
+        return reply.to_dict(), 200
+
+    def patch(self, reply_id):
+        reply = Reply.query.get(reply_id)
+        if not reply:
+            return {'error': 'Reply not found'}, 404
+        data = request.get_json()
+
+        for attr in data:
+            setattr(reply, attr, data.get(attr))
+
+        db.session.commit()
+        return reply.to_dict(), 200
+
+    def delete(self, message_id):
+        reply = Reply.query.get(message_id)
+        if not reply:
+            return {'error': 'Reply not found'}, 404
+        db.session.delete(reply)
+        db.session.commit()
+        return {}, 204
+
 class NearbyZipcodes(Resource):
 
     def get(self):
@@ -623,9 +674,9 @@ class ExperienceStudy(Resource):
             test_metrics = joblib_data['test_metrics']
             run_date = joblib_data['run_date']
 
-            exp_study_dict = {"run_date": run_date,
+            exp_study_dict = {"run_date": run_date.isoformat(),
                               "test_metrics": test_metrics,
-                              "test_results": test_results}
+                              "test_results": test_results_dict}
 
             return exp_study_dict, 200
         
@@ -734,6 +785,8 @@ api.add_resource(Forums, '/forums', endpoint='forums')
 api.add_resource(ForumById, '/forums/<int:forum_id>')
 api.add_resource(Messages, '/messages', endpoint='messages')
 api.add_resource(MessageById, '/signups/<int:message_id>')
+api.add_resource(Replies, '/messages', endpoint='replies')
+api.add_resource(ReplyById, '/signups/<int:reply_id>')
 api.add_resource(NearbyZipcodes, '/zipcodes')
 api.add_resource(BeekeepingNews, '/beekeeping_news')
 api.add_resource(GraphData, '/graph_data')

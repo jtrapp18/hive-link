@@ -260,5 +260,20 @@ with app.app_context():
     db.session.add_all(messages)
     db.session.commit()
 
+    print("Creating replies...")
+
+    replies = []
+    for message in messages:
+        for user in users:
+            if random() > 0.4:
+                reply = Reply(
+                    user_id=user.id,
+                    message_id=message.id,
+                    reply_text=fake.text(max_nb_chars=255),  # Fake reply text for the reply
+                )
+                replies.append(reply)
+
+    db.session.add_all(replies)
+    db.session.commit()
 
     print("Seeding Complete.")

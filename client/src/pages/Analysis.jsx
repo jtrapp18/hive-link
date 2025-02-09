@@ -7,6 +7,7 @@ import AnalysisHealth from '../graphing/AnalysisHealth';
 import { HexagonButton, StyledContainer } from '../MiscStyling';
 import { UserContext } from '../context/userProvider';
 import AnalysisUser from '../graphing/AnalysisUser';
+import ExpStudyResults from '../components/ExpStudyResults';
 import { getJSON, snakeToCamel } from '../helper';
 
 const ButtonContainer = styled.div`
@@ -83,14 +84,7 @@ const Analysis = () => {
             }
             {activeTab==='honeyAll' &&
                 <>
-                    <FeaturesContainer>
-                        <p><strong>Top impacts on honey production </strong>(Based on all available user data to date):</p>
-                        <ol>
-                            {studyResults.map(result=>
-                                <li key={result.Feature}>{toProperCase(result.Feature)}</li>
-                            )}
-                        </ol>
-                    </FeaturesContainer>
+                    <ExpStudyResults />
                     <AnalysisHoney
                         filters={[]}
                         graphData={graphData.aggregated}

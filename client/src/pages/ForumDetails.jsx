@@ -5,9 +5,17 @@ import Loading from './Loading';
 import { StyledContainer } from '../MiscStyling';
 import MessageCard from '../cards/MessageCard';
 import styled from 'styled-components';
+import NewMessage from '../forms/NewMessage';
 
-const MessageContainer = styled.div`
-
+const NewMessageContainer = styled.div`
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    background: black;
+    padding: 5%;
+    border-top: 3px double var(--honey);
+    z-index: 1000;
 `
 
 const ForumDetails = () => {
@@ -38,6 +46,9 @@ const ForumDetails = () => {
                     />
                 )}
             </div>
+            <NewMessageContainer>
+                <NewMessage />
+            </NewMessageContainer>
         </StyledContainer>
     );
 }

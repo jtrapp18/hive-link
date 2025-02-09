@@ -266,6 +266,15 @@ const camelToProperCase = (str) => {
 //****************************************************************************************************
 // Other utilities
 
+const formattedTime = (messageDate) => new Date(messageDate).toLocaleString("en-US", {
+  month: "long",
+  day: "numeric",
+  year: "numeric",
+  hour: "numeric",
+  minute: "numeric",
+  hour12: true
+});
+
 const scrollToTop = () => {
   window.scrollTo({
     top: 0,
@@ -274,4 +283,5 @@ const scrollToTop = () => {
 };
 
 export {userLogout, getJSON, getJSONById, postJSONToDb, patchJSONToDb, deleteJSONFromDb, 
-  getNearbyZipcodes, getHiveGeoPoints, getBeekeepingNews, snakeToCamel, camelToProperCase, scrollToTop};
+  getNearbyZipcodes, getHiveGeoPoints, getBeekeepingNews, snakeToCamel, camelToProperCase, 
+  formattedTime, scrollToTop};

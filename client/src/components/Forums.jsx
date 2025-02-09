@@ -5,11 +5,12 @@ import { StyledContainer } from '../MiscStyling';
 
 const StyledArticle = styled.article`
   width: 80%;
+  border: 1px solid gray;
+  padding: 2%;
 
   span {
     color: gray;
   }
-
 `
 
 const StyledNavLink = styled(NavLink)`
