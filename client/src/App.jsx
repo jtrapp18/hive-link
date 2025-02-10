@@ -29,15 +29,17 @@ function App() {
 
   // Fetching hives data once
   useEffect(() => {
-    console.log('logging hives...')
-    if (!hives.length) {
-      getJSON("hives")
-        .then((hives) => {
-          const hivesTransformed = snakeToCamel(hives);
-          setHives(hivesTransformed);
-        });
+    if (user) {
+      console.log('logging hives...')
+      if (!hives.length) {
+        getJSON("hives_by_user")
+          .then((hives) => {
+            const hivesTransformed = snakeToCamel(hives);
+            setHives(hivesTransformed);
+          });
+      }
     }
-  }, []);
+  }, [user]);
 
   // Fetching general graph data (available to everyone)
   useEffect(() => {

@@ -10,6 +10,7 @@ from datetime import datetime
 # from flask_migrate import Migrate
 from flask import request, session
 from flask_restful import  Resource
+from collections import Counter
 
 from lib.config import app, db, api
 from lib.models import Hive, Inspection, HoneyPull, User, Event, Signup, ModelHistory, Forum, Message, Reply
@@ -601,26 +602,44 @@ class ReplyById(Resource):
         db.session.delete(reply)
         db.session.commit()
         return {}, 204
-
-class NearbyZipcodes(Resource):
-
+    
+class HiveGeoData(Resource):
     def get(self):
         API_KEY = os.getenv("ZIPCODE_API_KEY")
 
-        zip_code = request.args.get("zip")
-        radius = request.args.get("radius", 5)
+        # Aggregate hives by ZIP code
+        zip_codes = [str(int(hive.postal_code)) for hive in Hive.query.all()]
+        hive_counts = dict(Counter(zip_codes))  # Get hive count per ZIP code
 
-        if not zip_code:
-            return {'error': 'ZIP code is required'}, 400
+        if not zip_codes:
+            return [], 200
 
-        url = f'https://www.zipcodeapi.com/rest/{API_KEY}/radius.json/{zip_code}/{radius}/mile'
+        # Construct the API query
+        base_url = "https://public.opendatasoft.com/"
+        api_endpoint = "api/explore/v2.1/catalog/datasets/georef-united-states-of-america-zc-point/records?"
+        select_params = "select=zip_code%2C%20usps_city%2C%20ste_name%2C%20geo_point_2d&"
+        where_params = f'where=zip_code%20in%20({",".join(f"%22{zip}%22" for zip in set(zip_codes))})&limit=-1'
+        url = f"{base_url}{api_endpoint}{select_params}{where_params}"
 
         response = requests.get(url)
+        if response.status_code != 200:
+            return {'error': 'Failed to fetch ZIP code geo data'}, 500
 
-        if response.status_code == 200:
-            return response.json()
-        else:
-            return {'error': 'Failed to fetch ZIP codes'}, 500
+        data = response.json()
+        results = []
+        for item in data["results"]:
+            zip_code = str(item.get("zip_code", "")).zfill(5)
+            geo_point = item.get("geo_point_2d", {})
+
+            if zip_code and geo_point:
+                results.append({
+                    'zip_code': zip_code,
+                    'lat': geo_point['lat'],
+                    'lon': geo_point['lon'],
+                    'numberOfHives': hive_counts.get(zip_code, 0)
+                })
+
+        return results, 200
 
 class BeekeepingNews(Resource):
 
@@ -770,7 +789,7 @@ api.add_resource(Messages, '/messages', endpoint='messages')
 api.add_resource(MessageById, '/signups/<int:message_id>')
 api.add_resource(Replies, '/messages', endpoint='replies')
 api.add_resource(ReplyById, '/signups/<int:reply_id>')
-api.add_resource(NearbyZipcodes, '/zipcodes')
+api.add_resource(HiveGeoData, '/geo_data')
 api.add_resource(BeekeepingNews, '/beekeeping_news')
 api.add_resource(GraphData, '/graph_data')
 api.add_resource(GraphDataUser, '/graph_data_user')
