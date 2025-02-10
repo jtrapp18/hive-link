@@ -32,7 +32,7 @@ function App() {
     if (user) {
       console.log('logging hives...')
       if (!hives.length) {
-        getJSON("hives_by_user")
+        getJSON("user_hives")
           .then((hives) => {
             const hivesTransformed = snakeToCamel(hives);
             setHives(hivesTransformed);

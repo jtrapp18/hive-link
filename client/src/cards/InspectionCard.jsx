@@ -44,6 +44,7 @@ const InspectionCard = ({ inspection, setActiveInspection}) => {
                 </section>  
             </div>
             <div>
+                <hr />
                 <p>{notes}</p>
             </div>
             <div className="bottom-container">

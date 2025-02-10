@@ -57,7 +57,7 @@ class Inspection(db.Model, SerializerMixin):
 # additional records for beekeeper
     activity_surrounding_hive = db.Column(Enum(CountCategory), nullable=True)
     stability_in_hive = db.Column(Enum(CountCategory), nullable=True)
-    notes = db.Column(db.String(100), nullable=True)
+    notes = db.Column(db.String(255), nullable=True)
 
     # queen = db.relationship('Queen', back_populates='inspections')
     honey_pull = db.relationship('HoneyPull', back_populates='inspections')

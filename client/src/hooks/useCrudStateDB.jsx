@@ -17,9 +17,8 @@ const useCrudStateDB = (setState, dbKey, optionalFunc=null, addFunc=null) => {
       })
     };
     
-    const updateItem = (item, itemId=null) => {
-
-      patchJSONToDb(dbKey, item, itemId=null)
+    const updateItem = (item, itemId) => {
+      patchJSONToDb(dbKey, itemId, item)
       .then(json => {
         const jsonTransformed = snakeToCamel(json);
         updateState(jsonTransformed, itemId);
@@ -68,7 +67,7 @@ const useCrudStateDB = (setState, dbKey, optionalFunc=null, addFunc=null) => {
       patchJSONToDb(nestedKey, nestedId, body)
       .then(json => {
         const jsonTransformed = snakeToCamel(json);
-        updateNestedKeyInState(arrayKey, arrayId, nestedKey, jsonTransformed, itemId);
+        updateNestedKeyInState(arrayKey, arrayId, nestedKey, nestedId, jsonTransformed, itemId);
       });
     };
 

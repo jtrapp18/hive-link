@@ -9,7 +9,7 @@ const FormSubmit = ({ label, formValues, setIsEditing }) => {
         {Object.entries(formValues).map(([key, value]) => (
             <div key={key}>
                 <label>{camelToProperCase(key)}:</label>
-                <p>{value}</p>
+                <p>{typeof value === "boolean" ? value.toString() : value}</p>
             </div>
         ))}
         <Button 

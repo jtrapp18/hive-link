@@ -69,9 +69,6 @@ const InspectionForm = ({ initObj, honeyPullId, viewInspection }) => {
     bias: Yup.number().required("Bias is required").min(0, "Must be a non-negative number"),
     hasEggs: Yup.boolean(),
     hasLarvae: Yup.boolean(),    
-    fate: Yup.string().required("Fate is required").oneOf(["Dead", "Swarmed", "Split", "Active"]),
-    activitySurroundingHive: Yup.string().nullable().oneOf(["Low", "Medium", "High"]),
-    stabilityInHive: Yup.string().nullable().oneOf(["Low", "Medium", "High"]),
     temp: Yup.number().min(-10, "Temperature must be between -10 and 50").max(50, "Temperature must be between -10 and 50"),
     humidity: Yup.number().min(0, "Humidity must be between 0 and 100").max(100, "Humidity must be between 0 and 100"),
     weatherConditions: Yup.string().oneOf(["Sunny", "Overcast", "Rainy", "Snowy", "Windy"]),
@@ -88,54 +85,55 @@ const InspectionForm = ({ initObj, honeyPullId, viewInspection }) => {
     formicAcidDosage: Yup.number().min(0, "Formic acid dosage cannot be negative"),
     thymolDosage: Yup.number().min(0, "Thymol dosage cannot be negative"),
     apistanDosage: Yup.number().min(0, "Apistan dosage cannot be negative"),
-    hasTwistedLarvae: Yup.boolean(),
-    hasChalkbrood: Yup.boolean(),
+    fate: Yup.string().required("Fate is required").oneOf(["Dead", "Swarmed", "Split", "Active"]),
     varroaMiteCount: Yup.number().min(0, "Varroa mite count cannot be negative"),
+    hasChalkbrood: Yup.boolean(),
+    hasTwistedLarvae: Yup.boolean(),
+    activitySurroundingHive: Yup.string().nullable().oneOf(["Low", "Medium", "High"]),
+    stabilityInHive: Yup.string().nullable().oneOf(["Low", "Medium", "High"]),
+    notes: Yup.string().nullable().max(255, 'Notes must be at most 255 characters')
   });
 
   const formik = useFormik({
       enableReinitialize: true,
-      initialValues: {...initObj, notes: !initObj.notes ? "" : initObj.notes} || { 
-      dateChecked: "", 
-      bias: "", 
-      hasEggs: false,      
-      hasLarvae: false,
-      fate: "", 
-      activitySurroundingHive: "", 
-      stabilityInHive: "",
-      temp: "", 
-      humidity: "", 
-      weatherConditions: "",
-      antsPresent: false,
-      slugsPresent: false,
-      hiveBeetlesPresent: false,
-      waxMothsPresent: false,
-      waspsHornetsPresent: false,
-      micePresent: false,
-      robberBeesPresent: false,
-      numPollenPatties: 0,
-      numSugarSyrupFrames: 0,
-      oxalicAcidDosage: 0,
-      formicAcidDosage: 0,
-      thymolDosage: 0,
-      apistanDosage: 0,
-      hasTwistedLarvae: false,
-      hasChalkbrood: false,
-      varroaMiteCount: 0,
-      activity_surrounding_hive: "",
-      stability_in_hive: "",
-      notes: ""
-    },
-    validationSchema,
-    onSubmit: (values) => {
-      const body = {
-        ...values,
-        honeyPullId: honeyPullId,
-      };
-
-      submitToDB(body);
-      setIsEditing(false);
-    },
+      initialValues: {
+        dateChecked: initObj?.dateChecked || "",
+        bias: initObj?.bias ?? "",
+        hasEggs: initObj?.hasEggs ?? false,      
+        hasLarvae: initObj?.hasLarvae ?? false,
+        temp: initObj?.temp ?? "", 
+        humidity: initObj?.humidity || "", 
+        weatherConditions: initObj?.weatherConditions || "",
+        antsPresent: initObj?.antsPresent ?? false,
+        slugsPresent: initObj?.slugsPresent ?? false,
+        hiveBeetlesPresent: initObj?.hiveBeetlesPresent ?? false,
+        waxMothsPresent: initObj?.waxMothsPresent ?? false,
+        waspsHornetsPresent: initObj?.waspsHornetsPresent ?? false,
+        micePresent: initObj?.micePresent ?? false,
+        robberBeesPresent: initObj?.robberBeesPresent ?? false,
+        numPollenPatties: initObj?.numPollenPatties ?? 0,
+        numSugarSyrupFrames: initObj?.numSugarSyrupFrames ?? 0,
+        oxalicAcidDosage: initObj?.oxalicAcidDosage ?? 0,
+        formicAcidDosage: initObj?.formicAcidDosage ?? 0,
+        thymolDosage: initObj?.thymolDosage ?? 0,
+        apistanDosage: initObj?.apistanDosage ?? 0,
+        fate: initObj?.fate || "",
+        hasTwistedLarvae: initObj?.hasTwistedLarvae ?? false,
+        hasChalkbrood: initObj?.hasChalkbrood ?? false,
+        varroaMiteCount: initObj?.varroaMiteCount ?? 0,
+        activitySurroundingHive: initObj?.activitySurroundingHive || "",
+        stabilityInHive: initObj?.stabilityInHive || "",
+        notes: initObj?.notes ?? ""
+      },
+      validationSchema,
+      onSubmit: (values) => {
+        const body = {
+          ...values,
+          honeyPullId: honeyPullId,
+        };
+        submitToDB(body);
+        setIsEditing(false);
+      },
   });
 
   return (
@@ -522,7 +520,9 @@ const InspectionForm = ({ initObj, honeyPullId, viewInspection }) => {
                 onBlur={formik.handleBlur}
               />
             </div>
-            <Button type="submit">{initObj ? "Update Inspection" : "Submit New Inspection"}</Button>
+            <hr />
+            <Button type="submit">{initObj ? "Submit Updates" : "Submit New Inspection"}</Button>
+            <hr />
           </>
         )}
           <FormFooter

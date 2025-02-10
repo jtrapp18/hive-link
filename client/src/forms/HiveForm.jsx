@@ -3,9 +3,8 @@ import { UserContext } from '../context/userProvider';
 import {useOutletContext} from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup"; // Validation library
-import { patchJSONToDb, postJSONToDb } from '../helper';
 import Error from "../styles/Error";
-import { StyledForm, StyledSubmit, Button } from '../MiscStyling'
+import { StyledForm, Button } from '../MiscStyling'
 import useCrudStateDB from '../hooks/useCrudStateDB';
 import FormSubmit from '../components/FormSubmit'
 
@@ -13,7 +12,7 @@ const HiveForm = ({ initObj, viewHive }) => {
   const { user } = useContext(UserContext);
   const [isEditing, setIsEditing] = useState(!initObj);
   const { setHives } = useOutletContext();
-  const {addItem, updateItem} = useCrudStateDB(setHives, "hives", null, viewHive);
+  const {addItem, updateItem} = useCrudStateDB(setHives, "hives", null, viewHive); 
 
   const initialValues = initObj
     ? {
