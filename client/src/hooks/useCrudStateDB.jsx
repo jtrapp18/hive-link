@@ -14,6 +14,8 @@ const useCrudStateDB = (setState, dbKey, optionalFunc=null, addFunc=null) => {
       .then(json => {
         const jsonTransformed = snakeToCamel(json);
         addToState(jsonTransformed);
+
+        console.log(jsonTransformed)
       })
     };
     

@@ -54,8 +54,6 @@ const MyEvents = () => {
     eventFiltering);
 
   const addEvent = (event) => {
-    event.isHostedByUser = true
-
     addItem(event);
     setShowNewForm(false);
     setShowDeleted(false);

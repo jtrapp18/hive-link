@@ -323,22 +323,23 @@ class InspectionById(Resource):
         return {}, 204
     
 class Events(Resource):
-    def get(self):
+    def transform_event(self, event):
         user_id = session.get('user_id')  # Returns None if no user is signed in
+
+        # Set flags to False if no user is logged in
+        is_hosted_by_user = event.user_id == user_id if user_id else False
+        is_attended_by_user = any(signup.user_id == user_id for signup in event.signups) if user_id else False
+
+        # Convert event to dict
+        event_data = event.to_dict()
+        event_data["is_hosted_by_user"] = is_hosted_by_user
+        event_data["is_attended_by_user"] = is_attended_by_user
+        return event_data
+        
+    def get(self):
         events = Event.query.all()  # Get all events
 
-        def transform_event(event):
-            # Set flags to False if no user is logged in
-            is_hosted_by_user = event.user_id == user_id if user_id else False
-            is_attended_by_user = any(signup.user_id == user_id for signup in event.signups) if user_id else False
-
-            # Convert event to dict
-            event_data = event.to_dict()
-            event_data["is_hosted_by_user"] = is_hosted_by_user
-            event_data["is_attended_by_user"] = is_attended_by_user
-            return event_data
-
-        events_data = [transform_event(event) for event in events]
+        events_data = [self.transform_event(event) for event in events]
         return events_data, 200
 
     def post(self):
@@ -354,23 +355,36 @@ class Events(Resource):
                 descr=data['descr'],
                 zipcode=data['zipcode']
             )
-
             # Add the new hive to the database and commit
             db.session.add(new_event)
             db.session.commit()
 
             # Return the created hive as a response
-            return new_event.to_dict(), 201
+            return self.transform_event(new_event), 201
         except Exception as e:
             db.session.rollback()
             return {'error': f'An error occurred: {str(e)}'}, 500
     
 class EventById(Resource):
+
+    def transform_event(self, event):
+        user_id = session.get('user_id')  # Returns None if no user is signed in
+
+        # Set flags to False if no user is logged in
+        is_hosted_by_user = event.user_id == user_id if user_id else False
+        is_attended_by_user = any(signup.user_id == user_id for signup in event.signups) if user_id else False
+
+        # Convert event to dict
+        event_data = event.to_dict()
+        event_data["is_hosted_by_user"] = is_hosted_by_user
+        event_data["is_attended_by_user"] = is_attended_by_user
+
     def get(self, event_id):
         event = Event.query.get(event_id)
+        
         if not event:
             return {'error': 'Hive not found'}, 404
-        return event.to_dict(), 200
+        return self.transform_event(event), 200
 
     def patch(self, event_id):
         event = Event.query.get(event_id)
