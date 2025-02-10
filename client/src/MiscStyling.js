@@ -296,7 +296,8 @@ const PlotContainer = styled.div`
 `;
 
 const StyledContainer = styled.div`
-    width: 80%;
+    width: 1000px;
+    max-width: 90vw;
 
     display: flex;
     flex-direction: column;

@@ -1,16 +1,18 @@
-import { useContext } from 'react';
-import { useNavigate } from "react-router-dom";
-import { UserContext } from '../context/userProvider';
+import { useOutletContext } from "react-router-dom";
 import styled from 'styled-components';
 import HiveCard from './HiveCard'
 import Error from '../styles/Error';
-import { Alert } from '../MiscStyling';
+import { formattedTime } from "../helper";
 
 const StyledCard = styled.article`
 
     border-bottom: 3px double var(--honey);
     padding: 3%;
     background: black;
+
+    small {
+        color: gray;
+    }
 
     .hive-summary {
         display: flex;
@@ -62,14 +64,16 @@ const StyledCard = styled.article`
 `
 
 const AnalysisCard = ({ hive, prediction }) => {
-    const navigate = useNavigate();
 
-    const { id, honeyPulls } = hive
-    const latestHoneyPull = honeyPulls[honeyPulls.length - 1];
-    const latestInspection = latestHoneyPull.inspections[latestHoneyPull.inspections.length - 1];
-
-    const {dateChecked, hasTwistedLarvae, hasChalkbrood, varroaMiteCount, bias, hasEggs, hasLarvae} = latestInspection
+    const { predictionData } = useOutletContext();
+    const { honeyPulls } = hive;
+    const sortedHoneyPulls = [...honeyPulls].sort((a, b) => new Date(a.datePulled) - new Date(b.datePulled));
+    const latestHoneyPull = sortedHoneyPulls[0];
+    const sortedInspections = [...latestHoneyPull.inspections].sort((a, b) => new Date(a.dateChecked) - new Date(b.dateChecked));
+    const latestInspection = sortedInspections[0];
+    const {dateChecked, hasTwistedLarvae, hasChalkbrood, varroaMiteCount, bias, hasEggs, hasLarvae} = latestInspection;
     const atRisk = hasTwistedLarvae || hasChalkbrood || varroaMiteCount > 3 || bias < 3 || !hasEggs || !hasLarvae;
+    const { modelRunDate, predRunDate } = predictionData;
 
     // const userHives = honeyPulls.filter((honeyPull) => honeyPull.userId === user.id)
     const inspectionCount = honeyPulls.reduce((accum, honeyPull) => honeyPull.inspections.length + accum, 0)
@@ -89,12 +93,15 @@ const AnalysisCard = ({ hive, prediction }) => {
                     <div className='inspection-row'>
                         {latestHoneyPull.weight ?
                             <p><strong>Honey Pull Weight (lbs): </strong>{latestHoneyPull.weight.toFixed(4)}</p> :
-                            <p className='honey-prediction'><strong>Predicted Honey Pull Weight (lbs): </strong>{prediction.toFixed(4)} (Based on pull date of today)</p>
+                            <p className='honey-prediction'><strong>Predicted Honey Pull Weight (lbs)*: </strong>{prediction.toFixed(4)}</p>
                         }
                     </div>
                 </section>
                 <HiveCard {...hive}/>
             </div>
+            {!latestHoneyPull.weight &&
+                <small>{`*Based on MLP Regressor user experience study run ${formattedTime(modelRunDate)}, inspection data as of ${formattedTime(predRunDate)}, and pull date of today`}</small>
+            }
             <hr />
             <section>
                 <span><strong>No. Inspections: </strong>{inspectionCount}</span>

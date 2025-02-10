@@ -11,7 +11,7 @@ function App() {
   const [hives, setHives] = useState([]);
   const [graphData, setGraphData] = useState([]);
   const [graphDataUser, setGraphDataUser] = useState([]);
-  const [predictions, setPredictions] = useState({});
+  const [predictionData, setPredictionData] = useState({});
 
   console.log('reloading app page...')
 
@@ -57,6 +57,7 @@ function App() {
       getJSON("graph_data_user")
         .then((data) => {
           const dataTransformed = snakeToCamel(data);
+          console.log(dataTransformed)
           setGraphDataUser(dataTransformed);
         });
     }
@@ -69,7 +70,7 @@ function App() {
       getJSON("predictions")
         .then((data) => {
           const dataTransformed = snakeToCamel(data);
-          setPredictions(dataTransformed.predicted);
+          setPredictionData(dataTransformed);
         });
     }
   }, [user]);
@@ -84,7 +85,7 @@ function App() {
               setHives,
               graphDataUser,
               graphData,
-              predictions
+              predictionData
             }}
           />
         </main>

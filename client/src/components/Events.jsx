@@ -1,6 +1,5 @@
 import { CardContainer } from '../MiscStyling';
 import EventCard from '../cards/EventCard';
-import styled from 'styled-components';
 
 const Events = ({ events, eventCardProps }) => {
 

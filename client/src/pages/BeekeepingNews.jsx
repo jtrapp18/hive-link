@@ -5,13 +5,6 @@ import SearchBar from "../components/SearchBar";
 import {StyledContainer} from '../MiscStyling'
 
 const ArticleContainer = styled.div`
-    width: 1000px;
-    max-width: 90vw;
-
-    display: flex;
-    flex-direction: column;
-    padding: 0 5% 0 5%;
-
     a {
       color: var(--bright-blue);
     }

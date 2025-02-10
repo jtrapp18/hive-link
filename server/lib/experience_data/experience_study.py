@@ -72,7 +72,7 @@ def pull_explanatory_variables(aggregated_data):
     metadata = {'hive_id', 'honey_pull_id', 'city', 'state', 
                 'data_added', 'date_reset', 
                 'date_pulled', 'count', 'days', 'date_added'}
-    outcomes = {'bias', 'weight', 'avg_daily_weight'}
+    outcomes = {'bias', 'weight', 'avg_daily_weight', 'avg_30_day_weight'}
 
     remaining_col = set(aggregated_data.columns) - metadata - outcomes
     explanatory_variables = list(remaining_col)
@@ -207,6 +207,7 @@ def run_predictions(df_prediction_input, joblib_loc):
 
     # Load the model, scaler, and explanatory variables from the joblib file
     joblib_data = joblib.load(fr'joblib/{joblib_loc}')
+    model_run_date = joblib_data['run_date']
     model = joblib_data['model']
     scaler = joblib_data['scaler']
     explanatory_variables = joblib_data['explanatory_variables']
@@ -214,8 +215,10 @@ def run_predictions(df_prediction_input, joblib_loc):
     # Make predictions using the active model
     predicted_values = add_predicted_values(explanatory_variables, 
                                             df_prediction_input, model, scaler)
+    
+    pred_run_date = datetime.now()
 
-    return predicted_values
+    return predicted_values, model_run_date, pred_run_date
 
 def get_latest_joblib():
     try:

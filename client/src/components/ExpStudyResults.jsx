@@ -49,7 +49,7 @@ const ExpStudyResults = () => {
                     <li key={result.Feature}>{camelToProperCase(result.Feature)}</li>
                 )}
             </ol>
-            <p><small>Based on user experience study run {formattedTime(runDate)}</small></p>
+            <p><small>Based on MLP Regressor user experience study run {formattedTime(runDate)}</small></p>
 
         </FeaturesContainer>
     );

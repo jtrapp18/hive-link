@@ -31,10 +31,15 @@ const PieChart = ({ title, label, valueData, selectedSlice, setSelectedSlice }) 
 
   const handleClick = (eventData) => {
     const selected = eventData.points[0];
-
+  
+    let labelValue = selected.label;
+    if (!isNaN(labelValue) && !isNaN(parseFloat(labelValue))) {
+      labelValue = parseInt(labelValue, 10); // Use parseFloat if decimals are possible
+    }
+  
     setSelectedSlice({
       labelCol: label.label,
-      labelFilter: selected.label
+      labelFilter: labelValue
     });
   };
 

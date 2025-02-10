@@ -112,6 +112,7 @@ def aggregate_data(df_filtered):
     date_end = pd.to_datetime(df_aggregated['date_pulled']) if 'date_pulled' in df_aggregated.columns else pd.to_datetime('today')
     df_aggregated['days'] = (date_end - pd.to_datetime(df_aggregated['date_reset'])).dt.days
     df_aggregated['avg_daily_weight'] = df_aggregated['weight'] / df_aggregated['days'] if 'date_pulled' in df_aggregated.columns else None
+    df_aggregated['avg_30_day_weight'] = df_aggregated['avg_daily_weight']*30 if 'date_pulled' in df_aggregated.columns else None
 
     return df_aggregated
 

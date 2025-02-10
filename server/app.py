@@ -752,10 +752,14 @@ class Predictions(Resource):
         try:
             joblib_loc = get_latest_joblib()
             df_normalized, df_prediction_input = process_data_for_analysis(hives, actuals=False)
-            predicted_values = run_predictions(df_prediction_input, joblib_loc)
+            predicted_values, model_run_date, pred_run_date = run_predictions(df_prediction_input, joblib_loc)
             predictions_only = predicted_values[['hive_id', 'predicted']].set_index('hive_id')
 
-            prediction_dict = predictions_only.to_dict()
+            prediction_dict = {
+                'model_run_date': model_run_date.isoformat(),
+                'pred_run_date': pred_run_date.isoformat(),
+                'predicted': predictions_only.to_dict()['predicted']
+            }
 
             # Return the predictions
             return prediction_dict, 200
