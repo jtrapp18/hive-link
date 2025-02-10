@@ -53,7 +53,7 @@ const StyledMessage = styled.div`
         color: gray;
     }  
 
-    .message-bubble {
+    .message-bubble, .message-editing {
         border: 1px solid var(--honey);
         padding: 10px;
         border-radius: 20px;
@@ -62,6 +62,13 @@ const StyledMessage = styled.div`
         p {
             color: black;
         }
+    }
+
+    .message-editing {
+        // background: var(--yellow);
+        color: black;
+        width: 100%;
+        border: 3px solid var(--honey);
     }
 
     .reply-buttons {
@@ -89,6 +96,7 @@ const Message = ({ id,  userId, msgUser, messageDate, messageText, handleUpdate,
     const { user } = useContext(UserContext);
     const [showOptions, setShowOptions] = useState(false);
     const [editMode, setEditMode] = useState(false);
+    const [cancelConfirm, setCancelConfirm] = useState(false);
     const [editMsg, setEditMsg] = useState(messageText);
 
     const toggleOptions = () => {
@@ -96,11 +104,13 @@ const Message = ({ id,  userId, msgUser, messageDate, messageText, handleUpdate,
     }
 
     const submitEdit = () => {
-        handleUpdate(editMsg);
+        handleUpdate(editMsg, id);
+        setEditMode(false);
     }
 
     const submitDelete = () => {
         handleDelete(id);
+        setCancelConfirm(false);
     }
 
     const handleChange = (e) => {
@@ -122,24 +132,37 @@ const Message = ({ id,  userId, msgUser, messageDate, messageText, handleUpdate,
                             ...
                         </h3>                    
                     }
-                    {showOptions &&
+                    {showOptions && !editMode && !cancelConfirm &&
                         <div className='options-container'>
-                            <button>Edit Message</button>
-                            <button onClick={submitDelete}>Delete Message</button>
+                            <button onClick={()=>setEditMode(true)}>Edit Message</button>
+                            <button onClick={()=>setCancelConfirm(true)}>Delete Message</button>
+                        </div>
+                    }
+                    {editMode &&
+                        <div className='options-container'>
+                            <button onClick={submitEdit}>Confirm Changes</button>
+                            <button onClick={()=>setEditMode(false)}>Cancel</button>
+                        </div>
+                    }
+                    {cancelConfirm &&
+                        <div className='options-container'>
+                            <button onClick={submitDelete}>Confirm Delete</button>
+                            <button onClick={()=>setCancelConfirm(false)}>Cancel</button>
                         </div>
                     }
                 </div>
-                <section className='message-bubble'>
-                    {editMode ?
-                        <textarea
-                            id="messageText"
-                            name="messageText"
-                            value={formData.messageText}
-                            onChange={handleChange}
-                        /> :
+                {editMode ?                           
+                    <textarea
+                        id="messageText"
+                        className='message-editing'
+                        name="messageText"
+                        value={editMsg}
+                        onChange={handleChange}
+                    /> :             
+                    <section className='message-bubble'>
                         <p>{messageText}</p>
-                    }
-                </section>
+                    </section>
+                }
             </div>
         </StyledMessage>
     );

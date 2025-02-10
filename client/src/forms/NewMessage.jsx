@@ -2,14 +2,15 @@ import { useContext, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { UserContext } from '../context/userProvider';
 import styled from 'styled-components';
-import { Button } from '../MiscStyling';
+import { Button, StyledForm } from '../MiscStyling';
 
-const Message = styled.div`
+const MessageForm = styled.form`
     textarea {
       width: 100%;
       border: 1px solid var(--honey);
       padding: 10px;
       border-radius: 20px;
+      color: black;
       background: white;
 
       p {
@@ -31,47 +32,44 @@ const Message = styled.div`
 
 const NewMessage = ({ setShow, handleAdd }) => {
     const { user } = useContext(UserContext);
-    const [formData, setFormData] = useState({
-        messageText: "",
-      });
+    const [messageText, setMessageText] = useState("");
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-      };
+      setMessageText(e.target.value)
+    };
       
     const handleSubmit = (e) => {
       e.preventDefault();
 
-      handleAdd(formData);
+      handleAdd(messageText);
+      setMessageText("");
+      setShow(false);
     };
 
     return (
-        <Message>
-          <form onSubmit={handleSubmit}>
-              <textarea
-                  id="messageText"
-                  name="messageText"
-                  value={formData.messageText}
-                  onChange={handleChange}
-              />
-            <div className='btn-container'>
-              <Button 
-                  type="button" 
-                  onClick={()=>setShow(false)}
-                >
-                  Cancel
-                
-              </Button>
-              <Button 
-                type="submit" 
+        <MessageForm onSubmit={(e) => { console.log('Form submit triggered'); handleSubmit(e); }}>
+            <textarea
+                id="messageText"
+                name="messageText"
+                value={messageText}
+                onChange={handleChange}
+            />
+          <div className='btn-container'>
+            <Button 
+                type="button" 
+                onClick={()=>setShow(false)}
               >
-                Submit
-                
-              </Button>
-            </div>
-          </form>
-        </Message>
+                Cancel
+              
+            </Button>
+            <Button 
+              type="submit"
+              onClick={()=>console.log('clicked')}
+            >
+              Submit
+            </Button>
+          </div>
+        </MessageForm>
     );
 }
 

@@ -98,12 +98,6 @@ const MobileNavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const cardRef = useRef(null); // Create a reference to the card element
 
-  const handleClickOutside = (e) => {
-    if (isMenuOpen && cardRef.current && !cardRef.current.contains(e.target)) {
-      setIsMenuOpen(false);
-    }
-  };
-
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
   };
@@ -121,16 +115,6 @@ const MobileNavBar = () => {
     }
     handleClick()
   }
-
-  useEffect(() => {
-    // Add event listener to detect clicks outside
-    document.addEventListener("mousedown", handleClickOutside);
-
-    // Cleanup the event listener on component unmount
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isMenuOpen]);
 
   return (
     <StyledDiv

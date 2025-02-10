@@ -47,14 +47,14 @@ const MessageCard = ({ id,  forumId, userId, user: msgUser, messageDate, message
     const [showReplies, setShowReplies] = useState(false);
     const {updateKey, deleteFromKey, addNestedKey, updateNestedKey} = useCrudStateDB(setForum, "forums");
 
-    const updateMessage = (updatedText) => {
+    const updateMessage = (updatedText, messageId) => {
         const message = ({
           messageText: updatedText,
           userId: user.id,
           forumId: forumId,
         })
 
-        updateKey("messages", id, message);
+        updateKey("messages", messageId, message);
       };
        
       const deleteMessage = (messageId) => {
@@ -63,7 +63,7 @@ const MessageCard = ({ id,  forumId, userId, user: msgUser, messageDate, message
     
       const addReply = (newReply) => {
         const reply = ({
-          ...newReply,
+          replyText: newReply,
           userId: user.id,
           messageId: id,
         })
@@ -73,7 +73,7 @@ const MessageCard = ({ id,  forumId, userId, user: msgUser, messageDate, message
     
       const updateReply = (updatedReply, replyId) => {
         const reply = ({
-          ...updatedReply,
+          replyText: updatedReply,
           userId: user.id,
           messageId: id,
         })

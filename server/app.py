@@ -441,6 +441,19 @@ class SignupById(Resource):
 
 class Forums(Resource):
 
+    def transform_forum(self, forum):
+        user_id = session.get('user_id')  # Ensure 'user_id' is in the session
+
+        return {
+            "id": forum.id,
+            "title": forum.title,
+            "category": forum.category,
+            "created_at": forum.created_at.isoformat(),
+            "user": forum.user.to_dict(),  # Assuming forum has a 'user' relation
+            "is_started_by_user": forum.user_id == user_id,
+            "is_participated_by_user": any(message.user_id == user_id for message in forum.messages)
+        }
+
     def get(self):
         user_id = session.get('user_id')  # Ensure 'user_id' is in the session
         if not user_id:
@@ -448,18 +461,7 @@ class Forums(Resource):
         
         forums = Forum.query.all()  # Fetch all forums
         
-        def transform_forum(forum):
-            return {
-                "id": forum.id,
-                "title": forum.title,
-                "category": forum.category,
-                "created_at": forum.created_at.isoformat(),
-                "user": forum.user.to_dict(),  # Assuming forum has a 'user' relation
-                "is_started_by_user": forum.user_id == user_id,
-                "is_participated_by_user": any(message.user_id == user_id for message in forum.messages)
-            }
-        
-        forums_data = [transform_forum(forum) for forum in forums]
+        forums_data = [self.transform_forum(forum) for forum in forums]
         return forums_data, 200
 
     def post(self):
@@ -479,18 +481,27 @@ class Forums(Resource):
             db.session.commit()
 
             # Return the created forum as a response
-            return new_forum.to_dict(), 201
+            return self.transform_forum(new_forum), 201
         except Exception as e:
             db.session.rollback()
             return {'error': f'An error occurred: {str(e)}'}, 500
 
 
 class ForumById(Resource):
+    def transform_forum(self, forum):
+        user_id = session.get('user_id')  # Ensure 'user_id' is in the session
+
+        forum_dict = forum.to_dict()
+        forum_dict['is_started_by_user'] = forum.user_id == user_id
+        forum_dict['is_participated_by_user'] = any(message.user_id == user_id for message in forum.messages)
+
+        return forum_dict
+
     def get(self, forum_id):
         forum = Forum.query.get(forum_id)
         if not forum:
             return {'error': 'Forum not found'}, 404
-        return forum.to_dict(), 200
+        return self.transform_forum(forum), 200
 
     def patch(self, forum_id):
         forum = Forum.query.get(forum_id)
@@ -800,9 +811,9 @@ api.add_resource(SignupById, '/signups/<int:signup_id>')
 api.add_resource(Forums, '/forums', endpoint='forums')
 api.add_resource(ForumById, '/forums/<int:forum_id>')
 api.add_resource(Messages, '/messages', endpoint='messages')
-api.add_resource(MessageById, '/signups/<int:message_id>')
-api.add_resource(Replies, '/messages', endpoint='replies')
-api.add_resource(ReplyById, '/signups/<int:reply_id>')
+api.add_resource(MessageById, '/messages/<int:message_id>')
+api.add_resource(Replies, '/replies', endpoint='replies')
+api.add_resource(ReplyById, '/replies/<int:reply_id>')
 api.add_resource(HiveGeoData, '/geo_data')
 api.add_resource(BeekeepingNews, '/beekeeping_news')
 api.add_resource(GraphData, '/graph_data')

@@ -11,11 +11,11 @@ import {UserContext} from '../context/userProvider'
 import useCrudStateDB from '../hooks/useCrudStateDB';
 import { ForumProvider } from '../context/forumProvider';
 
-const NewMessageContainer = styled(NavLink)`
+const NewMessageContainer = styled.div`
     width: 100%;
-    position: fixed;
-    bottom: 0;
-    right: 0;
+    // position: fixed;
+    // bottom: 0;
+    // right: 0;
     background: black;
     padding: 5%;
     border-top: 3px double var(--honey);
@@ -26,6 +26,7 @@ const ForumDetails = () => {
     const { id } = useParams();
     const { user } = useContext(UserContext);
     const [forum, setForum] = useState(null);
+    const [showNew, setShowNew] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -40,7 +41,7 @@ const ForumDetails = () => {
 
         const addMessage = (newMessage) => {
             const message = ({
-              ...newMessage,
+              messageText: newMessage,
               userId: user.id,
               forumId: forum.id,
             })
@@ -66,14 +67,18 @@ const ForumDetails = () => {
                         />
                     )}
                 </div>
-                <NewMessageContainer>
-                    <NewMessage
-                        handleAdd={addMessage}
-                    />
-                </NewMessageContainer>
+                {showNew ?
+                    <NewMessageContainer>
+                        <NewMessage
+                            setShow={setShowNew}
+                            handleAdd={addMessage}
+                        />
+                    </NewMessageContainer> :
+                    <button onClick={()=>setShowNew(true)}>New Message</button>
+                }
             </StyledContainer>
         </ForumProvider>
     );
 }
 
-export default ForumDetails; 
+export default ForumDetails;

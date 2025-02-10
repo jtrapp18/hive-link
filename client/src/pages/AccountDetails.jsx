@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { Button } from '../MiscStyling';
 import Error from "../styles/Error";
 import { StyledForm, StyledSubmit, StyledContainer } from "../MiscStyling";
+import FormSubmit from '../components/FormSubmit'
 import useCrudStateDB from '../hooks/useCrudStateDB';
 
 const AccountDetails = () => {
@@ -35,35 +36,11 @@ const AccountDetails = () => {
     return (
       <StyledContainer>
         {!isEditing ? (
-          <StyledSubmit>
-            <h1>Account Details</h1>
-            <div>
-              <label>First Name:</label>
-              <p>{user.firstName}</p>
-            </div>
-            <div>
-              <label>Last Name:</label>
-              <p>{user.lastName}</p>
-            </div>
-            <div>
-              <label>Email Address:</label>
-              <p>{user.email}</p>
-            </div>
-            <div>
-              <label>Phone Number:</label>
-              <p>{user.phoneNumber}</p>
-            </div>
-            <div>
-              <label>Zip Code:</label>
-              <p>{user.zipcode}</p>
-            </div>
-            <Button 
-              type="button" 
-              onClick={() => setIsEditing(true)}
-            >
-                Edit
-            </Button>
-          </StyledSubmit>
+          <FormSubmit
+            label='Account Details'
+            formValues={formData}
+            setIsEditing={setIsEditing}
+          />
         ) : (
           <StyledForm onSubmit={handleSubmit}>
             <h1>Account Details</h1>
