@@ -5,8 +5,9 @@ import useCrudState from "./useCrudState";
  
 const useCrudStateDB = (setState, dbKey, optionalFunc=null, addFunc=null) => {
 
-    const {addToState, updateState, deleteFromState, addToKeyInState, updateKeyInState, 
-      deleteFromKeyInState, addNestedToKeyInState, updateNestedKeyInState} = 
+    const {addToState, updateState, deleteFromState, 
+      addToKeyInState, updateKeyInState, deleteFromKeyInState, 
+      addNestedToKeyInState, updateNestedKeyInState, deleteNestedKeyInState} = 
     useCrudState(setState, optionalFunc, addFunc);
 
     const addItem = (item) => {
@@ -73,9 +74,14 @@ const useCrudStateDB = (setState, dbKey, optionalFunc=null, addFunc=null) => {
       });
     };
 
+    const deleteNestedKey = (arrayKey, arrayId, nestedKey, nestedId, itemId=null) => {
+      deleteJSONFromDb(nestedKey, nestedId);
+      deleteNestedKeyInState(arrayKey, arrayId, nestedKey, nestedId, itemId);
+    };
+
   return {addItem, updateItem, deleteItem, 
     addToKey, updateKey, deleteFromKey,
-    addNestedKey, updateNestedKey
+    addNestedKey, updateNestedKey, deleteNestedKey
   }
 }
 

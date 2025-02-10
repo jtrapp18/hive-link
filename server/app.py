@@ -620,8 +620,8 @@ class ReplyById(Resource):
         db.session.commit()
         return reply.to_dict(), 200
 
-    def delete(self, message_id):
-        reply = Reply.query.get(message_id)
+    def delete(self, reply_id):
+        reply = Reply.query.get(reply_id)
         if not reply:
             return {'error': 'Reply not found'}, 404
         db.session.delete(reply)

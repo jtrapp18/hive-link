@@ -19,7 +19,7 @@ const CardContainer = styled.div`
         } 
     }
 
-    .reply-buttons {
+    section.reply-options {
         display: flex;
 
         div {
@@ -35,7 +35,12 @@ const CardContainer = styled.div`
 
             &:hover {
                 background: var(--dark-gray);
-            }         
+            }
+            
+            p {
+                padding: 0;
+                margin: 0 0 0 5px;
+            }
         }
     }
 `
@@ -45,7 +50,7 @@ const MessageCard = ({ id,  forumId, userId, user: msgUser, messageDate, message
     const { setForum } = useContext(ForumContext);
     const [newReply, setNewReply] = useState(false);
     const [showReplies, setShowReplies] = useState(false);
-    const {updateKey, deleteFromKey, addNestedKey, updateNestedKey} = useCrudStateDB(setForum, "forums");
+    const {updateKey, deleteFromKey, addNestedKey, updateNestedKey, deleteNestedKey} = useCrudStateDB(setForum, "forums");
 
     const updateMessage = (updatedText, messageId) => {
         const message = ({
@@ -81,6 +86,10 @@ const MessageCard = ({ id,  forumId, userId, user: msgUser, messageDate, message
         updateNestedKey("messages", id, "replies", replyId, reply);
       }
 
+      const deleteReply = (replyId) => {
+        deleteNestedKey("messages", id, "replies", replyId);
+      };  
+
     return (
         <CardContainer>
             <Message 
@@ -92,11 +101,14 @@ const MessageCard = ({ id,  forumId, userId, user: msgUser, messageDate, message
                 handleUpdate={updateMessage}
                 handleDelete={deleteMessage}
             />
-            <section className='reply-buttons'>
+            <section className='reply-options'>
                 <div
                     onClick={()=>setShowReplies(prev=>!prev)}
                 >
-                    {showReplies ? <FaMinusCircle /> : <FaPlusCircle />}
+                    {showReplies ? 
+                        <FaMinusCircle /> : <FaPlusCircle />
+                    }
+                    <p>{`${replies.length} replies`}</p>
                 </div>
                 <div
                     onClick={()=>setNewReply(true)}
@@ -123,7 +135,7 @@ const MessageCard = ({ id,  forumId, userId, user: msgUser, messageDate, message
                                 messageDate={reply.replyDate}
                                 messageText={reply.replyText}
                                 handleUpdate={updateReply}
-                                // handleDelete={deleteReply}
+                                handleDelete={deleteReply}
                             />
                         )}
                     </div>

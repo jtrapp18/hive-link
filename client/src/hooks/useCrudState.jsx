@@ -152,10 +152,37 @@ const useCrudState = (setState, optionalFunc=null, addFunc=null) => {
       return updatedState;
     });
   };
+
+    const deleteNestedKeyInState = (arrayKey, arrayId, nestedKey, nestedId, itemId) => {
+      const stateArrayKey = snakeToCamel(arrayKey);
+      const stateNestedKey = snakeToCamel(nestedKey);
+    
+      const updateStateArray = (item) => ({
+        ...item,
+        [stateArrayKey]: item[stateArrayKey].map(subItem =>
+          subItem.id === arrayId
+            ? {
+                ...subItem,
+                [stateNestedKey]: subItem[stateNestedKey].filter(nestedSubItem => nestedSubItem.id !== nestedId)
+              }
+            : subItem
+        ),
+      });
+    
+      setState(prevItems => {
+        const updatedState = Array.isArray(prevItems)
+          ? prevItems.map(item => (item.id === itemId ? updateStateArray(item) : item))
+          : updateStateArray(prevItems);
+    
+        optionalFunc?.(updatedState);
+        return updatedState;
+      });
+    };
+  
     
     return {addToState, updateState, deleteFromState, 
       addToKeyInState, updateKeyInState, deleteFromKeyInState,
-      addNestedToKeyInState, updateNestedKeyInState
+      addNestedToKeyInState, updateNestedKeyInState, deleteNestedKeyInState
     }
 }
 

@@ -69,6 +69,7 @@ const StyledMessage = styled.div`
         color: black;
         width: 100%;
         border: 3px solid var(--honey);
+        height: fit-content;
     }
 
     .reply-buttons {
@@ -106,11 +107,13 @@ const Message = ({ id,  userId, msgUser, messageDate, messageText, handleUpdate,
     const submitEdit = () => {
         handleUpdate(editMsg, id);
         setEditMode(false);
+        setShowOptions(false);
     }
 
     const submitDelete = () => {
         handleDelete(id);
         setCancelConfirm(false);
+        setShowOptions(false);
     }
 
     const handleChange = (e) => {
