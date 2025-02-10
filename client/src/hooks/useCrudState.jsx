@@ -146,10 +146,6 @@ const useCrudState = (setState, optionalFunc=null, addFunc=null) => {
       const updatedState = Array.isArray(prevItems)
         ? prevItems.map(item => (item.id === itemId ? updateStateArray(item) : item))
         : updateStateArray(prevItems);
-
-      console.log(arrayKey, arrayId, nestedKey, nestedId, updatedObj, itemId)
-      console.log(prevItems)
-      console.log(updatedState)
   
       optionalFunc?.(updatedState);
       addFunc?.(updatedObj);

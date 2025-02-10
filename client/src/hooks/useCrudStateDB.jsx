@@ -38,7 +38,7 @@ const useCrudStateDB = (setState, dbKey, optionalFunc=null, addFunc=null) => {
       postJSONToDb(arrayKey, body)
       .then(json => {
         const jsonTransformed = snakeToCamel(json);
-        addToKeyInState(arrayKey, jsonTransformed, itemId);
+        addToKeyInState(arrayKey, jsonTransformed, itemId); 
       });
     };
 

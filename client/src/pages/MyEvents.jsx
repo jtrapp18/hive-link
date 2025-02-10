@@ -47,10 +47,15 @@ const MyEvents = () => {
     });
   }, []);
 
-  const {addItem, updateItem, deleteItem, addToKey, deleteFromKey} = useCrudStateDB(setEvents, "events", 
+  const {addItem, updateItem} = useCrudStateDB(setEvents, "events", 
     eventFiltering, setActiveItem);
 
+  const {deleteItem, addToKey, deleteFromKey} = useCrudStateDB(setEvents, "events", 
+    eventFiltering);
+
   const addEvent = (event) => {
+    event.isHostedByUser = true
+
     addItem(event);
     setShowNewForm(false);
     setShowDeleted(false);
@@ -68,6 +73,8 @@ const MyEvents = () => {
   };
   
   const signupEvent = (event) => {
+    event.isAttendedByUser = true
+
     const signup = ({
       userId: user.id,
       eventId: event.id
@@ -77,6 +84,8 @@ const MyEvents = () => {
   };
    
   const cancelSignup = (event) => {
+    event.isAttendedByUser = false
+
     const eventId = event.id
     const signup = event.signups.filter(signup=>signup.userId===user.id)[0]
     deleteFromKey("signups", signup.id, eventId)
