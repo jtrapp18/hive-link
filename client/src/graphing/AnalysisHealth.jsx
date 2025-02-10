@@ -11,6 +11,7 @@ const Hexagons = styled.img`
   top: 0;
   right: 0;
   width: 20vw;
+  animation: slideDown 1s ease-out forwards;
 `
 
 const AnalysisHealth = ({graphData, label, filters}) => {
@@ -42,11 +43,6 @@ const AnalysisHealth = ({graphData, label, filters}) => {
                 <>
                     <GraphSectionHeader>Hive Statistics over Time</GraphSectionHeader>
                     <div className='graph-container'>
-                        {/* <MultiLine
-                            title={'Fate over Time'}
-                            x={{data: filteredData.dateChecked, label: 'Inspection Date'}}
-                            prefix='fate'
-                        /> */}
                         <TrendChart
                             title={'Varroa Mite Count over Time'}
                             x={{data: filteredData.dateChecked, label: 'Inspection Date'}}

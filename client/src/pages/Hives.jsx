@@ -11,6 +11,7 @@ import usePopupForm from '../hooks/usePopupForm';
 import HiveForm from '../forms/HiveForm'
 import { Button } from '../MiscStyling';
 import { StyledContainer } from '../MiscStyling';
+import MotionWrapper from '../styles/MotionWrapper';
 
 const Hives = () => {
   const { user } = useContext(UserContext);
@@ -37,11 +38,13 @@ const Hives = () => {
             viewHive={viewHive}
           />
           {hives.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded))
-          .map(hive=>
-            <HiveCard
-                key={hive.id}
-                {...hive}
-            />
+          .map((hive, index)=>
+            <MotionWrapper index={index}>
+              <HiveCard
+                  key={hive.id}
+                  {...hive}
+              />
+            </MotionWrapper>
           )}
         </CardContainer>
       </StyledContainer>

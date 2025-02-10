@@ -16,6 +16,7 @@ import { Button, HexagonButton, StyledContainer } from '../MiscStyling';
 import HiveToast from '../styles/HiveToast';
 import DrippingHoney from '../components/DrippingHoney'
 import BackButton from '../components/BackButton';
+import MotionWrapper from '../styles/MotionWrapper';
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -126,12 +127,14 @@ const HiveDetails = () => {
             />
             {hive.honeyPulls
             .sort((a, b) => new Date(b.dateReset) - new Date(a.dateReset)) // Sort by date in descending order
-            .map((honeyPull) => (
-              <HoneyCard
-                key={honeyPull.id}
-                honeyPull={honeyPull}
-                setActiveHoneyPull={setActiveHoneyPull}
-              />
+            .map((honeyPull, index) => (
+              <MotionWrapper index={index}>
+                <HoneyCard
+                  key={honeyPull.id}
+                  honeyPull={honeyPull}
+                  setActiveHoneyPull={setActiveHoneyPull}
+                />
+              </MotionWrapper>
             ))}
           </CardContainer>
         </>
@@ -156,12 +159,14 @@ const HiveDetails = () => {
             />
             {inspections
             .sort((a, b) => new Date(b.dateChecked) - new Date(a.dateChecked)) // Sort by date in descending order
-            .map((inspection) => (
-              <InspectionCard
-                key={inspection.id}
-                inspection={inspection}
-                setActiveInspection={setActiveInspection}
-              />
+            .map((inspection, index) => (
+              <MotionWrapper index={index}>
+                <InspectionCard
+                  key={inspection.id}
+                  inspection={inspection}
+                  setActiveInspection={setActiveInspection}
+                />
+              </MotionWrapper>
             ))}
           </CardContainer>
         </>

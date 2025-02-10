@@ -19,6 +19,7 @@
     "bootstrap": "^5.3.3",
     "eslint": "^8.57.1",
     "formik": "^2.4.6",
+    "framer-motion": "^12.4.2",
     "leaflet": "^1.9.4",
     "multer": "^1.4.5-lts.1",
     "numpy": "^0.0.1",
