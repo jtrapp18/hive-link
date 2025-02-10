@@ -444,12 +444,15 @@ class Forums(Resource):
     def transform_forum(self, forum):
         user_id = session.get('user_id')  # Ensure 'user_id' is in the session
 
-        return {
+        return { 
             "id": forum.id,
             "title": forum.title,
             "category": forum.category,
             "created_at": forum.created_at.isoformat(),
-            "user": forum.user.to_dict(),  # Assuming forum has a 'user' relation
+            'user': {
+                'id': forum.user.id,
+                'username': forum.user.username
+            },
             "is_started_by_user": forum.user_id == user_id,
             "is_participated_by_user": any(message.user_id == user_id for message in forum.messages)
         }

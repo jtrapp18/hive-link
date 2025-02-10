@@ -5,9 +5,11 @@ import styled from 'styled-components';
 import { Button, StyledForm } from '../MiscStyling';
 
 const MessageForm = styled.form`
+    width: 100%;
+    
     textarea {
       width: 100%;
-      border: 1px solid var(--honey);
+      border: 3px solid var(--honey);
       padding: 10px;
       border-radius: 20px;
       color: black;

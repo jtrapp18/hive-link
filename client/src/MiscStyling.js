@@ -211,13 +211,6 @@ const HexagonButton = styled.button`
   }
 `;
 
-const BackButton = styled.button`
-  background: none;
-  color: #00A3FF;
-  text-decoration: underline;
-  border: none;
-`
-
 const StyledCard = styled.article`
     width: 100%;
     max-width: clamp(300px, 100%, 600px);
@@ -303,11 +296,10 @@ const PlotContainer = styled.div`
 `;
 
 const StyledContainer = styled.div`
-    width: 95%;
+    width: 80%;
 
     display: flex;
     flex-direction: column;
-    padding: 0 5% 0 5%;
     justify-content: center;
     align-items: center;
 `
@@ -340,4 +332,4 @@ const Alert = styled.span`
 
 export { StyledMenuItem, StyledNavLink, StyledLink, StyledMain, StyledForm, 
   StyledSubmit, StyledDeleted, CardContainer, BorderGlow, Button, 
-  HexagonButton, BackButton, StyledCard, StyledContainer, StyledAnalysis, PlotContainer, Alert }
+  HexagonButton, StyledCard, StyledContainer, StyledAnalysis, PlotContainer, Alert }

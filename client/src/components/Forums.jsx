@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { NavLink } from "react-router-dom";
 import { StyledContainer } from '../MiscStyling';
+import { formattedTime } from '../helper';
 
 const StyledArticle = styled.article`
   width: 800px;
@@ -22,12 +23,12 @@ const StyledNavLink = styled(NavLink)`
 const Forums = ({ forums }) => {
 
   return (
-      <StyledContainer>
+      <StyledContainer> 
         {forums.length === 0 ?
           <span>No forums to show</span> :
           (forums.map(forum=>
-            <StyledArticle key={forum.title}>
-              <span>{forum.user.username}</span>
+            <StyledArticle key={forum.title}> 
+              <span>{forum.user.username} | {formattedTime(forum.createdAt)}</span>
               <StyledNavLink
                 to={`${forum.id}`}
               >

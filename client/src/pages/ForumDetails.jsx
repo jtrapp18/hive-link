@@ -6,20 +6,51 @@ import { StyledContainer } from '../MiscStyling';
 import MessageCard from '../cards/MessageCard';
 import styled from 'styled-components';
 import NewMessage from '../forms/NewMessage';
-import { BackButton } from '../MiscStyling';
 import {UserContext} from '../context/userProvider'
 import useCrudStateDB from '../hooks/useCrudStateDB';
 import { ForumProvider } from '../context/forumProvider';
+import { formattedTime } from '../helper';
+import BackButton from '../components/BackButton';
+
+const ForumHeader = styled.div`
+    width: 1000px;
+    max-width: 90vw;
+    display: flex;
+    flex-direction: column;
+    // justify-content: center;
+    // text-align: center;
+
+    h1 {
+        color: var(--yellow);
+    }
+
+    span {
+        color: gray;
+    }
+`
 
 const NewMessageContainer = styled.div`
     width: 100%;
-    // position: fixed;
-    // bottom: 0;
-    // right: 0;
     background: black;
-    padding: 5%;
+    margin: 1%;
+    padding: 3%;
     border-top: 3px double var(--honey);
-    z-index: 1000;
+    display: flex;
+    justify-content: center;
+`
+
+const NewMessageButton = styled.button`
+    color: var(--honey);
+    background: black;
+    width: 50%;
+    border-radius: 30px;
+    border: 1px solid var(--honey);
+    padding: 1%;
+
+    &:hover {
+        color: black;
+        background: var(--honey);
+    }
 `
 
 const ForumDetails = () => {
@@ -54,11 +85,12 @@ const ForumDetails = () => {
     return (
         <ForumProvider value={{ forum, setForum }}>
             <StyledContainer>
-                <h1>Discussion</h1>
-                <h3>{forum.title}</h3>
-                <p>Category: {forum.category}</p>
-                <p>{forum.user.username}</p>
-                <BackButton onClick={() => navigate(-1)}>Back to Forums</BackButton>
+                <BackButton />
+                <ForumHeader>
+                    <span>{forum.user.username} | {formattedTime(forum.createdAt)}</span>
+                    <h1>{forum.title}</h1>
+                    <h3><strong>Category: </strong>{forum.category}</h3>
+                </ForumHeader>
                 <div>
                     {forum.messages.map(message=>
                         <MessageCard
@@ -67,15 +99,16 @@ const ForumDetails = () => {
                         />
                     )}
                 </div>
+                <NewMessageContainer>
                 {showNew ?
-                    <NewMessageContainer>
-                        <NewMessage
-                            setShow={setShowNew}
-                            handleAdd={addMessage}
-                        />
-                    </NewMessageContainer> :
-                    <button onClick={()=>setShowNew(true)}>New Message</button>
+                    <NewMessage
+                        setShow={setShowNew}
+                        handleAdd={addMessage}
+                    />
+                     :
+                    <NewMessageButton onClick={()=>setShowNew(true)}>+ New Message</NewMessageButton>
                 }
+                </NewMessageContainer>
             </StyledContainer>
         </ForumProvider>
     );

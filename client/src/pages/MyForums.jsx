@@ -51,12 +51,6 @@ const MyForums = () => {
     setShowDeleted(false);
   };
 
-  const viewForum = (forum) => {
-    setActiveItem(forum)
-    setShowNewForm(false);
-    setShowDeleted(false);
-  };
-
   const deleteForum = (forum) => {
     deleteItem(forum);
     setShowDeleted(true);
