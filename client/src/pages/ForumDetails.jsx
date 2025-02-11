@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { getJSONById, snakeToCamel } from '../helper';
 import Loading from './Loading';
 import { StyledContainer } from '../MiscStyling';
@@ -20,7 +20,7 @@ const ForumHeader = styled.div`
     // justify-content: center;
     // text-align: center;
 
-    h1 {
+    h2 {
         color: var(--yellow);
     }
 
@@ -58,7 +58,6 @@ const ForumDetails = () => {
     const { user } = useContext(UserContext);
     const [forum, setForum] = useState(null);
     const [showNew, setShowNew] = useState(true);
-    const navigate = useNavigate();
 
     useEffect(() => {
         getJSONById("forums", id)
@@ -88,8 +87,8 @@ const ForumDetails = () => {
                 <BackButton />
                 <ForumHeader>
                     <span>{forum.user.username} | {formattedTime(forum.createdAt)}</span>
-                    <h1>{forum.title}</h1>
-                    <h3><strong>Category: </strong>{forum.category}</h3>
+                    <h2>{forum.title}</h2>
+                    {/* <h3><strong>Category: </strong>{forum.category}</h3> */}
                 </ForumHeader>
                 <div>
                     {forum.messages.map(message=>

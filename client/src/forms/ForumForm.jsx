@@ -80,7 +80,7 @@ const ForumForm = ({ initObj, addForum, updateForum, deleteForum, deleted }) => 
               <Error>{formik.errors.title}</Error>
             )}
           </div>
-          <Button type="submit">{initObj ? "Update Forum Post" : "Add Forum Post"}</Button>
+          <Button type="submit">{initObj ? "Update Forum" : "Create Forum"}</Button>
         </StyledForm>
       ) : (
         <StyledSubmit>
