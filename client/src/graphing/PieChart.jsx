@@ -1,89 +1,81 @@
-import { useEffect, lazy } from "react";
-import { useResizeDetector } from 'react-resize-detector'
+import { useEffect, useRef, useCallback, useState } from "react";
+import { useResizeDetector } from "react-resize-detector";
 import { PlotContainer } from "../MiscStyling";
-
-const Plot = lazy(() => import('react-plotly.js'));
+import LazyPlot from "./LazyPlot";
 
 const PieChart = ({ title, label, valueData, selectedSlice, setSelectedSlice }) => {
+  const { width, height, ref } = useResizeDetector();
+  const containerRef = useRef(null);
 
   if (!label.data || !valueData) {
     return <PlotContainer><p>Loading...</p></PlotContainer>;
   }
 
-  const { width, height, ref } = useResizeDetector({});
+  // ✅ Handles clicking on pie slices
+  const handleClick = useCallback((eventData) => {
+    if (eventData.points?.length) {
+      const selected = eventData.points[0];
 
-  // Function to handle clicks outside the pie chart
-  const handleOutsideClick = (event) => {
-    if (ref.current && ref.current.contains(event.target)) {
-      setSelectedSlice(null); // Reset the selection when clicking outside
+      let labelValue = selected.label;
+      if (!isNaN(labelValue) && !isNaN(parseFloat(labelValue))) {
+        labelValue = parseInt(labelValue, 10);
+      }
+
+      setSelectedSlice({
+        labelCol: label.label,
+        labelFilter: labelValue,
+      });
     }
-  };
+  }, [label.label, setSelectedSlice]);
 
+  // ✅ Handles clicks inside the chart container but not on a slice
   useEffect(() => {
-    // Add event listener for detecting clicks outside the chart
-    document.addEventListener('click', handleOutsideClick);
-
-    // Clean up the event listener on unmount
-    return () => {
-      document.removeEventListener('click', handleOutsideClick);
+    const handleBackgroundClick = (event) => {
+      if (
+        containerRef.current &&
+        containerRef.current.contains(event.target) && // Click is inside the container
+        !event.target.closest(".slice") // But NOT on a pie slice
+      ) {
+        setSelectedSlice(null);
+      }
     };
-  }, [ref]);
 
-  const handleClick = (eventData) => {
-    const selected = eventData.points[0];
-  
-    let labelValue = selected.label;
-    if (!isNaN(labelValue) && !isNaN(parseFloat(labelValue))) {
-      labelValue = parseInt(labelValue, 10); // Use parseFloat if decimals are possible
-    }
-  
-    setSelectedSlice({
-      labelCol: label.label,
-      labelFilter: labelValue
-    });
-  };
+    document.addEventListener("click", handleBackgroundClick);
+    return () => document.removeEventListener("click", handleBackgroundClick);
+  }, [setSelectedSlice]);
 
   const trace = {
     labels: label.data,
     values: valueData,
-    type: 'pie',
-    textinfo: 'label+percent',
-    hoverinfo: 'label+percent+value',
+    type: "pie",
+    textinfo: "label+percent",
+    hoverinfo: "label+percent+value",
+    automargin: true,
   };
 
   const layout = {
-    title: {
-      text: title,
-      font: { color: 'black' }
-    },
+    title: { text: title, font: { color: "black" } },
     showlegend: true,
     legend: {
-        x: 1,
-        y: 0.5,
-        xanchor: 'left',
-        yanchor: 'middle',
-        title: {
-            text: label.label,
-            font: { color: 'black' }
-        }
-    }
+      x: 1,
+      y: 0.5,
+      xanchor: "left",
+      yanchor: "middle",
+      title: { text: label.label, font: { color: "black" } },
+    },
+    width,
+    height,
   };
 
   return (
-    <PlotContainer ref={ref}>
-      <Plot
-        key={JSON.stringify(label.data)} // Ensures re-render when data updates
+    <PlotContainer ref={containerRef}>
+      <LazyPlot
         data={[trace]}
+        layout={layout}
         config={{ responsive: true }}
         onClick={handleClick}
-        style={{ width: '100%', height: '100%' }}
-        layout={{
-          ...layout, 
-          ...{
-            width: width, 
-            height: height
-          }
-        }}
+        className="pie-chart"
+        chartType="pie"
       />
     </PlotContainer>
   );

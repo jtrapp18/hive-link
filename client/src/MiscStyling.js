@@ -299,6 +299,10 @@ const PlotContainer = styled.div`
   cursor: pointer;
   border: 3px solid var(--honey);
 
+  p {
+    color: black;
+  }
+
   h3 {
     text-align: center;
     text-decoration: underline;

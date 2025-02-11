@@ -33,6 +33,7 @@ const StyledContainer = styled.div`
 
     a:hover {
         text-decoration: underline;
+        color: var(--bright-blue);
     }
   }
 `;

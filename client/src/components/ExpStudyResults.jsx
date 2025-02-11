@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Loading from '../pages/Loading'
 import { getJSON, snakeToCamel, camelToProperCase, formattedTime } from '../helper';
+import { ClipLoader } from 'react-spinners';
 
 const FeaturesContainer = styled.div`
     width: 85%;
@@ -34,11 +34,11 @@ const ExpStudyResults = () => {
           .then((data) => {
             const dataTransformed = snakeToCamel(data);
             setStudyInfo(dataTransformed);
-            console.log(dataTransformed);
           });
       }, []);
 
-    if (!studyInfo) return <Loading />
+    if (!studyInfo) return <ClipLoader color='var(--bright-blue)'/>;
+
     const { runDate, testMetrics, testResults } = studyInfo;
 
     return (
@@ -50,7 +50,6 @@ const ExpStudyResults = () => {
                 )}
             </ol>
             <p><small>Based on MLP Regressor user experience study run {formattedTime(runDate)}</small></p>
-
         </FeaturesContainer>
     );
 }

@@ -1,13 +1,15 @@
 import { useState, lazy } from 'react';
-import TrendChart from './TrendChart';
-import PieChartComponent from './PieChart';
-import { StyledAnalysis, GraphSectionHeader } from '../MiscStyling';
-// import GraphSectionHeader from '../styles/GraphSectionHeader'
+// import TrendChart from './TrendChart';
+// import PieChartComponent from './PieChart';
+import { StyledAnalysis } from '../MiscStyling';
 import Loading from '../pages/Loading';
-import { camelToProperCase } from '../helper'
-import DrippingHoney from '../components/DrippingHoney'
+import { camelToProperCase } from '../helper';
+import DrippingHoney from '../components/DrippingHoney';
 
-const PestImpacts = lazy(() => import('./PestImpacts'))
+import BasicHoneyStats from './BasicHoneyStats'
+// const BasicHoneyStats = lazy(() => import('./BasicHoneyStats'));
+const PestImpacts = lazy(() => import('./PestImpacts'));
+const TempVsHoney = lazy(() => import('./TempVsHoney'));
 
 const AnalysisHoney = ({graphData, label, filters}) => {
 
@@ -39,44 +41,17 @@ const AnalysisHoney = ({graphData, label, filters}) => {
         <StyledAnalysis>
             <DrippingHoney />
             <h2>{label}{filterLabel ? ` for ${camelToProperCase(filterLabel)}` : ''}</h2>
-            <span>{!filterLabel ? 'Click slice below to filter data' : 'Click outside of pie to clear filter'}</span>
-            <div className='graph-container'>
-                <PieChartComponent
-                    title={`Total Honey Production by ${pieSplit==='hiveId' ? 'Hive' : 'State'}`}
-                    label={{data: graphData[pieSplit], label: pieSplit}}
-                    valueData={graphData.weight}
-                    selectedSlice={selectedSlice}
-                    setSelectedSlice={setSelectedSlice}
-                />
-            </div>
-            <GraphSectionHeader>
-                <hr/>
-                <h3>Impact of Temperature</h3>
-                <hr/>
-            </GraphSectionHeader>
-            <div className='graph-container'>
-                <TrendChart
-                    title={`Average 30-Day Honey Production by Average Temperature`}
-                    x={{data: filteredData.temp, label: 'Average Temperature'}}
-                    y={{data: filteredData.avg_30DayWeight, label: 'Honey Production (lbs)'}}
-                    // chartType='box'
-                />
-                <TrendChart
-                    title={'Average 30-Day Honey Production by Average Humidity'}
-                    x={{data: filteredData.humidity, label: 'Average Humidity'}}
-                    y={{data: filteredData.avg_30DayWeight, label: 'Honey Production (lbs)'}}
-                />
-            </div>
-            <GraphSectionHeader>
-                <hr/>
-                <h3>Impact of Pests</h3>
-                <hr/>
-            </GraphSectionHeader>
+            <BasicHoneyStats 
+                filterLabel={filterLabel} 
+                graphData={graphData} 
+                pieSplit={pieSplit}
+                selectedSlice={selectedSlice}
+                setSelectedSlice={setSelectedSlice}
+            />
+            <br />
             <PestImpacts filteredData={filteredData}/>
             <br />
-            <br />
-            <br />
-            <br />
+            <TempVsHoney filteredData={filteredData}/>
         </StyledAnalysis>
     );
 }

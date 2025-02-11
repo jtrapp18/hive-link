@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from lib.config import db, app
-from lib.models import Hive, Inspection, HoneyPull, CountCategory, User, Event, Signup, Forum, Message, Reply
+from lib.models import Hive, Inspection, HoneyPull, User, Event, Signup, Forum, Message, Reply
 
 fake = Faker()
 

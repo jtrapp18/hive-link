@@ -6,6 +6,9 @@ import { visualizer } from 'rollup-plugin-visualizer';
 // https://vitejs.dev/config/
 export default defineConfig({
   base: '/',
+  define: {
+    global: 'window',
+  },
   plugins: [
     react(),
     Inspect(),
@@ -13,15 +16,11 @@ export default defineConfig({
   ],
   build: {
     target: 'esnext',  // Target modern browsers for tree shaking
-    rollupOptions: {
-      // Optional optimization to exclude large dependencies from the bundle
-      external: ['react', 'react-dom'], // These are externalized to avoid bundling
-    },
   },
   server: {
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:5555',
+        // target: 'http://127.0.0.1:5555',
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, ''),

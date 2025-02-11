@@ -1,9 +1,11 @@
 import { lazy } from 'react'
-import TrendChart from './TrendChart';
-import { StyledAnalysis, GraphSectionHeader } from '../MiscStyling';
+import { StyledAnalysis } from '../MiscStyling';
 import styled from 'styled-components'
 
+import LinearHiveStats from './LinearHiveStats';
+// const LinearHiveStats = lazy(()=> import('./LinearHiveStats'));
 const TreatmentImpacts = lazy(()=> import('./TreatmentImpacts'));
+const TempVsMites = lazy(()=> import('./TempVsMites'));
 
 const Hexagons = styled.img`
   position: fixed;
@@ -40,38 +42,12 @@ const AnalysisHealth = ({graphData, label, filters}) => {
             <h2>{label}</h2>
             {isUserOnly &&
                 <>
-                    <GraphSectionHeader>Hive Statistics over Time</GraphSectionHeader>
-                    <div className='graph-container'>
-                        <TrendChart
-                            title={'Varroa Mite Count over Time'}
-                            x={{data: filteredData.dateChecked, label: 'Inspection Date'}}
-                            y={{data: filteredData.varroaMiteCount, label: 'Varroa Mite Count'}}
-                        />
-                    </div>
-                </>              
+                    <LinearHiveStats filteredData={filteredData}/>
+                    <br />    
+                </>    
             }
-            <GraphSectionHeader>
-                <hr/>
-                <h3>Impact of Weather</h3>
-                <hr/>
-            </GraphSectionHeader>
-            <div className='graph-container'>
-                <TrendChart
-                    title={'Varroa Mite Count by Average Temperature'}
-                    x={{data: filteredData.temp, label: 'Average Temperature'}}
-                    y={{data: filteredData.varroaMiteCount, label: 'Varroa Mite Count'}}
-                />
-                <TrendChart
-                    title={'Varroa Mite Count by Average Humidity'}
-                    x={{data: filteredData.humidity, label: 'Average Humidity'}}
-                    y={{data: filteredData.varroaMiteCount, label: 'Varroa Mite Count'}}
-                />
-            </div>
-            <GraphSectionHeader>
-                <hr/>
-                <h3>Varroa Mite Treatments</h3>
-                <hr/>
-            </GraphSectionHeader>
+            <TempVsMites filteredData={filteredData}/>
+            <br />
             <TreatmentImpacts filteredData={filteredData}/>
         </StyledAnalysis>
     );
