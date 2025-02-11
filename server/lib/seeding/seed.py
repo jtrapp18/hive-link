@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-from lib.seeding import generate_weather_data, pest_likelihood, varroa_mite_model, treatment_dosages, calculate_weekly_honey
 from random import randint, choice as rc, random
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from faker import Faker
+
 from lib.config import db, app
 from lib.models import Hive, Inspection, HoneyPull, CountCategory, User, Event, Signup, Forum, Message, Reply
+from lib.seeding import seed_data
+from lib.seeding import generate_weather_data, pest_likelihood, varroa_mite_model, treatment_dosages, calculate_weekly_honey
 
 fake = Faker()
 
@@ -202,16 +204,16 @@ with app.app_context():
     print("Creating events...")
 
     events = []
-    for user in users:
-        if random()>.5:
-            event = Event(
-                user_id=user.id,
-                title=fake.bs(),  # Fake name for the event
-                event_date=fake.date_this_year(),  # Random date in the current year
-                descr=fake.text(max_nb_chars=200),  # Fake description for the event
-                zipcode=fake.postcode()  # Random location
-            )
-            events.append(event)
+    for seed_event in seed_data["events"]:
+        user = rc(users)
+        event = Event(
+            user_id=user.id,
+            title=seed_event["title"],  # Fake name for the event
+            event_date=seed_event["date"],  # Random date in the current year
+            descr=seed_event["descr"],  # Fake description for the event
+            zipcode=user.zipcode  # Random location
+        )
+        events.append(event)
 
     db.session.add_all(events)
     db.session.commit()
@@ -221,7 +223,7 @@ with app.app_context():
     signups = []
     for event in events:
         for user in users:
-            if random()>.5 and event.user_id != user.id:
+            if random()>.6 and event.user_id != user.id:
                 signup = Signup(user_id=user.id, event_id=event.id)
                 signups.append(signup)
 
@@ -232,14 +234,14 @@ with app.app_context():
     print("Creating forums...")
 
     forums = []
-    for user in users:
-        if random() > 0.3:
-            forum = Forum(
-                user_id=user.id,
-                title=fake.bs(),  # Fake name for the forum
-                category=fake.bs(),  # Fake category for the forum (optional)
-            )
-            forums.append(forum)
+    for seed_forum in seed_data["forums"]:
+        user = rc(users)
+        forum = Forum(
+            user_id=user.id,
+            title=seed_forum["title"],  # Fake name for the forum
+            category=seed_forum["category"],  # Fake category for the forum (optional)
+        )
+        forums.append(forum)
 
     db.session.add_all(forums)
     db.session.commit()

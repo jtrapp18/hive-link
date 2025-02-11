@@ -122,7 +122,7 @@ class ExperienceStudy:
         
         # Train the neural network
         self.model = MLPRegressor(hidden_layer_sizes=(100,), 
-                                  max_iter=500, 
+                                  max_iter=1000, 
                                   alpha=0.01, 
                                   random_state=42, 
                                   solver='lbfgs'
