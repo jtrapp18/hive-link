@@ -107,12 +107,12 @@ const useCrudState = (setState, optionalFunc=null, addFunc=null) => {
     const updateStateArray = (item) => ({
       ...item,
       [stateArrayKey]: item[stateArrayKey].map(subItem => 
-        subItem.id === newObj[arrayId]
+        subItem.id === arrayId
           ? { ...subItem, [stateNestedKey]: [...subItem[stateNestedKey], newObj] }
           : subItem
       ),
     });
-  
+    
     setState(prevItems => {
       console.log(prevItems); // Check if prevItems is an array
       const updatedState = Array.isArray(prevItems)

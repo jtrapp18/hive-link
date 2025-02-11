@@ -13,7 +13,7 @@ import { formattedTime } from '../helper';
 import BackButton from '../components/BackButton';
 
 const ForumHeader = styled.div`
-    width: 1000px;
+    width: fit-content;
     max-width: 90vw;
     display: flex;
     flex-direction: column;

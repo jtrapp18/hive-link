@@ -73,7 +73,7 @@ const MessageCard = ({ id,  forumId, userId, user: msgUser, messageDate, message
           messageId: id,
         })
     
-        addNestedKey("messages", "replies", reply);
+        addNestedKey("messages", id, "replies", reply);
       };
     
       const updateReply = (updatedReply, replyId) => {
