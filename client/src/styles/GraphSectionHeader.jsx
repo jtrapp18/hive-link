@@ -13,6 +13,7 @@ function GraphSectionHeader({ children }) {
 const Wrapper = styled.div`
   width: 100%;
   place-items: center;
+  display: grid;
 `;
 
 const Line = styled.hr`

@@ -1,52 +1,30 @@
-import { lazy } from 'react';
-import { useResizeDetector } from 'react-resize-detector'
+import React from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label } from 'recharts';
 import { PlotContainer } from '../MiscStyling';
 
-const Plot = lazy(() => import('react-plotly.js'));
-
 const TrendChart = ({ title, x, y }) => {
-  // Prevent rendering if data is missing or empty
-  if (!x.data || !y.data) {
-    return <p>Loading chart...</p>;
-  }
-
-  const { width, height, ref } = useResizeDetector({})
-
-  const trace = {
-    x: x.data,
-    y: y.data,
-    type: 'scatter',
-    mode: 'markers',
-    name: title,
-  };
-
-  const layout = {
-    title: {
-      text: title,
-    },
-    xaxis: {
-      title: { text: x.label },
-    },
-    yaxis: {
-      title: { text: y.label },
-    },
-  };
+  const data = x.data.map((_, index) => ({
+    x: x.data[index],
+    y: y.data[index],
+  }));
 
   return (
-    <PlotContainer ref={ref}>
-      <Plot
-        key={JSON.stringify(x.data)} // Ensures re-render when data updates
-        data={[trace]}
-        config={{ responsive: true }}
-        style={{ width: '100%', height: '100%' }}
-        layout={{
-          ...layout, 
-          ...{
-            width: width, 
-            height: height
-          }
-        }}
-      />
+    <PlotContainer>
+      <h3>{title}</h3>
+      <ResponsiveContainer width="100%">
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="x">
+            <Label value={x.label} offset={0} position="insideBottom" />
+          </XAxis>
+          <YAxis>
+            <Label value={y.label} angle={-90} position="insideLeft" />
+          </YAxis>
+          <Tooltip />
+          <Legend />
+          <Line type="monotone" dataKey="y" stroke="#8884d8" />
+        </LineChart>
+      </ResponsiveContainer>
     </PlotContainer>
   );
 };

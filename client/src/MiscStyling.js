@@ -291,12 +291,21 @@ const StyledCard = styled.article`
 `
 
 const PlotContainer = styled.div`
+  display: grid;
   width: 100%;
   height: 400px;
   max-height: 90vh;
   background: white;
   cursor: pointer;
   border: 3px solid var(--honey);
+
+  h3 {
+    text-align: center;
+    text-decoration: underline;
+    font-weight: bold;
+    color: black;
+    font-size: 1.5rem;
+  }
 
   .gtitle {
     text-decoration: underline;
@@ -316,6 +325,11 @@ const StyledContainer = styled.div`
 `
 
 const StyledAnalysis = styled(StyledContainer)`
+    display: grid;
+    // justify-content: stretch;
+    h2, span {
+      text-align: center;
+    }
 
     span {
       color: var(--honey);
@@ -323,7 +337,8 @@ const StyledAnalysis = styled(StyledContainer)`
 
     .graph-container {
         display: grid;
-        justify-content: center;
+        // justify-content: center;
+        text-align: center;
         width: 100%;
         grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
         gap: 1%;

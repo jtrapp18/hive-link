@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import TrendChart from './TrendChart';
-import PieChart from './PieChart';
+import PieChartComponent from './PieChart';
 import { StyledAnalysis } from '../MiscStyling';
 import GraphSectionHeader from '../styles/GraphSectionHeader'
 import Loading from '../pages/Loading';
@@ -39,7 +39,7 @@ const AnalysisHoney = ({graphData, label, filters}) => {
             <h2>{label}{filterLabel ? ` for ${camelToProperCase(filterLabel)}` : ''}</h2>
             <span>{!filterLabel ? 'Click slice below to filter data' : 'Click outside of pie to clear filter'}</span>
             <div className='graph-container'>
-                <PieChart
+                <PieChartComponent
                     title={`Total Honey Production by ${pieSplit==='hiveId' ? 'Hive' : 'State'}`}
                     label={{data: graphData[pieSplit], label: pieSplit}}
                     valueData={graphData.weight}

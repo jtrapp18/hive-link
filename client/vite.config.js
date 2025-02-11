@@ -1,13 +1,15 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import Inspect from 'vite-plugin-inspect';
+// import visualizer from 'vite-plugin-visualizer';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   base: '/',
   plugins: [
     react({babel: {parserOpts: {plugins:[],}, plugins: []}}),
-    Inspect()
+    Inspect(),
+    // visualizer()
 ],
   server: {
     proxy: {
