@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import CloseButton from 'react-bootstrap/CloseButton';
 
@@ -23,6 +23,7 @@ function Popup({ children, onClose }) {
 
 const Wrapper = styled.div`
   position: fixed;
+  max-width: 95vw;
   z-index: 1000;
   top: calc(var(--height-header) + 1%);
   left: 50%;

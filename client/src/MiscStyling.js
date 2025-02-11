@@ -33,22 +33,25 @@ const StyledLink = styled(Link)`
 `
 
 const StyledMain = styled.main`
+
+  min-height: var(--size-body);
+  padding: 20px;
+  margin: 10px;
   display: flex;
-  background: ${(props) => props.theme.background};
+  flex-direction: column;
+  align-items: center;
 
-  .main-content {
-    margin: ${(props) => props.isMobile ? '0 0 20px 0' : '20px'};
-  }
-
-  .page-header {
-    margin: 10px;
-  }
+  /* Background image */
+  background-image: ${(props) => props.isMobile ? 'none' : `url('/images/grid_left.png')`};
+  background-size: auto 40vh;
+  background-position: top left;
+  background-repeat: no-repeat;
 `;
 
 const StyledForm = styled.form`
   width: 500px;
   max-width: 90vw;
-  padding: 50px;
+  padding: 10%;
   // border: 3px double var(--yellow);
   overflow-y: auto;
 
@@ -80,8 +83,8 @@ const StyledForm = styled.form`
 
 const StyledSubmit = styled.div`
   width: 500px;
-  max-width: 95vw;
-  padding: 50px;
+  max-width: 90vw;
+  padding: 10%;
   display: flex;
   flex-direction: column;
 
@@ -89,6 +92,10 @@ const StyledSubmit = styled.div`
     padding: 5px;
     border-radius: 200px;
     text-align: center;
+  }
+
+  p {
+    color: var(--yellow);
   }
 
   div {
@@ -248,13 +255,16 @@ const StyledCard = styled.article`
         }
 
         .info-section {
-            min-width: 40%;
+            // min-width: 40%;
+            width: fit-content;
+            white-space: nowrap;
             div {
                 display: flex;
                 align-items: center;
 
                 p {
                     margin: 2%;
+                    color: var(--yellow);
                 }
             }
         }

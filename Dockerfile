@@ -22,5 +22,5 @@ COPY client/dist ./client/dist
 COPY server ./server
 
 # Expose the port and set the command to start Gunicorn
-EXPOSE 5000
-CMD ["gunicorn", "--chdir", "server", "--log-level", "debug", "-b", "0.0.0.0:5000", "app:app"]
+EXPOSE $PORT
+CMD ["gunicorn", "--chdir", "server", "--log-level", "debug", "-b", "0.0.0.0:$PORT", "app:app"]

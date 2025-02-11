@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { BorderGlow } from '../MiscStyling';
-import HiveMap from './HiveMap';
 
 const StyledContainer = styled.div`
   width: 100%;
@@ -20,7 +19,7 @@ const StyledContainer = styled.div`
 
   h1 {
     text-align: center;
-    font-size: 12vh;
+    font-size: clamp(4.5rem, 5.5vw, 6rem);
     color: var(--honey);
     font-weight: bold;
     width: 100%;

@@ -29,16 +29,6 @@
   --default-font: 'RopaSans';
 }
 
-/* BungeeInline
-BungeeOutline
-FrancoisOne
-Mogra
-Nosifer
-RopaSans
-
-RobotoCondensed
-Rubik */
-
 #root {
   overflow-x: hidden;
   overflow-y: auto;
@@ -194,21 +184,6 @@ span {
 
 div {
   position: relative;
-}
-
-main {
-  min-height: var(--size-body);
-  padding: 20px;
-  margin: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  /* Background image */
-  background-image: url('/images/grid_left.png');
-  background-size: auto 40vh;
-  background-position: top left;
-  background-repeat: no-repeat;
 }
 
 @keyframes logo-spin {

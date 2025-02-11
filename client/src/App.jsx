@@ -1,12 +1,16 @@
-import {useState, useEffect, useContext} from 'react';
+import {useState, useEffect, useContext, Suspense } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import { Outlet } from 'react-router-dom';
 import { getJSON, snakeToCamel } from './helper';
 import { UserContext } from './context/userProvider';
+import { WindowWidthContext } from './context/windowSize'
+import Loading from './pages/Loading';
+import { StyledMain } from './MiscStyling';
 
 function App() {
 
+  const { isMobile } = useContext(WindowWidthContext);
   const { user, setUser } = useContext(UserContext);
   const [hives, setHives] = useState([]);
   const [graphData, setGraphData] = useState([]);
@@ -78,17 +82,19 @@ function App() {
   return (
     <>
       <Header/>
-      <main>
-        <Outlet
-            context={{
-              hives,
-              setHives,
-              graphDataUser,
-              graphData,
-              predictionData
-            }}
-          />
-        </main>
+        <StyledMain isMobile={isMobile}>
+          <Suspense fallback={<Loading />}>
+            <Outlet
+                context={{
+                  hives,
+                  setHives,
+                  graphDataUser,
+                  graphData,
+                  predictionData
+                }}
+              />
+          </Suspense>
+        </StyledMain>
       <Footer />
     </>
   );

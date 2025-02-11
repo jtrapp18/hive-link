@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
-import Plot from "react-plotly.js";
+import { useEffect, lazy } from "react";
 import { useResizeDetector } from 'react-resize-detector'
 import { PlotContainer } from "../MiscStyling";
-import Loading from '../pages/Loading'
+
+const Plot = lazy(() => import('react-plotly.js'));
 
 const PieChart = ({ title, label, valueData, selectedSlice, setSelectedSlice }) => {
 

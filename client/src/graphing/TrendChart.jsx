@@ -1,8 +1,8 @@
-import React from 'react';
-import Plot from 'react-plotly.js';
-import styled from 'styled-components';
+import { lazy } from 'react';
 import { useResizeDetector } from 'react-resize-detector'
 import { PlotContainer } from '../MiscStyling';
+
+const Plot = lazy(() => import('react-plotly.js'));
 
 const TrendChart = ({ title, x, y }) => {
   // Prevent rendering if data is missing or empty

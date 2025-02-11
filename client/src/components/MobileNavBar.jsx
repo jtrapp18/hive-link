@@ -79,7 +79,7 @@ const HamburgerButton = styled.button`
   }
 
   &.open {
-    transform: rotate(45deg) translateX(30%);
+    transform: rotate(45deg) translateY(30%);
   }
 
   .icon {

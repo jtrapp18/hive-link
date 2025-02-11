@@ -2,12 +2,9 @@ import {useContext, useState} from "react";
 import Login from './Login'
 import {UserContext} from '../context/userProvider'
 import { patchJSONToDb } from "../helper";
-import styled from "styled-components";
 import { Button } from '../MiscStyling';
-import Error from "../styles/Error";
-import { StyledForm, StyledSubmit, StyledContainer } from "../MiscStyling";
+import { StyledForm, StyledContainer } from "../MiscStyling";
 import FormSubmit from '../components/FormSubmit'
-import useCrudStateDB from '../hooks/useCrudStateDB';
 
 const AccountDetails = () => {
   const { user, setUser } = useContext(UserContext);

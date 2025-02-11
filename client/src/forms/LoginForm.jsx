@@ -1,7 +1,5 @@
 import React, { useContext } from "react";
-import { useOutletContext } from "react-router-dom";
 import { snakeToCamel, postJSONToDb } from "../helper";
-import styled from "styled-components";
 import { UserContext } from '../context/userProvider';
 import { useFormik } from 'formik';
 import Error from "../styles/Error";

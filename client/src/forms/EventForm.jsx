@@ -1,5 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
-import styled from "styled-components";
+import React, { useContext, useState } from "react";
 import { UserContext } from '../context/userProvider';
 import { useFormik } from "formik";
 import * as Yup from "yup"; // Validation library

@@ -9,7 +9,6 @@ import ForumForm from '../forms/ForumForm'
 import usePopupForm from '../hooks/usePopupForm'
 import useCrudStateDB from '../hooks/useCrudStateDB';
 import Loading from './Loading';
-import styled from 'styled-components';
 import { StyledContainer } from '../MiscStyling';
 import Login from './Login'
 

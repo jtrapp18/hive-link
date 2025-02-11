@@ -1,17 +1,16 @@
-import { useContext, useState} from 'react';
-import styled from "styled-components";
+import { useContext, lazy} from 'react';
 import {WindowWidthContext} from "../context/windowSize";
 import {useOutletContext} from "react-router-dom";
 import HiveCard from '../cards/HiveCard';
 import {UserContext} from '../context/userProvider'
 import Login from './Login';
-import Error from "../styles/Error";
 import { CardContainer } from '../MiscStyling';
 import usePopupForm from '../hooks/usePopupForm';
-import HiveForm from '../forms/HiveForm'
 import { Button } from '../MiscStyling';
 import { StyledContainer } from '../MiscStyling';
 import MotionWrapper from '../styles/MotionWrapper';
+
+const HiveForm = lazy(() => import('../forms/HiveForm'));
 
 const Hives = () => {
   const { user } = useContext(UserContext);

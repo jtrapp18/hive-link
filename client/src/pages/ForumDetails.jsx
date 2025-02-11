@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useParams, useNavigate, NavLink, useOutletContext } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { getJSONById, snakeToCamel } from '../helper';
 import Loading from './Loading';
 import { StyledContainer } from '../MiscStyling';

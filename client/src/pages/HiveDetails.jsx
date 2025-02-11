@@ -1,22 +1,22 @@
-import { useState } from 'react';
+import { lazy, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import HiveCard from '../cards/HiveCard';
 import { useNavigate } from 'react-router-dom';
 import {useOutletContext} from "react-router-dom";
-import HiveForm from '../forms/HiveForm'
-import InspectionCard from '../cards/InspectionCard'
-import HoneyCard from '../cards/HoneyCard'
-import { CardContainer } from '../MiscStyling';
-import usePopupForm from '../hooks/usePopupForm';
-import HoneyForm from '../forms/HoneyForm'
-import InspectionForm from '../forms/InspectionForm'
-import Loading from './Loading'
+import { Button, HexagonButton, CardContainer, StyledContainer } from '../MiscStyling';
+import Loading from './Loading';
 import styled from 'styled-components';
-import { Button, HexagonButton, StyledContainer } from '../MiscStyling';
+import DrippingHoney from '../components/DrippingHoney';
+import usePopupForm from '../hooks/usePopupForm';
 import HiveToast from '../styles/HiveToast';
-import DrippingHoney from '../components/DrippingHoney'
 import BackButton from '../components/BackButton';
 import MotionWrapper from '../styles/MotionWrapper';
+import HiveCard from '../cards/HiveCard';
+
+const HoneyCard = lazy(() => import('../cards/HoneyCard'));
+const InspectionCard = lazy(() => import('../cards/InspectionCard'));
+const HiveForm = lazy(() => import('../forms/HiveForm'));
+const HoneyForm = lazy(() => import('../forms/HoneyForm'));
+const InspectionForm = lazy(() => import('../forms/InspectionForm'));
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -107,70 +107,68 @@ const HiveDetails = () => {
       <HivePopup
         viewHive={setActiveHive}
       />
-      {activeTab==='honeyPulls' &&
-        <>
-          <DrippingHoney />
-          <h3>Honey Pulls</h3>
-          <div>
-            <Button onClick={clickNewHoney}>Add Honey Pull</Button>
-            {showToast==='honey' && 
-              <HiveToast 
-                onClose={()=>setShowToast(null)}
-              >
-                Need to record pull date and weight of current round before adding new honey pull
-              </HiveToast>
-            }
-          </div>
-          <CardContainer>
-            <HoneyPullPopup
-              viewHoney={viewHoney}
-            />
-            {hive.honeyPulls
-            .sort((a, b) => new Date(b.dateReset) - new Date(a.dateReset)) // Sort by date in descending order
-            .map((honeyPull, index) => (
-              <MotionWrapper index={index}>
-                <HoneyCard
-                  key={honeyPull.id}
-                  honeyPull={honeyPull}
-                  setActiveHoneyPull={setActiveHoneyPull}
-                />
-              </MotionWrapper>
-            ))}
-          </CardContainer>
-        </>
-      }
-      {activeTab==='inspections' &&
-        <>
-          <h3>Inspections</h3>
-          <div>
-            <Button onClick={clickNewInspection}>Add Hive Inspection</Button>
-            {showToast==='inspection' && 
-              <HiveToast 
-                onClose={()=>setShowToast(null)}
-              >
-                Need to set up an active honey pull round before adding a new inspection
-              </HiveToast>
-            }
-          </div>
-          <CardContainer>
-            <InspectionPopup 
-              honeyPullId={activeHoneyPull.id}
-              viewInspection={viewInspection}
-            />
-            {inspections
-            .sort((a, b) => new Date(b.dateChecked) - new Date(a.dateChecked)) // Sort by date in descending order
-            .map((inspection, index) => (
-              <MotionWrapper index={index}>
-                <InspectionCard
-                  key={inspection.id}
-                  inspection={inspection}
-                  setActiveInspection={setActiveInspection}
-                />
-              </MotionWrapper>
-            ))}
-          </CardContainer>
-        </>
-      }
+        {activeTab==='honeyPulls' &&
+          <>
+            <DrippingHoney />
+            <h3>Honey Pulls</h3>
+            <div>
+              <Button onClick={clickNewHoney}>Add Honey Pull</Button>
+              {showToast==='honey' && 
+                <HiveToast 
+                  onClose={()=>setShowToast(null)}
+                >
+                  Need to record pull date and weight of current round before adding new honey pull
+                </HiveToast>
+              }
+            </div>
+            <CardContainer>
+              <HoneyPullPopup
+                viewHoney={viewHoney}
+              />
+              {hive.honeyPulls
+              .sort((a, b) => new Date(b.dateReset) - new Date(a.dateReset)) // Sort by date in descending order
+              .map((honeyPull, index) => (
+                <MotionWrapper key={honeyPull.id} index={index}>
+                  <HoneyCard
+                    honeyPull={honeyPull}
+                    setActiveHoneyPull={setActiveHoneyPull}
+                  />
+                </MotionWrapper>
+              ))}
+            </CardContainer>
+          </>
+        }
+        {activeTab==='inspections' &&
+          <>
+            <h3>Inspections</h3>
+            <div>
+              <Button onClick={clickNewInspection}>Add Hive Inspection</Button>
+              {showToast==='inspection' && 
+                <HiveToast 
+                  onClose={()=>setShowToast(null)}
+                >
+                  Need to set up an active honey pull round before adding a new inspection
+                </HiveToast>
+              }
+            </div>
+            <CardContainer>
+              <InspectionPopup 
+                honeyPullId={activeHoneyPull.id}
+                viewInspection={viewInspection}
+              />
+              {inspections
+              .sort((a, b) => new Date(b.dateChecked) - new Date(a.dateChecked)) // Sort by date in descending order
+              .map((inspection, index) => (
+                <MotionWrapper key={inspection.id} index={index}>
+                  <InspectionCard
+                    inspection={inspection}
+                    setActiveInspection={setActiveInspection}
+                  />
+                </MotionWrapper>
+              ))}
+            </CardContainer>
+          </>
+        }
     </StyledContainer>
   );
 };

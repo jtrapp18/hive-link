@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import TrendChart from './TrendChart';
 import PieChart from './PieChart';
 import { StyledAnalysis } from '../MiscStyling';

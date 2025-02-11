@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { StyledContainer } from '../MiscStyling';
 import {useOutletContext} from "react-router-dom";
 import { CardContainer } from '../MiscStyling';

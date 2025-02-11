@@ -1,37 +1,21 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, lazy } from 'react';
 import {useOutletContext} from "react-router-dom";
 import styled from 'styled-components';
 import Loading from './Loading'
-import AnalysisHoney from '../graphing/AnalysisHoney';
-import AnalysisHealth from '../graphing/AnalysisHealth';
 import { HexagonButton, StyledContainer } from '../MiscStyling';
 import { UserContext } from '../context/userProvider';
-import AnalysisUser from '../graphing/AnalysisUser';
-import ExpStudyResults from '../components/ExpStudyResults';
 import { getJSON, snakeToCamel } from '../helper';
+
+const AnalysisHoney = lazy(() => import('../graphing/AnalysisHoney'));
+const AnalysisHealth = lazy(() => import('../graphing/AnalysisHealth'));
+const AnalysisUser = lazy(() => import('../graphing/AnalysisUser'));
+const ExpStudyResults = lazy(() => import('../components/ExpStudyResults'));
 
 const ButtonContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 50px;
-`
-
-const FeaturesContainer = styled.div`
-    width: 85%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    li, p {
-        color: gray;
-    }
-
-    ol {
-        width: 100%;
-        column-count: 3;
-        column-gap: space-between;  
-    }
 `
 
 const Analysis = () => {

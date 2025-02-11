@@ -1,7 +1,4 @@
-import React, { useState } from 'react';
 import TrendChart from './TrendChart';
-import MultiLine from './MultiLine';
-import Loading from '../pages/Loading'
 import { StyledAnalysis } from '../MiscStyling';
 import GraphSectionHeader from '../styles/GraphSectionHeader'
 import styled from 'styled-components'
