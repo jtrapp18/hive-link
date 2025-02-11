@@ -5,7 +5,7 @@ const StyledContainer = styled.div`
     width: 100%;
 
     button {
-        background: none;
+        background: rgba(0, 0, 0, .7);
         color: #00A3FF;
         text-decoration: underline;
         border: none;

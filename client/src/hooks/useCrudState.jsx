@@ -100,24 +100,27 @@ const useCrudState = (setState, optionalFunc=null, addFunc=null) => {
     });
   };
   
-  const addNestedToKeyInState = (arrayKey, nestedKey, newObj, itemId) => {
+  const addNestedToKeyInState = (arrayKey, arrayId, nestedKey, newObj, itemId) => {
     const stateArrayKey = snakeToCamel(arrayKey);
     const stateNestedKey = snakeToCamel(nestedKey);
   
     const updateStateArray = (item) => ({
       ...item,
       [stateArrayKey]: item[stateArrayKey].map(subItem => 
-        subItem.id === newObj[stateArrayKey + 'Id']
+        subItem.id === newObj[arrayId]
           ? { ...subItem, [stateNestedKey]: [...subItem[stateNestedKey], newObj] }
           : subItem
       ),
     });
   
     setState(prevItems => {
+      console.log(prevItems); // Check if prevItems is an array
       const updatedState = Array.isArray(prevItems)
-        ? prevItems.map(item => (item.id === itemId ? updateStateArray(item) : item))
+        ? prevItems.map(item => {
+            return (item.id === itemId ? updateStateArray(item) : item);
+          })
         : updateStateArray(prevItems);
-  
+
       optionalFunc?.(updatedState);
       addFunc?.(newObj);
       return updatedState;

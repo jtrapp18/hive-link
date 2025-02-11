@@ -13,12 +13,10 @@ import MotionWrapper from '../styles/MotionWrapper';
 import HiveCard from '../cards/HiveCard';
 
 const HoneyCard = lazy(() => import('../cards/HoneyCard'));
-// const InspectionCard = lazy(() => import('../cards/InspectionCard'));
+const InspectionCard = lazy(() => import('../cards/InspectionCard'));
 const HiveForm = lazy(() => import('../forms/HiveForm'));
 const HoneyForm = lazy(() => import('../forms/HoneyForm'));
-// const InspectionForm = lazy(() => import('../forms/InspectionForm'));
-
-const Inspections = lazy(() => import('../components/Inspections'));
+const InspectionForm = lazy(() => import('../forms/InspectionForm'));
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -45,7 +43,7 @@ const HiveDetails = () => {
   const [showToast, setShowToast] = useState(null);
   const {PopupForm: HivePopup, setActiveItem: setActiveHive, setShowNewForm: setShowNewHive} = usePopupForm(HiveForm);
   const {PopupForm: HoneyPullPopup, setActiveItem: setActiveHoneyPull, setShowNewForm: setShowNewHoneyPull} = usePopupForm(HoneyForm);
-  // const {PopupForm: InspectionPopup, setActiveItem: setActiveInspection, setShowNewForm: setShowNewInspection} = usePopupForm(InspectionForm);
+  const {PopupForm: InspectionPopup, setActiveItem: setActiveInspection, setShowNewForm: setShowNewInspection} = usePopupForm(InspectionForm);
 
   if (!hive) {return <Loading />}
 
@@ -140,36 +138,35 @@ const HiveDetails = () => {
           </>
         }
         {activeTab==='inspections' &&
-          <Inspections />
-          // <>
-          //   <h3>Inspections</h3>
-          //   <div>
-          //     <Button onClick={clickNewInspection}>Record Hive Inspection</Button>
-          //     {showToast==='inspection' && 
-          //       <HiveToast 
-          //         onClose={()=>setShowToast(null)}
-          //       >
-          //         Need to set up an active honey pull round before adding a new inspection
-          //       </HiveToast>
-          //     }
-          //   </div>
-          //   <CardContainer>
-          //     <InspectionPopup 
-          //       honeyPullId={activeHoneyPull.id}
-          //       viewInspection={viewInspection}
-          //     />
-          //     {inspections
-          //     .sort((a, b) => new Date(b.dateChecked) - new Date(a.dateChecked)) // Sort by date in descending order
-          //     .map((inspection, index) => (
-          //       <MotionWrapper key={inspection.id} index={index}>
-          //         <InspectionCard
-          //           inspection={inspection}
-          //           setActiveInspection={setActiveInspection}
-          //         />
-          //       </MotionWrapper>
-          //     ))}
-          //   </CardContainer>
-          // </>
+          <>
+            <h3>Inspections</h3>
+            <div>
+              <Button onClick={clickNewInspection}>Record Hive Inspection</Button>
+              {showToast==='inspection' && 
+                <HiveToast 
+                  onClose={()=>setShowToast(null)}
+                >
+                  Need to set up an active honey pull round before adding a new inspection
+                </HiveToast>
+              }
+            </div>
+            <CardContainer>
+              <InspectionPopup 
+                honeyPullId={activeHoneyPull.id}
+                viewInspection={viewInspection}
+              />
+              {inspections
+              .sort((a, b) => new Date(b.dateChecked) - new Date(a.dateChecked)) // Sort by date in descending order
+              .map((inspection, index) => (
+                <MotionWrapper key={inspection.id} index={index}>
+                  <InspectionCard
+                    inspection={inspection}
+                    setActiveInspection={setActiveInspection}
+                  />
+                </MotionWrapper>
+              ))}
+            </CardContainer>
+          </>
         }
     </StyledContainer>
   );

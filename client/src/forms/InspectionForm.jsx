@@ -33,7 +33,6 @@ const ModForm = styled(StyledForm)`
 `
 
 const InspectionForm = ({ initObj, honeyPullId, viewInspection }) => {
-  const { user } = useContext(UserContext);
   const [isEditing, setIsEditing] = useState(!initObj);
   const { id } = useParams(); // Get hive ID from URL
   const { setHives } = useOutletContext();
@@ -44,15 +43,30 @@ const InspectionForm = ({ initObj, honeyPullId, viewInspection }) => {
   const prevStep = () => setStep((prev) => prev - 1);
 
   const nextStep = async () => {
-    // const errors = await formik.validateForm();
+    const errors = await formik.validateForm();
   
-    // if (Object.keys(errors).length > 0) {
-    //   formik.setTouched(
-    //     Object.keys(errors).reduce((acc, key) => ({ ...acc, [key]: true }), {})
-    //   );
-    //   return; // Stop navigation if there are errors
-    // }
+    const pageFields = {
+      1: ["dateChecked", "bias"],
+      2: ["temp", "humidity", "weatherConditions"],
+      5: ["activitySurroundingHive", "stabilityInHive"]
+    };
+
+    console.log(step)
+    console.log(errors)
   
+    // Get errors relevant to the current step
+    const stepErrors = Object.keys(errors).filter(field =>
+      pageFields[step]?.includes(field)
+    );
+  
+    // If there are errors for the current step, mark them as touched and prevent navigation
+    if (stepErrors.length > 0) {
+      formik.setTouched(
+        stepErrors.reduce((acc, key) => ({ ...acc, [key]: true }), {})
+      );
+      return; // Stop navigation if there are errors
+    }
+
     setStep(step + 1); // Proceed if no errors
   };
 
@@ -60,7 +74,8 @@ const InspectionForm = ({ initObj, honeyPullId, viewInspection }) => {
     ? (body) =>
       updateNestedKey("honey_pulls", honeyPullId, "inspections", initObj.id, body, hiveId)
     : (body) => {
-      addNestedKey("honey_pulls", "inspections", body, hiveId)
+      console.log(body)
+      addNestedKey("honey_pulls", honeyPullId, "inspections", body, hiveId)
     }
 
   // Validation schema
@@ -71,7 +86,7 @@ const InspectionForm = ({ initObj, honeyPullId, viewInspection }) => {
     hasLarvae: Yup.boolean(),    
     temp: Yup.number().min(-10, "Temperature must be between -10 and 50").max(50, "Temperature must be between -10 and 50"),
     humidity: Yup.number().min(0, "Humidity must be between 0 and 100").max(100, "Humidity must be between 0 and 100"),
-    weatherConditions: Yup.string().oneOf(["Sunny", "Overcast", "Rainy", "Snowy", "Windy"]),
+    weatherConditions: Yup.string().required().oneOf(["Sunny", "Overcast", "Rainy", "Snowy", "Windy"]),
     antsPresent: Yup.boolean(),
     slugsPresent: Yup.boolean(),
     hiveBeetlesPresent: Yup.boolean(),
@@ -89,8 +104,8 @@ const InspectionForm = ({ initObj, honeyPullId, viewInspection }) => {
     varroaMiteCount: Yup.number().min(0, "Varroa mite count cannot be negative"),
     hasChalkbrood: Yup.boolean(),
     hasTwistedLarvae: Yup.boolean(),
-    activitySurroundingHive: Yup.string().nullable().oneOf(["Low", "Medium", "High"]),
-    stabilityInHive: Yup.string().nullable().oneOf(["Low", "Medium", "High"]),
+    activitySurroundingHive: Yup.string().required().oneOf(["Low", "Medium", "High"]),
+    stabilityInHive: Yup.string().required().oneOf(["Low", "Medium", "High"]),
     notes: Yup.string().nullable().max(255, 'Notes must be at most 255 characters')
   });
 
@@ -204,6 +219,8 @@ const InspectionForm = ({ initObj, honeyPullId, viewInspection }) => {
                 />
               </div>
             </div>
+            <br />
+            <br />
           </>
         )}
 
@@ -258,6 +275,8 @@ const InspectionForm = ({ initObj, honeyPullId, viewInspection }) => {
                 <Error>{formik.errors.weatherConditions}</Error>
               )}
             </div>
+            <br />
+            <br />
           </>
         )}
         {step === 3 && (
@@ -342,6 +361,8 @@ const InspectionForm = ({ initObj, honeyPullId, viewInspection }) => {
                 />
               </div>
             </div>
+            <br />
+            <br />
           </>
         )}
         {step === 4 && (
@@ -413,6 +434,8 @@ const InspectionForm = ({ initObj, honeyPullId, viewInspection }) => {
                 onBlur={formik.handleBlur}
               />
             </div>
+            <br />
+            <br />
           </>
         )}
         {step === 5 && (
@@ -522,7 +545,15 @@ const InspectionForm = ({ initObj, honeyPullId, viewInspection }) => {
             </div>
             <hr />
             <Button type="submit">{initObj ? "Submit Updates" : "Submit New Inspection"}</Button>
+            {(formik.errors.dateChecked || formik.errors.bias) && (
+              <Error>Fix errors on page 1 before submitting</Error>
+            )}
+            {(formik.errors.temp || formik.errors.humidity || formik.errors.weatherConditions) && (
+              <Error>Fix errors on page 2 before submitting</Error>
+            )}
             <hr />
+            <br />
+            <br />
           </>
         )}
           <FormFooter

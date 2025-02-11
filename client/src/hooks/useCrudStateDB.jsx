@@ -13,8 +13,6 @@ const useCrudStateDB = (setState, dbKey, optionalFunc=null, addFunc=null) => {
       .then(json => {
         const jsonTransformed = snakeToCamel(json);
         addToState(jsonTransformed);
-
-        console.log(jsonTransformed)
       })
     };
     
@@ -56,11 +54,11 @@ const useCrudStateDB = (setState, dbKey, optionalFunc=null, addFunc=null) => {
       deleteFromKeyInState(arrayKey, arrayId, itemId);
     };
     
-    const addNestedKey = (arrayKey, nestedKey, body, itemId=null) => {
-      postJSONToDb(arrayKey, body)
+    const addNestedKey = (arrayKey, arrayId, nestedKey, body, itemId=null) => {
+      postJSONToDb(nestedKey, body)
       .then(json => {
         const jsonTransformed = snakeToCamel(json);
-        addNestedToKeyInState(arrayKey, nestedKey, jsonTransformed, itemId);
+        addNestedToKeyInState(arrayKey, arrayId, nestedKey, jsonTransformed, itemId);
       });
     };
 

@@ -272,9 +272,9 @@ class Inspections(Resource):
             # Get data from the request
             data = request.get_json()
 
-            # Create new inspection
+            # Create new inspection 
             new_inspection = Inspection(
-                hive_id=data['hive_id'],  # Link the inspection to a hive
+                honey_pull_id=data['honey_pull_id'],  # Link the inspection to a hive
                 date_checked=data['date_checked'],
                 super_count=data.get('super_count'),
                 hive_body_count=data.get('hive_body_count'),
@@ -296,6 +296,8 @@ class Inspections(Resource):
                 weather_conditions=data.get('weather_conditions'),
                 humidity=data.get('humidity'),
                 fate=data.get('fate'),
+                has_eggs=data.get('has_eggs', False),
+                has_larvae=data.get('has_larvae', False),
                 has_twisted_larvae=data.get('has_twisted_larvae', False),
                 has_chalkbrood=data.get('has_chalkbrood', False),
                 varroa_mite_count=data.get('varroa_mite_count'),

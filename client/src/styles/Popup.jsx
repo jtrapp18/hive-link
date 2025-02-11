@@ -44,6 +44,10 @@ const Element = styled.div`
   max-height: 75vh;
   height: 100%;
   overflow: auto;
+  padding: 3%;
+  width: 700px;
+  display: flex;
+  justify-content: center;
 `;
 
 const Overlay = styled.div`

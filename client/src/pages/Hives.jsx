@@ -28,9 +28,9 @@ const Hives = () => {
   return (
       <StyledContainer>
         <h1>My Hives</h1>
-        <p>Click on any hives to manage details</p>
+        <p>Click on any hive to manage details, honey pulls, and/or inspections</p>
         <h3>. . . . . </h3>
-        <Button onClick={()=>setShowNewForm(true)}>Add New Hive</Button>        
+        <Button onClick={()=>setShowNewForm(true)}>Register New Hive</Button>        
         <br />
         <CardContainer>
           <PopupForm

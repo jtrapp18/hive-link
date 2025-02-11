@@ -51,7 +51,7 @@ const StyledMain = styled.main`
 const StyledForm = styled.form`
   width: 600px;
   max-width: 90vw;
-  padding: 1% 10% 1% 10%;
+  padding: 2%;
   // border: 3px double var(--yellow);
   overflow-y: auto;
 
@@ -82,9 +82,9 @@ const StyledForm = styled.form`
 `
 
 const StyledSubmit = styled.div`
-  width: 700px;
+  width: 650px;
   max-width: 90vw;
-  padding: 1% 10% 1% 10%;
+  padding: 2%;
   display: flex;
   flex-direction: column;
 
