@@ -18,6 +18,7 @@ const MyEvents = () => {
   const [events, setEvents] = useState([]);
   const [eventsHosting, setEventsHosting] = useState([]);
   const [eventsAttending, setEventsAttending] = useState([]);
+  const [eventsOther, setEventsOther] = useState([]);
   const [eventsFiltered, setEventsFiltered] = useState([]);
   const {PopupForm, setActiveItem, setShowNewForm, setShowDeleted} = usePopupForm(EventForm);
   const [nearbyZipcodes, setNearbyZipcodes] = useState([]);
@@ -36,6 +37,7 @@ const MyEvents = () => {
 
       setEventsHosting(eventsHosting);
       setEventsAttending(eventsAttending);
+      setEventsOther(eventsOther);
       setEventsFiltered(eventsFiltered);
   }
 
@@ -46,6 +48,16 @@ const MyEvents = () => {
       eventFiltering(eventsTransformed);
     });
   }, []);
+
+  const updateFilter = (nearbyZipcodes) => {
+    const eventsFiltered = nearbyZipcodes.length===0
+    ? eventsOther
+    : eventsOther.filter(event =>
+        nearbyZipcodes.includes(event.zipcode)
+      );
+
+      setEventsFiltered(eventsFiltered);
+  }
 
   const {addItem, updateItem} = useCrudStateDB(setEvents, "events", 
     eventFiltering, setActiveItem);
@@ -124,7 +136,7 @@ const MyEvents = () => {
         }
         <h1>Find Events</h1>
         <EventSearch
-          setNearbyZipcodes={setNearbyZipcodes}
+          updateFilter={updateFilter}
         />
         <h3>. . . . . </h3>
         <Events

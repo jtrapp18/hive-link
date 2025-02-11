@@ -451,6 +451,26 @@ class SignupById(Resource):
         db.session.delete(signup)
         db.session.commit()
         return {}, 204
+    
+class NearbyZipcodes(Resource):
+
+    def get(self):
+        API_KEY = os.getenv("ZIPCODE_API_KEY")
+
+        zip_code = request.args.get("zip")
+        radius = request.args.get("radius", 5)
+
+        if not zip_code:
+            return {'error': 'ZIP code is required'}, 400
+
+        url = f'https://www.zipcodeapi.com/rest/{API_KEY}/radius.json/{zip_code}/{radius}/mile'
+
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return {'error': 'Failed to fetch ZIP codes'}, 500
 
 class Forums(Resource):
 
@@ -646,8 +666,6 @@ class ReplyById(Resource):
     
 class HiveGeoData(Resource):
     def get(self):
-        API_KEY = os.getenv("ZIPCODE_API_KEY")
-
         # Aggregate hives by ZIP code
         zip_codes = [str(int(hive.postal_code)) for hive in Hive.query.all()]
         hive_counts = dict(Counter(zip_codes))  # Get hive count per ZIP code
@@ -828,6 +846,7 @@ api.add_resource(Events, '/api/events', endpoint='events')
 api.add_resource(EventById, '/api/events/<int:event_id>')
 api.add_resource(Signups, '/api/signups', endpoint='signups')
 api.add_resource(SignupById, '/api/signups/<int:signup_id>')
+api.add_resource(NearbyZipcodes, '/api/zipcodes')
 api.add_resource(Forums, '/api/forums', endpoint='forums')
 api.add_resource(ForumById, '/api/forums/<int:forum_id>')
 api.add_resource(Messages, '/api/messages', endpoint='messages')

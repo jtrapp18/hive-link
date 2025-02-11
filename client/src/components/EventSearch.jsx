@@ -45,7 +45,7 @@ const SearchContainer = styled.div`
   }
 `
 
-const EventSearch = ({setNearbyZipcodes}) => {
+const EventSearch = ({updateFilter}) => {
   const { user } = useContext(UserContext);
   const { isMobile } = useContext(WindowWidthContext);
   const [filterZip, setFilterZip] = useState(!user ? '' : user.zipcode);
@@ -57,7 +57,7 @@ const EventSearch = ({setNearbyZipcodes}) => {
       getNearbyZipcodes(filterZip, filterRadius).then((json) => {
         const zipcodesTransformed = snakeToCamel(json);
         const zipcodeList = zipcodesTransformed.zipCodes.map(z=>z.zipCode);
-        setNearbyZipcodes(zipcodeList);
+        updateFilter(zipcodeList);
         setIsFiltered(true);
 
         console.log("Nearby Zipcodes:", zipcodeList)
@@ -66,7 +66,7 @@ const EventSearch = ({setNearbyZipcodes}) => {
   }
 
   const clearFilters = () => {
-    setNearbyZipcodes([]);
+    updateFilter([]);
     setIsFiltered(false);
     setFilterZip('');
   }

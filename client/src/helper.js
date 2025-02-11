@@ -145,6 +145,7 @@ function getNearbyZipcodes(zipcode, radius) {
   // Make the API call to your Lambda (via API Gateway)
   return fetch(`/api/zipcodes?zip=${zipcode}&radius=${radius}`)
     .then(res => {
+      console.log(res)
       if (!res.ok) {
         console.error(`Error fetching zipcodes! Status: ${res.status}`);
       }
