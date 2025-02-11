@@ -1,7 +1,9 @@
+import { lazy } from 'react'
 import TrendChart from './TrendChart';
-import { StyledAnalysis } from '../MiscStyling';
-import GraphSectionHeader from '../styles/GraphSectionHeader'
+import { StyledAnalysis, GraphSectionHeader } from '../MiscStyling';
 import styled from 'styled-components'
+
+const TreatmentImpacts = lazy(()=> import('./TreatmentImpacts'));
 
 const Hexagons = styled.img`
   position: fixed;
@@ -48,48 +50,29 @@ const AnalysisHealth = ({graphData, label, filters}) => {
                     </div>
                 </>              
             }
-            <GraphSectionHeader>Impact of Weather</GraphSectionHeader>
+            <GraphSectionHeader>
+                <hr/>
+                <h3>Impact of Weather</h3>
+                <hr/>
+            </GraphSectionHeader>
             <div className='graph-container'>
                 <TrendChart
-                    data={graphData}
                     title={'Varroa Mite Count by Average Temperature'}
                     x={{data: filteredData.temp, label: 'Average Temperature'}}
                     y={{data: filteredData.varroaMiteCount, label: 'Varroa Mite Count'}}
                 />
                 <TrendChart
-                    data={graphData}
                     title={'Varroa Mite Count by Average Humidity'}
                     x={{data: filteredData.humidity, label: 'Average Humidity'}}
                     y={{data: filteredData.varroaMiteCount, label: 'Varroa Mite Count'}}
                 />
             </div>
-            <GraphSectionHeader>Varroa Mite Treatments</GraphSectionHeader>
-            <div className='graph-container'>
-                <TrendChart
-                    data={graphData}
-                    title={'Varroa Mite Count by Oxalic Acid Dosage'}
-                    x={{data: filteredData.oxalicAcidDosage, label: 'Oxalic Acid Dosage'}}
-                    y={{data: filteredData.varroaMiteCount, label: 'Varroa Mite Count'}}
-                />
-                <TrendChart
-                    data={graphData}
-                    title={'Varroa Mite Count by Formic Acid Dosage'}
-                    x={{data: filteredData.formicAcidDosage, label: 'Formic Acid Dosage'}}
-                    y={{data: filteredData.varroaMiteCount, label: 'Varroa Mite Count'}}
-                />
-                <TrendChart
-                    data={graphData}
-                    title={'Varroa Mite Count by Thymol Dosage'}
-                    x={{data: filteredData.thymolDosage, label: 'Thymol Dosage'}}
-                    y={{data: filteredData.varroaMiteCount, label: 'Varroa Mite Count'}}
-                />
-                <TrendChart
-                    data={graphData}
-                    title={'Varroa Mite Count by Apistan Dosage'}
-                    x={{data: filteredData.apistanDosage, label: 'Apistan Dosage'}}
-                    y={{data: filteredData.varroaMiteCount, label: 'Varroa Mite Count'}}
-                />
-            </div>
+            <GraphSectionHeader>
+                <hr/>
+                <h3>Varroa Mite Treatments</h3>
+                <hr/>
+            </GraphSectionHeader>
+            <TreatmentImpacts filteredData={filteredData}/>
         </StyledAnalysis>
     );
 }

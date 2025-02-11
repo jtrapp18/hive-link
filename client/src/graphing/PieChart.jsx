@@ -1,83 +1,92 @@
-import { useEffect, useState, useRef } from "react";
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useEffect, lazy } from "react";
+import { useResizeDetector } from 'react-resize-detector'
 import { PlotContainer } from "../MiscStyling";
 
-const PieChartComponent = ({ title, label, valueData, selectedSlice, setSelectedSlice }) => {
-  const [activeIndex, setActiveIndex] = useState(null);
-  const chartRef = useRef(null);
+const Plot = lazy(() => import('react-plotly.js'));
+
+const PieChart = ({ title, label, valueData, selectedSlice, setSelectedSlice }) => {
 
   if (!label.data || !valueData) {
     return <PlotContainer><p>Loading...</p></PlotContainer>;
   }
 
+  const { width, height, ref } = useResizeDetector({});
+
+  // Function to handle clicks outside the pie chart
   const handleOutsideClick = (event) => {
-    if (chartRef.current && chartRef.current.contains(event.target)) {
+    if (ref.current && ref.current.contains(event.target)) {
       setSelectedSlice(null); // Reset the selection when clicking outside
     }
   };
 
   useEffect(() => {
+    // Add event listener for detecting clicks outside the chart
     document.addEventListener('click', handleOutsideClick);
+
+    // Clean up the event listener on unmount
     return () => {
       document.removeEventListener('click', handleOutsideClick);
     };
-  }, []);
+  }, [ref]);
 
   const handleClick = (eventData) => {
-    const index = eventData.activeIndex;
-    // const labelValue = label.data[index];
-    console.log(eventData)
-    
-    setActiveIndex(index);
+    const selected = eventData.points[0];
+  
+    let labelValue = selected.label;
+    if (!isNaN(labelValue) && !isNaN(parseFloat(labelValue))) {
+      labelValue = parseInt(labelValue, 10); // Use parseFloat if decimals are possible
+    }
+  
     setSelectedSlice({
       labelCol: label.label,
-      labelFilter: eventData.name
+      labelFilter: labelValue
     });
   };
 
-  const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#00c49f'];
+  const trace = {
+    labels: label.data,
+    values: valueData,
+    type: 'pie',
+    textinfo: 'label+percent',
+    hoverinfo: 'label+percent+value',
+  };
 
-  // Grouping data by label and summing the values
-  const aggregatedData = label.data.reduce((acc, currLabel, index) => {
-    if (acc[currLabel]) {
-      acc[currLabel] += valueData[index]; // Aggregate by adding the values
-    } else {
-      acc[currLabel] = valueData[index]; // Initialize with first value
+  const layout = {
+    title: {
+      text: title,
+      font: { color: 'black' }
+    },
+    showlegend: true,
+    legend: {
+        x: 1,
+        y: 0.5,
+        xanchor: 'left',
+        yanchor: 'middle',
+        title: {
+            text: label.label,
+            font: { color: 'black' }
+        }
     }
-    return acc;
-  }, {});
-
-  // Convert aggregated data to a format suitable for Pie chart
-  const pieData = Object.keys(aggregatedData).map((labelItem, index) => ({
-    name: labelItem,
-    value: aggregatedData[labelItem],
-  }));
+  };
 
   return (
-    <PlotContainer ref={chartRef}>
-      <h3>{title}</h3>
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart>
-          <Pie
-            data={pieData}
-            dataKey="value"
-            nameKey="name"
-            cx="50%"
-            cy="50%"
-            outerRadius="80%"
-            fill="#8884d8"
-            onClick={handleClick}  // Handle slice clicks
-          >
-            {pieData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Pie>
-          <Tooltip />
-          <Legend />
-        </PieChart>
-      </ResponsiveContainer>
+    <PlotContainer ref={ref}>
+      <Plot
+        key={JSON.stringify(label.data)} // Ensures re-render when data updates
+        data={[trace]}
+        config={{ responsive: true }}
+        onClick={handleClick}
+        style={{ width: '100%', height: '100%' }}
+        layout={{
+          ...layout, 
+          ...{
+            width: width, 
+            height: height
+          }
+        }}
+      />
     </PlotContainer>
   );
 };
 
-export default PieChartComponent;
+export default PieChart;

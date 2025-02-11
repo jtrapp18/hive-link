@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useState, lazy } from 'react';
 import TrendChart from './TrendChart';
 import PieChartComponent from './PieChart';
-import { StyledAnalysis } from '../MiscStyling';
-import GraphSectionHeader from '../styles/GraphSectionHeader'
+import { StyledAnalysis, GraphSectionHeader } from '../MiscStyling';
+// import GraphSectionHeader from '../styles/GraphSectionHeader'
 import Loading from '../pages/Loading';
 import { camelToProperCase } from '../helper'
 import DrippingHoney from '../components/DrippingHoney'
+
+const PestImpacts = lazy(() => import('./PestImpacts'))
 
 const AnalysisHoney = ({graphData, label, filters}) => {
 
@@ -47,12 +49,17 @@ const AnalysisHoney = ({graphData, label, filters}) => {
                     setSelectedSlice={setSelectedSlice}
                 />
             </div>
-            <GraphSectionHeader>Impact of Temperature</GraphSectionHeader>
+            <GraphSectionHeader>
+                <hr/>
+                <h3>Impact of Temperature</h3>
+                <hr/>
+            </GraphSectionHeader>
             <div className='graph-container'>
                 <TrendChart
                     title={`Average 30-Day Honey Production by Average Temperature`}
                     x={{data: filteredData.temp, label: 'Average Temperature'}}
                     y={{data: filteredData.avg_30DayWeight, label: 'Honey Production (lbs)'}}
+                    // chartType='box'
                 />
                 <TrendChart
                     title={'Average 30-Day Honey Production by Average Humidity'}
@@ -60,44 +67,16 @@ const AnalysisHoney = ({graphData, label, filters}) => {
                     y={{data: filteredData.avg_30DayWeight, label: 'Honey Production (lbs)'}}
                 />
             </div>
-            <GraphSectionHeader>Impact of Pests</GraphSectionHeader>
-            <div className='graph-container'>
-                <TrendChart
-                    title={'Impact of Ants on Honey Production'}
-                    x={{data: filteredData.antsPresent, label: 'Inspections with Ants Present'}}
-                    y={{data: filteredData.avg_30DayWeight, label: 'Honey Production (lbs)'}}
-                />
-                <TrendChart
-                    title={'Impact of Slugs on Honey Production'}
-                    x={{data: filteredData.slugsPresent, label: 'Inspections with Slugs Present'}}
-                    y={{data: filteredData.avg_30DayWeight, label: 'Honey Production (lbs)'}}
-                />
-                <TrendChart
-                    title={'Impact of Hive Beetles on Honey Production'}
-                    x={{data: filteredData.hiveBeetlesPresent, label: 'Inspections with Hive Beetles Present'}}
-                    y={{data: filteredData.avg_30DayWeight, label: 'Honey Production (lbs)'}}
-                />
-                <TrendChart
-                    title={'Impact of Wax Moths on Honey Production'}
-                    x={{data: filteredData.waxMothsPresent, label: 'Inspections with Wax Moths Present'}}
-                    y={{data: filteredData.avg_30DayWeight, label: 'Honey Production (lbs)'}}
-                />
-                <TrendChart
-                    title={'Impact of Wasps on Honey Production'}
-                    x={{data: filteredData.waspsHornetsPresent, label: 'Inspections with Wasps Present'}}
-                    y={{data: filteredData.avg_30DayWeight, label: 'Honey Production (lbs)'}}
-                />
-                <TrendChart
-                    title={'Impact of Mice on Honey Production'}
-                    x={{data: filteredData.micePresent, label: 'Inspections with Mice Present'}}
-                    y={{data: filteredData.avg_30DayWeight, label: 'Honey Production (lbs)'}}
-                />
-                <TrendChart
-                    title={'Impact of Robber Bees on Honey Production'}
-                    x={{data: filteredData.robberBeesPresent, label: 'Inspections with Robber Bees Present'}}
-                    y={{data: filteredData.avg_30DayWeight, label: 'Honey Production (lbs)'}}
-                />
-            </div>
+            <GraphSectionHeader>
+                <hr/>
+                <h3>Impact of Pests</h3>
+                <hr/>
+            </GraphSectionHeader>
+            <PestImpacts filteredData={filteredData}/>
+            <br />
+            <br />
+            <br />
+            <br />
         </StyledAnalysis>
     );
 }

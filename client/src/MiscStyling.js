@@ -326,7 +326,6 @@ const StyledContainer = styled.div`
 
 const StyledAnalysis = styled(StyledContainer)`
     display: grid;
-    // justify-content: stretch;
     h2, span {
       text-align: center;
     }
@@ -337,9 +336,9 @@ const StyledAnalysis = styled(StyledContainer)`
 
     .graph-container {
         display: grid;
-        // justify-content: center;
         text-align: center;
-        width: 100%;
+        width: 90vw;
+        place-content: center;
         grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
         gap: 1%;
     }
@@ -356,6 +355,24 @@ const Alert = styled.span`
   color: red;
 `;
 
+const GraphSectionHeader = styled.div`
+  width: 100%;
+  place-items: center;
+  display: grid;
+
+  hr {
+    border: 1px solid var(--honey);
+    padding: 0;
+    color: white;
+    width: 90%;
+  }
+
+  h3 {
+    color: var(--honey);
+    text-align: center;  
+  }
+`;
+
 export { StyledMenuItem, StyledNavLink, StyledLink, StyledMain, StyledForm, 
   StyledSubmit, StyledDeleted, CardContainer, BorderGlow, Button, 
-  HexagonButton, StyledCard, StyledContainer, StyledAnalysis, PlotContainer, Alert }
+  HexagonButton, StyledCard, StyledContainer, StyledAnalysis, PlotContainer, Alert, GraphSectionHeader }
