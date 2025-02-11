@@ -11,15 +11,20 @@ const StyledFooter = styled.footer`
     div {
         width: 100%;
         display: flex;
-        justify-content: end;
+        align-items: end;
+        justify-content: space-between;
 
-        img {
+        #bees {
+            width: 20%;
+            height: auto;
+            object-fit: contain;
+        }   
+
+        #hexagons {
             width: 70%;
         }        
     }
 
-
-    
     section {
         position: absolute;
         bottom: 0;
@@ -27,33 +32,36 @@ const StyledFooter = styled.footer`
 
         p {
             color: var(--honey);
+            text-align: center;
         }
     }
 `
 
-const Bees = styled.img`
-  position: absolute;
-  bottom: 0;
-  left: 5%;
-  width: 20vw;
-`
+// const Bees = styled.img`
+//   position: absolute;
+//   bottom: 0;
+//   left: 5%;
+//   width: 20vw;
+// `
 
 const Footer = () => {
 
     return (
         <StyledFooter id="footer">
-            <Bees
-                src='/images/three_bees.png'
-                alt='bees flying' 
-            />
             <div>
                 <img
+                    id='bees'
+                    src='/images/three_bees.png'
+                    alt='bees flying' 
+                />
+                <img
+                    id='hexagons'
                     src={'images/orange_hexagons.png'}
                     alt='Honeycomb watercolor'
                 />
             </div>
             <section>
-                <p>Phase 5 Project</p>
+                <p>This website was developed for the capstone project at FlatIron School</p>
             </section>
         </StyledFooter>
     );

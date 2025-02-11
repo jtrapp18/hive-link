@@ -50,7 +50,7 @@ const ForumForm = ({ initObj, addForum, updateForum, deleteForum, deleted }) => 
     <div>
       {isEditing ? (
         <StyledForm onSubmit={formik.handleSubmit}>
-          <h3>{initObj ? "Forum Details" : "Add New Forum Post"}</h3>
+          <h2>{initObj ? "Forum Details" : "Add New Forum Post"}</h2>
           <br />
           <div className="form-input">
             <label htmlFor="category">Category</label>

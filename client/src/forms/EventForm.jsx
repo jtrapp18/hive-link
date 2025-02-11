@@ -44,7 +44,7 @@ const EventForm = ({ initObj, addEvent, updateEvent, cancelEvent, deleted }) => 
 
   if (deleted) return  (
     <StyledDeleted>
-      <h1>Event Cancelled</h1>
+      <h2>Event Cancelled</h2>
       <div>
         <label>Title:</label>
         <p>{formik.values.title}</p>

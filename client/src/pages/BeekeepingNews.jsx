@@ -17,10 +17,12 @@ const ArticleContainer = styled.div`
 
 const BeekeepingNews = () => {
   const [articles, setArticles] = useState([]);
+  const [queryApplied, setQueryApplied] = useState('');
 
   const pullFromSearch = (searchQuery) => {
     getBeekeepingNews(searchQuery).then(json => {
       setArticles(json.items);
+      setQueryApplied(searchQuery);
     });
   };
 
@@ -33,13 +35,12 @@ const BeekeepingNews = () => {
       <h1>Recent Beekeeping News</h1>
       <h3>. . . . . </h3>
       <SearchBar pullFromSearch={pullFromSearch} />
+      {queryApplied && <h3>Results for {queryApplied}</h3>}
       <br />
       <ArticleContainer>
         {articles.map((article, index) => (
-          <MotionWrapper index={index}>
-            <article
-              key={article.link}
-            >
+          <MotionWrapper index={index} key={article.link}>
+            <article>
               <a href={article.link} target='_blank'>{article.title}</a>
               <p>{article.snippet}</p>
               <hr />

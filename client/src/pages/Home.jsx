@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import MotionWrapper from '../styles/MotionWrapper'
 
 const StyledContainer = styled.div`
   height: var(--size-body);
@@ -29,7 +30,7 @@ const StyledContainer = styled.div`
     object-fit: cover;
     object-position: top;
     opacity: 0;
-    animation: fadeIn 1s ease-in-out forwards;
+    animation: fadeIn 3s ease-in-out forwards;
   }
 
 `;
@@ -37,16 +38,12 @@ const StyledContainer = styled.div`
 function Home() {
   return (
     <StyledContainer>
-        <div>
+        <MotionWrapper index={1}>
           <h1>Hive Link</h1>
+        </MotionWrapper>
+        <MotionWrapper index={2}>
           <h3>A Beekeeper Network Focused on Building Healthier Hives</h3>
-        </div>
-        {/* "Stronger Together, Like the Hive."
-        "Working Together, Thriving Together."
-        "In Unity, the Hive Thrives."
-        "Collaboration Fuels the Hive."
-        "Like Bees, We Flourish Together." */}
-        {/* <h3>Together, We Strengthen the Hive.</h3> */}
+        </MotionWrapper>
         <img
             src="/images/bee_analysis.jpeg" // Provide the relative or absolute path to the image
             alt="First slide"

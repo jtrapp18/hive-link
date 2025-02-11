@@ -76,7 +76,7 @@ const HiveForm = ({ initObj, viewHive }) => {
     <div>
       {isEditing ? (
         <StyledForm onSubmit={formik.handleSubmit}>
-          <h3>{initObj ? "Update Hive Details" : "Add New Hive"}</h3>
+          <h2>{initObj ? "Update Hive Details" : "Add New Hive"}</h2>
           <br />
           <div className="form-input">
             <label htmlFor="dateAdded">Date Added</label>

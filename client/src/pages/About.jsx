@@ -48,7 +48,7 @@ function About() {
           <h1>Hive Link</h1>
           <h3>Collaboration is the Heart of the Hive.</h3>
           <p>
-            One of the first lessons I learned as a beekeeper is that having bees is easy, but keeping bees is another story…
+            One of the first lessons I learned as a beekeeper is that getting bees is easy, but keeping bees is another story…
           </p>
           <p>
             Honey bees are sensitive to a variety of factors, and as such, recordkeeping is critical to understanding the patterns and needs of the hive.

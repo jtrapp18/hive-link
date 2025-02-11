@@ -49,9 +49,9 @@ const StyledMain = styled.main`
 `;
 
 const StyledForm = styled.form`
-  width: 500px;
+  width: 700px;
   max-width: 90vw;
-  padding: 10%;
+  padding: 1% 10% 1% 10%;
   // border: 3px double var(--yellow);
   overflow-y: auto;
 
@@ -82,9 +82,9 @@ const StyledForm = styled.form`
 `
 
 const StyledSubmit = styled.div`
-  width: 500px;
+  width: 700px;
   max-width: 90vw;
-  padding: 10%;
+  padding: 1% 10% 1% 10%;
   display: flex;
   flex-direction: column;
 
@@ -118,7 +118,7 @@ const StyledDeleted = styled.div`
   display: flex;
   flex-direction: column;
 
-  h1 {
+  h2 {
     padding: 5px;
     border-radius: 200px;
     text-align: center;

@@ -69,8 +69,7 @@ const HoneyForm = ({ initObj, viewHoney }) => {
     <div>
       {isEditing ? (
         <StyledForm onSubmit={formik.handleSubmit}>
-          <h3>{initObj ? "Update Honey Pull" : "Add New Honey Pull"}</h3>
-
+          <h2>{initObj ? "Update Honey Pull" : "Add New Honey Pull"}</h2>
           <div className="form-input">
             <label htmlFor="dateReset">Start Date</label>
             <input

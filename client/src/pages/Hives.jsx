@@ -38,9 +38,8 @@ const Hives = () => {
           />
           {hives.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded))
           .map((hive, index)=>
-            <MotionWrapper index={index}>
+            <MotionWrapper key={hive.id} index={index}>
               <HiveCard
-                  key={hive.id}
                   {...hive}
               />
             </MotionWrapper>

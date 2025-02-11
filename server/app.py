@@ -129,15 +129,27 @@ class UserById(Resource):
         user = User.query.get(user_id)
         if not user:
             return {'error': 'User not found'}, 404
-        
+
         data = request.get_json()
 
+        # Check if username or email have changed
+        if 'username' in data and data['username'] != user.username:
+            user.username = data['username']
+
+        if 'email' in data and data['email'] != user.email:
+            # Check if the new email is already taken (excluding the current user)
+            if db.session.query(User).filter(User.email == data['email'], User.id != user.id).first():
+                return {'error': 'Email address is already in use.'}, 400
+            user.email = data['email']
+
+        # Update other fields
         for attr in data:
-            setattr(user, attr, data.get(attr))
+            if attr not in ['username', 'email']:  # Skip updating username and email if not changed
+                setattr(user, attr, data.get(attr))
 
         db.session.commit()
         return user.to_dict(), 200
-    
+
 class Hives(Resource):
     def get(self):
         hives = [hive.to_dict() for hive in Hive.query.all()]
