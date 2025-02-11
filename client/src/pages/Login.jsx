@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
+import AccountForm from '../forms/AccountForm'
 import LoginForm from '../forms/LoginForm'
-import SignupForm from '../forms/SignUpForm'
 import LoggedInConfirm from '../components/LoggedInConfirm';
 import Error from '../styles/Error';
 import { Button } from '../MiscStyling';
@@ -28,7 +28,7 @@ function Login({errMessage}) {
       }
       {showSignUp &&
         <>
-          <SignupForm setShowConfirm={setShowConfirm}/>
+          <AccountForm setShowConfirm={setShowConfirm}/>
           <p>Already have an account?</p>
           <Button
             onClick={()=>setShowSignUp(false)}

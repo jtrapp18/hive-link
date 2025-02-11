@@ -7,26 +7,58 @@ import { StyledForm, Button } from "../MiscStyling";
 import useCrudStateDB from '../hooks/useCrudStateDB';
 import FormSubmit from '../components/FormSubmit';
 import { IMaskInput } from 'react-imask';
+import { postJSONToDb, snakeToCamel } from "../helper";
 
-const AccountForm = () => {
+const AccountForm = ({ setShowConfirm }) => {
   const { user, setUser } = useContext(UserContext); // User info from context
-  const [isEditing, setIsEditing] = useState(false); // Start in edit mode
+  const [isEditing, setIsEditing] = useState(!user); // Start in edit mode
   const { updateItem } = useCrudStateDB(setUser, "users");
 
-  // Initialize form values from user context
-  const initialValues = {
-    username: user.username || "",
-    email: user.email || "",
-    firstName: user?.firstName || "",
-    lastName: user?.lastName || "",
-    phoneNumber: user.phoneNumber || "",
-    zipcode: user.zipcode || "",
-  };
+  const initialValues = user
+  ? {
+      username: user.username || "",
+      email: user.email || "",
+      firstName: user.firstName || "",
+      lastName: user.lastName || "",
+      phoneNumber: user.phoneNumber || "",
+      zipcode: user.zipcode || "",
+    }
+  : {
+      username: "",
+      email: "",
+      firstName: "",
+      lastName: "",
+      phoneNumber: "",
+      zipcode: "",
+      password: "",
+      password_confirmation: "",
+    };
 
-  const submitToDB = (body) => {
-    updateItem(body, user.id); // Update user in database
-    setIsEditing(false);
-  };
+  const submitToDB = user
+  ? (body) => {
+      updateItem(body, user.id); // Update user in database
+      setIsEditing(false);
+    }
+  : async (body, setErrors) => { // Make this function async directly
+      try {
+        const newUser = await postJSONToDb("account_signup", body);
+        if (newUser) {
+          const userTransformed = snakeToCamel(newUser);
+          setUser(userTransformed);
+          setShowConfirm(true);
+        }
+      } catch (error) {
+        const errors = {};
+
+        if (error.message.toLowerCase().includes('username')) {
+          errors.username = 'Username already taken.';
+        } 
+        if (error.message.toLowerCase().includes('email')) {
+          errors.email = 'Email already registered.';
+        }
+        setErrors(errors);
+      }
+    };
 
   const cancelChange = () => {
     formik.resetForm();
@@ -56,19 +88,30 @@ const AccountForm = () => {
     zipcode: Yup.string()
       .matches(/^\d{5}(-\d{4})?$/, "Invalid zip code format")
       .required("Zip code is required."),
+    username: Yup.string()
+      .required('Username is required')
+      .min(3, 'Username must be at least 3 characters'),
+    password: user
+      ? Yup.string().notRequired() // Password is not required for existing users
+      : Yup.string()
+          .required("Password is required")
+          .min(8, "Password must be at least 8 characters long")
+          .matches(/[A-Z]/, "Password must include at least one uppercase letter")
+          .matches(/[a-z]/, "Password must include at least one lowercase letter")
+          .matches(/\d/, "Password must include at least one number")
+          .matches(/[!@#$%^&*(),.?":{}|<>]/, "Password must include at least one special character"),
+    password_confirmation: user
+      ? Yup.string().notRequired() // Password confirmation is not required for existing users
+      : Yup.string()
+          .required("Password confirmation is required")
+          .oneOf([Yup.ref("password"), null], "Passwords must match"),
   });
 
   const formik = useFormik({
     initialValues,
     validationSchema,
-    onSubmit: (values) => {
-      const body = {
-        ...Object.fromEntries(
-          Object.entries(values).map(([key, value]) => [key, value === "" ? null : value])
-        ),
-      };
-
-      submitToDB(body); // Submit updated data to the backend
+    onSubmit: (values, { setErrors }) => {
+      submitToDB(values, setErrors); // Submit updated data to the backend
     },
   });
 
@@ -158,10 +201,47 @@ const AccountForm = () => {
               <div className="error">{formik.errors.zipcode}</div>
             )}
           </div>
-          <div>
-            <Button type="button" onClick={cancelChange}>Cancel</Button>
-            <Button type="submit">Save Changes</Button>
-          </div>
+          {!user &&
+            <>
+              <div>
+                <label htmlFor="password">Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={formik.values.password}
+                  onChange={formik.handleChange}
+                  autoComplete="current-password"
+                />
+                {formik.touched.password && formik.errors.password ? (
+                  <Error>{formik.errors.password}</Error>
+                ) : null}
+              </div>
+              <div>
+                <label htmlFor="password_confirmation">Password Confirmation</label>
+                <input
+                  type="password"
+                  id="password_confirmation"
+                  name="password_confirmation"
+                  value={formik.values.password_confirmation}
+                  onChange={formik.handleChange}
+                  autoComplete="current-password"
+                />
+                {formik.touched.password_confirmation && formik.errors.password_confirmation ? (
+                  <Error>{formik.errors.password_confirmation}</Error>
+                ) : null}
+              </div>
+              <div>
+                <Button type="submit">Sign Up</Button>
+              </div>
+            </>
+          }
+          {!!user && 
+            <div>
+              <Button type="button" onClick={cancelChange}>Cancel</Button>
+              <Button type="submit">Save Changes</Button>
+            </div>
+          }
         </StyledForm>
       ) : (
         <FormSubmit

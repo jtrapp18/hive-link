@@ -56,23 +56,22 @@ function SignUpForm({ setShowConfirm }) {
       };
 
       try {
-        postJSONToDb("login", body)
-        .then((user) => {
-          const userTransformed = snakeToCamel(user);
-          setUser(userTransformed);
-          setShowConfirm(true);
-        });
+        const newUser = await postJSONToDb("account_signup", body);
+        if (newUser) {
+            setUser(newUser);
+            setShowConfirm(true);
+        }
       } catch (error) {
-        const errors = {};
+          const errors = {};
 
-        if (error.message.toLowerCase().includes('username')) {
-          errors.username = 'Username already taken.';
-        }
-        if (error.message.toLowerCase().includes('email')) {
-          errors.email = 'Email already registered.';
-        }
+          if (error.message.toLowerCase().includes('username'))  {
+            errors.username = 'Username already taken.';
+          } 
+          if (error.message.toLowerCase().includes('email'))  {
+            errors.email = 'Email already registered.';
+          }
 
-        setErrors(errors);
+          setErrors(errors);
       }
     }
   });

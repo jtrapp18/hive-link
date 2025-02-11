@@ -18,18 +18,12 @@ function LoginForm({ setShowConfirm }) {
       const body = { username: values.username, password: values.password };
   
       try {
-        postJSONToDb("login", body)
-        .then((user) => {
-          const userTransformed = snakeToCamel(user);
-          setUser(userTransformed);
-          setShowConfirm(true);
-        });
+        const user = await postJSONToDb("login", body);  // Await the promise
+        const userTransformed = snakeToCamel(user);
+        setUser(userTransformed);
+        setShowConfirm(true);
       } catch (error) {
-        console.log("Error object:", error);
-        
-        console.log(error.message)
-          // Display the error message from the backend
-          setErrors({ password: error.message });
+        setErrors({ password: error.message });
       }
     },
     validate: (values) => {

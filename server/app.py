@@ -63,6 +63,7 @@ class AccountSignup(Resource):
                 username=json['username'],
                 first_name=json['first_name'],
                 last_name=json['last_name'],
+                phone_number=json['phone_number'],
                 email=json['email'],
                 zipcode=json['zipcode']
                 )
