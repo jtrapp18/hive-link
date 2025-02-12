@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import usePopupForm from '../hooks/usePopupForm';
 import BackButton from '../components/BackButton';
 import HiveCard from '../cards/HiveCard';
+import AnalyticsLink from '../components/AnalyticsLink'
 
 const HiveForm = lazy(() => import('../forms/HiveForm'));
 const HoneyPulls = lazy(() => import('../components/HoneyPulls'));
@@ -66,12 +67,19 @@ const HiveDetails = () => {
       <HivePopup
         viewHive={setActiveHive}
       />
-        {activeTab==='honeyPulls' &&
-          <HoneyPulls />
-        }
-        {activeTab==='inspections' &&
-          <Inspections />
-        }
+      {!activeTab &&
+        <div>
+          <p>Click 'Edit Details' to modify your hive's information, or select 'Honey Pulls' or 'Inspections' to view, add, or update honey recordings and inspection data.</p>
+          <AnalyticsLink />
+        </div>
+      }
+
+      {activeTab==='honeyPulls' &&
+        <HoneyPulls />
+      }
+      {activeTab==='inspections' &&
+        <Inspections />
+      }
     </StyledContainer>
   );
 };

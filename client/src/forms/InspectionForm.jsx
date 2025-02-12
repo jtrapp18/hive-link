@@ -50,9 +50,6 @@ const InspectionForm = ({ initObj, honeyPullId, viewInspection }) => {
       2: ["temp", "humidity", "weatherConditions"],
       5: ["activitySurroundingHive", "stabilityInHive"]
     };
-
-    console.log(step)
-    console.log(errors)
   
     // Get errors relevant to the current step
     const stepErrors = Object.keys(errors).filter(field =>
@@ -525,10 +522,20 @@ const InspectionForm = ({ initObj, honeyPullId, viewInspection }) => {
             <hr />
             <Button type="submit">{initObj ? "Submit Updates" : "Submit New Inspection"}</Button>
             {(formik.errors.dateChecked || formik.errors.bias) && (
-              <Error>Fix errors on page 1 before submitting</Error>
+              <div 
+                className='submit-error' 
+                onClick={()=>setStep(1)}
+              >
+                <Error>Fix errors on page 1 before submitting</Error>
+              </div>
             )}
             {(formik.errors.temp || formik.errors.humidity || formik.errors.weatherConditions) && (
-              <Error>Fix errors on page 2 before submitting</Error>
+              <div 
+                className='submit-error' 
+                onClick={()=>setStep(2)}
+              >
+                <Error>Fix errors on page 2 before submitting</Error>
+              </div>
             )}
             <hr />
             <br />

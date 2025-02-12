@@ -5,8 +5,6 @@ import { scrollToTop } from "../helper";
 import { UserContext } from '../context/userProvider';
 import { userLogout } from "../helper";
 
-// Styled components
-
 const StyledDiv = styled.div`
     height: var(--height-header);
     position: relative;

@@ -5,8 +5,9 @@ import { Button, CardContainer } from '../MiscStyling';
 import usePopupForm from '../hooks/usePopupForm';
 import HiveToast from '../styles/HiveToast';
 import MotionWrapper from '../styles/MotionWrapper';
+import AnalyticsLink from './AnalyticsLink';
+import InspectionCard from '../cards/InspectionCard';
 
-const InspectionCard = lazy(() => import('../cards/InspectionCard'));
 const InspectionForm = lazy(() => import('../forms/InspectionForm'));
 
 const Inspections = () => {
@@ -36,6 +37,11 @@ const Inspections = () => {
   return (
         <>
             <h3>Inspections</h3>
+            <h3>. . . . . </h3>
+            <div>
+              <p>Log your latest hive inspection for the current honey pull round.</p>
+              <AnalyticsLink />
+            </div>
             <div>
                 <Button onClick={clickNewInspection}>Record Hive Inspection</Button>
                 {showToast==='inspection' && 

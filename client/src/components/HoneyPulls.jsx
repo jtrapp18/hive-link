@@ -7,8 +7,9 @@ import DrippingHoney from '../components/DrippingHoney';
 import usePopupForm from '../hooks/usePopupForm';
 import HiveToast from '../styles/HiveToast';
 import MotionWrapper from '../styles/MotionWrapper';
+import AnalyticsLink from './AnalyticsLink';
+import HoneyCard from '../cards/HoneyCard';
 
-const HoneyCard = lazy(() => import('../cards/HoneyCard'));
 const HoneyForm = lazy(() => import('../forms/HoneyForm'));
 
 const HoneyPulls = () => {
@@ -40,8 +41,14 @@ const HoneyPulls = () => {
       <>
         <DrippingHoney />
         <h3>Honey Pulls</h3>
+        <h3>. . . . . </h3>
+        <div>
+          <p>Track your honey harvest by setting up honey pull rounds for your hive. Record the dates between each pull and log the weight of the honey collected in pounds.</p>
+          <AnalyticsLink />
+        </div>
         <div>
           <Button onClick={clickNewHoney}>Add Honey Pull</Button>
+          <br />
           {showToast==='honey' && 
             <HiveToast 
               onClose={()=>setShowToast(null)}

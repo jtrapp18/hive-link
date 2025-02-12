@@ -76,6 +76,10 @@ const StyledForm = styled.form`
   span {
     color: gray;
   }
+
+  .submit-error {
+    cursor: pointer;
+  }
 `
 
 const StyledSubmit = styled.div`
