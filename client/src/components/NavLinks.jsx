@@ -1,7 +1,5 @@
-import { useState } from "react";
 import { StyledMenuItem, StyledNavLink } from "../MiscStyling";
 import { FaUserAlt } from 'react-icons/fa'; // Import icons
-import AccountDropdown from "./AccountDropdown";
 import styled from "styled-components";
 
 const StyledAccountIcon = styled.div`
@@ -11,7 +9,6 @@ const StyledAccountIcon = styled.div`
 `
 
 function NavLinks({ handleClick, setIsMenuOpen }) {
-  // const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <>

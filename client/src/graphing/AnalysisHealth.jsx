@@ -1,19 +1,10 @@
 import { lazy } from 'react'
 import { StyledAnalysis } from '../MiscStyling';
 import styled from 'styled-components'
-
 import LinearHiveStats from './LinearHiveStats';
-// const LinearHiveStats = lazy(()=> import('./LinearHiveStats'));
+
 const TreatmentImpacts = lazy(()=> import('./TreatmentImpacts'));
 const TempVsMites = lazy(()=> import('./TempVsMites'));
-
-const Hexagons = styled.img`
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 20vw;
-  animation: slideDown 1s ease-out forwards;
-`
 
 const AnalysisHealth = ({graphData, label, filters}) => {
 
@@ -35,10 +26,6 @@ const AnalysisHealth = ({graphData, label, filters}) => {
 
     return (
         <StyledAnalysis>
-            <Hexagons
-                src='/images/hexagon_design.png'
-                alt='hexagon pattern'
-            />
             <h2>{label}</h2>
             {isUserOnly &&
                 <>

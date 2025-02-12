@@ -5,6 +5,7 @@ import Error from '../styles/Error';
 import { formattedTime } from "../helper";
 
 const StyledCard = styled.article`
+    width: 100%;
 
     border-bottom: 3px double var(--honey);
     padding: 3%;
@@ -67,15 +68,21 @@ const AnalysisCard = ({ hive, prediction }) => {
 
     const { predictionData } = useOutletContext();
     const { honeyPulls } = hive;
+
+    if (honeyPulls.length===0) return <StyledCard>No honey pull rounds have been recorded for Hive {hive.id}</StyledCard>
+    
     const sortedHoneyPulls = [...honeyPulls].sort((a, b) => new Date(a.datePulled) - new Date(b.datePulled));
     const latestHoneyPull = sortedHoneyPulls[0];
+
+    if (latestHoneyPull.inspections.length===0) return <StyledCard>No inspections have been logged for Hive {hive.id}</StyledCard>
+     
     const sortedInspections = [...latestHoneyPull.inspections].sort((a, b) => new Date(a.dateChecked) - new Date(b.dateChecked));
     const latestInspection = sortedInspections[0];
+
     const {dateChecked, hasTwistedLarvae, hasChalkbrood, varroaMiteCount, bias, hasEggs, hasLarvae} = latestInspection;
     const atRisk = hasTwistedLarvae || hasChalkbrood || varroaMiteCount > 3 || bias < 3 || !hasEggs || !hasLarvae;
     const { modelRunDate, predRunDate } = predictionData;
 
-    // const userHives = honeyPulls.filter((honeyPull) => honeyPull.userId === user.id)
     const inspectionCount = honeyPulls.reduce((accum, honeyPull) => honeyPull.inspections.length + accum, 0)
 
     return (

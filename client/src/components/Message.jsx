@@ -10,7 +10,7 @@ const StyledMessage = styled.div`
     display: flex;
     flex-direction: column;
     align-items: start;
-    margin: 10px;
+    margin: 3% 0%;
     width: 100%;
 
     .message-info {
@@ -38,14 +38,14 @@ const StyledMessage = styled.div`
     }
 
     .message-main {
-        width: 80%;
+        width: 95%;
     }
 
     &.self {
         align-items: end;
 
         .message-bubble {
-            background: var(--light-gray);        
+            background: var(--light-orange);
         }
     }
 
@@ -56,7 +56,7 @@ const StyledMessage = styled.div`
     .message-bubble, .message-editing {
         border: 1px solid var(--honey);
         padding: 10px;
-        border-radius: 20px;
+        border-radius: 15px;
         background: white;
 
         p {
@@ -65,11 +65,12 @@ const StyledMessage = styled.div`
     }
 
     .message-editing {
-        // background: var(--yellow);
-        color: black;
+        color: blue;
+        background: var(--light-yellow);
         width: 100%;
         border: 3px solid var(--honey);
-        height: fit-content;
+        height: 200px;
+        padding-right: clamp(100px, 5vw, 5vw);
     }
 
     .reply-buttons {
@@ -102,6 +103,12 @@ const Message = ({ id,  userId, msgUser, messageDate, messageText, handleUpdate,
 
     const toggleOptions = () => {
         setShowOptions(prev=>!prev)
+    }
+
+    const submitCancel = () => {
+        setEditMode(false);
+        setShowOptions(false);
+        setCancelConfirm(false);
     }
 
     const submitEdit = () => {
@@ -144,13 +151,13 @@ const Message = ({ id,  userId, msgUser, messageDate, messageText, handleUpdate,
                     {editMode &&
                         <div className='options-container'>
                             <button onClick={submitEdit}>Confirm Changes</button>
-                            <button onClick={()=>setEditMode(false)}>Cancel</button>
+                            <button onClick={submitCancel}>Cancel</button>
                         </div>
                     }
                     {cancelConfirm &&
                         <div className='options-container'>
                             <button onClick={submitDelete}>Confirm Delete</button>
-                            <button onClick={()=>setCancelConfirm(false)}>Cancel</button>
+                            <button onClick={submitCancel}>Cancel</button>
                         </div>
                     }
                 </div>

@@ -56,8 +56,8 @@ const Inspections = () => {
                 .map((inspection, index) => (
                 <MotionWrapper key={inspection.id} index={index}>
                     <InspectionCard
-                    inspection={inspection}
-                    setActiveInspection={setActiveInspection}
+                      inspection={inspection}
+                      setActiveInspection={setActiveInspection}
                     />
                 </MotionWrapper>
                 ))}

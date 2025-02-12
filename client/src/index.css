@@ -1,12 +1,13 @@
 :root {
   /* --green: #0b7c21; */
   --green: #4E7839;
-  --light-yellow: #e9e5bc;
+  --light-yellow: #fbf4a4;
   --honey: #FFB300;
   --brown: #6B4226;
   --dark-purple: #301934;
   --light-green: #9DC183;
   --light-peach: #fae9d8;
+  --light-orange: rgb(247, 216, 160);
   /* --dark-green: #06402B; */
   --bright-blue: rgb(40, 203, 215);
   --dark-green: #334F26;
@@ -251,6 +252,15 @@ div {
 @keyframes slideDown {
   from {
     transform: translateY(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideDiagonal {
+  from {
+    transform: translateY(-100%) translateX(-100%);
   }
   to {
     transform: translateX(0);

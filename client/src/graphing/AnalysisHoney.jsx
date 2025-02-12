@@ -1,10 +1,7 @@
 import { useState, lazy } from 'react';
-// import TrendChart from './TrendChart';
-// import PieChartComponent from './PieChart';
 import { StyledAnalysis } from '../MiscStyling';
 import Loading from '../pages/Loading';
 import { camelToProperCase } from '../helper';
-import DrippingHoney from '../components/DrippingHoney';
 
 import BasicHoneyStats from './BasicHoneyStats'
 // const BasicHoneyStats = lazy(() => import('./BasicHoneyStats'));
@@ -39,7 +36,6 @@ const AnalysisHoney = ({graphData, label, filters}) => {
 
     return (
         <StyledAnalysis>
-            <DrippingHoney />
             <h2>{label}{filterLabel ? ` for ${camelToProperCase(filterLabel)}` : ''}</h2>
             <BasicHoneyStats 
                 filterLabel={filterLabel} 

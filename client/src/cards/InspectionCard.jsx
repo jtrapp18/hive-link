@@ -1,12 +1,6 @@
-import { useEffect, useState, useContext } from 'react';
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import { UserContext } from '../context/userProvider';
 import { StyledCard, Button } from '../MiscStyling';
 
 const InspectionCard = ({ inspection, setActiveInspection}) => {
-    const navigate = useNavigate();
-    const { user } = useContext(UserContext);
     const { id, honeyPullId, dateChecked, fate, hasChalkbrood, hasTwistedLarvae, varroaMiteCount, notes } = inspection
 
     return (

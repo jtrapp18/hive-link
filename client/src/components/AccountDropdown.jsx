@@ -5,8 +5,6 @@ import { UserContext } from '../context/userProvider';
 import { NavLink } from "react-router-dom";
 import { userLogout } from "../helper";
 
-// Styled components
-
 const LinkContainer = styled.div`
   position: absolute;
   top: 100%;
@@ -24,15 +22,6 @@ const LinkContainer = styled.div`
   transform-origin: top; /* Animation starts at the top */
   transform: scaleY(0); /* Initially collapsed */
   transition: transform 0.3s ease-in-out; /* Smooth fold-out animation */
-
-  a {
-    height: 10vh;
-    display: flex;
-    align-items: center;
-    justify-content: end;
-    color: black;
-    font-size: var(--default-font-size);
-  }
 
   &.open {
     transform: scaleY(1); /* Fully expanded */
@@ -57,6 +46,12 @@ const StyledNavLink = styled(NavLink)`
   cursor: pointer;
   padding: 10px;
   font-size: clamp(1.2rem, 1.5vw, 2.2rem);
+
+  height: 10vh;
+  justify-content: end;
+  font-size: var(--default-font-size);
+  align-items: center;
+  display: flex;
 
   &.active {
     text-decoration: overline;

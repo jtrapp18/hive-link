@@ -46,14 +46,6 @@ const LinkContainer = styled.div`
   &.closed {
     transform: scaleY(0); /* Fully collapsed */
   }
-
-  #exit {
-    background: var(--gray);
-    span {
-      cursor: pointer;
-      padding: 5px;
-    }
-  }
 `;
 
 const HamburgerButton = styled.button`
@@ -63,9 +55,8 @@ const HamburgerButton = styled.button`
   cursor: pointer;
   z-index: 1000;
   position: absolute; /* Position it within the header */
-  right: 10vw; /* Adjust spacing from the right */
-  top: 50%;
-  transform: translateY(-50%); /* Center vertically */
+  right: 0;
+  bottom: 0;
   width: 40px;
   height: 30px;
 

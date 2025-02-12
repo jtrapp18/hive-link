@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import styled from "styled-components";
 import {UserContext} from '../context/userProvider'
 import NotLoggedInToast from '../components/NotLoggedInToast'
-import { Button } from '../MiscStyling';
+import { Button, Tag } from '../MiscStyling';
  
 const StyledEventCard = styled.article`
     width: 100%;
@@ -16,12 +16,6 @@ const StyledEventCard = styled.article`
         border-top: 3px double var(--honey);
         justify-content: space-between;
         display: flex;
-
-        span {
-            background: gray;
-            border-radius: 5px;
-            padding: 5px;
-        }
     }
 
     .main-event {
@@ -61,7 +55,7 @@ const EventCard = ({ event, btnLabel, handleEventBtn}) => {
                 <p>{descr}</p>
             </div>
             <div className="btn-container">
-                <span>{`${signups.length} Currently Planning to Attend`}</span>
+                <Tag>{`${signups.length} Planning to Attend`}</Tag>
                 <Button onClick={handleClick}>{btnLabel}</Button>
                 {showToast && <NotLoggedInToast onClose={()=>setShowToast(false)}/>}
             </div>

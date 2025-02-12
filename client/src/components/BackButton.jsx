@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 const StyledContainer = styled.div`
     width: 100%;
+    transform: translateX(calc(500px - 50vw));
 
     button {
         background: rgba(0, 0, 0, .7);
@@ -13,6 +14,10 @@ const StyledContainer = styled.div`
         &:hover {
             color: var(--bright-blue);
         }
+    }
+
+    @media (max-width: 1000px) {
+        transform: translateX(0);
     }
 `
 

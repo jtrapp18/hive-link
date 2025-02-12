@@ -23,6 +23,7 @@ const FormSubmit = ({ label, formValues, setIsEditing }) => {
                 </p>
             </div>
         ))}
+        <br />
         <Button 
             type="button" 
             onClick={() => setIsEditing(true)}

@@ -497,7 +497,7 @@ class Forums(Resource):
         if not user_id:
             return {"error": "User not authenticated"}, 401  # Handle unauthenticated users
         
-        forums = Forum.query.all()  # Fetch all forums
+        forums = Forum.query.order_by(Forum.created_at.asc()).all()  # Oldest first
         
         forums_data = [self.transform_forum(forum) for forum in forums]
         return forums_data, 200
@@ -530,8 +530,16 @@ class ForumById(Resource):
         user_id = session.get('user_id')  # Ensure 'user_id' is in the session
 
         forum_dict = forum.to_dict()
+
         forum_dict['is_started_by_user'] = forum.user_id == user_id
         forum_dict['is_participated_by_user'] = any(message.user_id == user_id for message in forum.messages)
+        
+        # Sort messages in place
+        forum_dict['messages'].sort(key=lambda m: m['message_date'])
+
+        # Sort replies within each message
+        for message in forum_dict['messages']:
+            message['replies'].sort(key=lambda r: r['reply_date'])
 
         return forum_dict
 
@@ -563,8 +571,8 @@ class ForumById(Resource):
 
 class Messages(Resource):
     def get(self):
-        messages = [message.to_dict() for message in Message.query.all()]
-        return messages, 200
+        messages = Message.query.order_by(Message.created_at.asc()).all()  # Oldest first
+        return [message.to_dict() for message in messages], 200
 
     def post(self):
         try:

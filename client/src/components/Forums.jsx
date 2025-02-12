@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { NavLink } from "react-router-dom";
-import { StyledContainer } from '../MiscStyling';
+import { StyledContainer, Tag } from '../MiscStyling';
 import { formattedTime } from '../helper';
 import MotionWrapper from '../styles/MotionWrapper'
 
@@ -19,6 +19,10 @@ const StyledNavLink = styled(NavLink)`
   color: var(--bright-blue);
   text-decoration: underline;
   cursor: pointer;
+
+  &:hover {
+    color: var(--yellow);
+  }
 `
 
 const Forums = ({ forums }) => {
@@ -36,7 +40,7 @@ const Forums = ({ forums }) => {
                 >
                   <h3>{forum.title}</h3>
                 </StyledNavLink>
-                <p><strong>Category: </strong>{forum.category}</p>
+                <Tag>{forum.category}</Tag>
               </StyledArticle>
             </MotionWrapper>
           ))

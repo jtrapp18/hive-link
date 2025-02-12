@@ -5,6 +5,8 @@ import Loading from './Loading'
 import { HexagonButton, StyledContainer } from '../MiscStyling';
 import { UserContext } from '../context/userProvider';
 import { getJSON, snakeToCamel } from '../helper';
+import DrippingHoney from '../components/DrippingHoney';
+import HexagonDesign from '../components/HexagonDesign';
 
 const AnalysisHoney = lazy(() => import('../graphing/AnalysisHoney'));
 const AnalysisHealth = lazy(() => import('../graphing/AnalysisHealth'));
@@ -34,13 +36,13 @@ const Analysis = () => {
           });
       }, []);
 
-    const toProperCase = str => str.replace(/_/g, ' ').replace(/\b\w/g, match => match.toUpperCase());
-
     if (!studyResults) return <Loading />
     if (graphData.length===0) return <Loading />
 
     return (
         <StyledContainer>
+            {(activeTab==='honeyUser' || activeTab==='honeyAll') && <DrippingHoney />}
+            {(activeTab==='healthUser' || activeTab==='healthAll') && <HexagonDesign/>}
             <h1>Hive Analysis</h1>
             <ButtonContainer>
                 {user && <HexagonButton isActive={activeTab==='hivesUser'} onClick={()=>setActiveTab('hivesUser')}>My Hives</HexagonButton>}

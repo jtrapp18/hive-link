@@ -1,9 +1,7 @@
 import { useContext, useState } from 'react';
-import { useOutletContext } from "react-router-dom";
 import { UserContext } from '../context/userProvider';
 import { ForumContext } from '../context/forumProvider';
 import styled from 'styled-components';
-import { formattedTime } from '../helper';
 import { FaPlusCircle, FaMinusCircle } from 'react-icons/fa';
 import Message from '../components/Message';
 import NewMessage from '../forms/NewMessage';

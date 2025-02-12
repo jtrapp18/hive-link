@@ -9,7 +9,7 @@ const Events = ({ events, eventCardProps }) => {
         <span>No scheduled events</span>
       ) : (
         events.map((event, index) => (
-          <MotionWrapper index={index}>
+          <MotionWrapper key={event.id} index={index}>
             <EventCard event={event} {...eventCardProps} />
           </MotionWrapper>
         ))

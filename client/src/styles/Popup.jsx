@@ -46,6 +46,7 @@ const Element = styled.div`
   overflow: auto;
   padding: 3%;
   width: 700px;
+  max-width: 90vw;
   display: flex;
   justify-content: center;
 `;

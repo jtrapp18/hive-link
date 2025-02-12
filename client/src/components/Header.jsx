@@ -7,29 +7,35 @@ import styled from 'styled-components';
 import Logo from './Logo';
 import {UserContext} from '../context/userProvider'
 
-const StyledHeader = styled(Headroom)`
-  padding: 0;
-  margin: 0;
+const StyledHeadRoom = styled(Headroom)`
 
   .headroom {
-    display: flex;
-    justify-content: space-between;
-    background: white;
-    height: var(--height-header);
-
     #logged-in {
       position: absolute;
       right: 10vw;
       top: 0;
       color: var(--honey);
     }
-  }
 
-  #honeycomb {
-    height: 100%;
-    position: absolute;
-    right: 0;
+    #honeycomb {
+      height: 100%;
+      position: absolute;
+      right: 0;
+      top: 0;
+      z-index: 0;
+    }  
   }
+`
+
+const StyledHeader = styled.div`
+  width: 100%;
+  height: var(--height-header);
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  background: white;
+  padding: 1% 5%;
+  align-items: end;
 `
 
 const Header = () => {
@@ -37,15 +43,17 @@ const Header = () => {
   const { user } = useContext(UserContext);
     
     return (
-        <StyledHeader>
-          <Logo />
-          {isMobile ? <MobileNavBar /> : <NavBar />}
-          <img 
-            id='honeycomb'
-            src='images/honeycomb_side.png'
-          />
-          {user && <span id='logged-in'>{`Logged in as ${user.username}`}</span>}
-        </StyledHeader>
+        <StyledHeadRoom>
+          <StyledHeader>
+            <Logo />
+            {isMobile ? <MobileNavBar /> : <NavBar />}
+          </StyledHeader>
+            <img 
+              id='honeycomb'
+              src='images/honeycomb_side.png'
+            />
+            {user && !isMobile && <span id='logged-in'>{`Logged in as ${user.username}`}</span>}
+        </StyledHeadRoom>
     );
 }
 

@@ -1,9 +1,3 @@
-import { useEffect, useState, useContext } from 'react';
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import { deleteJSONFromDb, postJSONToDb } from "../helper";
-import { useOutletContext } from "react-router-dom";
-import { UserContext } from '../context/userProvider';
 import { StyledCard, Button } from '../MiscStyling';
 
 const HoneyCard = ({ honeyPull, setActiveHoneyPull }) => {
@@ -14,7 +8,7 @@ const HoneyCard = ({ honeyPull, setActiveHoneyPull }) => {
             <div 
                 className="main-container"
             >
-                {!datePulled && <span className='current-round'>🐝 Active Round</span>}
+                {!datePulled && <small className='current-round'>🐝 Active Round</small>}
                 <section className='img-section'>
                     <img
                         src='images/dripping_honeycomb.png'

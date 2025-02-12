@@ -93,6 +93,7 @@ const ForumForm = ({ initObj, addForum, updateForum, deleteForum, deleted }) => 
             <label>Title:</label>
             <p>{formik.values.title}</p>
           </div>
+          <br />
           <Button 
             type="button" 
             onClick={() => setIsEditing(true)}

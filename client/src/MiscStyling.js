@@ -5,9 +5,10 @@ import { Link } from "react-scroll";
 const StyledMenuItem = css`
   text-decoration: none;
   position: relative;
-  padding: 0px 10px 0px 10px;
+  padding-left: 3vw;
   cursor: pointer;
-  margin: 0 5px 0 5px;
+  display: flex;
+  align-items: center;
 `;
 
 const StyledNavigation = css`
@@ -34,8 +35,6 @@ const StyledLink = styled(Link)`
 
 const StyledMain = styled.main`
   min-height: var(--size-body);
-  padding: ${(props) => props.isMobile ? '1%' : '20px'};
-  margin: ${(props) => props.isMobile ? '0' : '10px'};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -49,9 +48,8 @@ const StyledMain = styled.main`
 
 const StyledForm = styled.form`
   width: 600px;
-  max-width: 90vw;
+  max-width: 75vw;
   padding: 2%;
-  // border: 3px double var(--yellow);
   overflow-y: auto;
 
   h1 {
@@ -82,7 +80,7 @@ const StyledForm = styled.form`
 
 const StyledSubmit = styled.div`
   width: 650px;
-  max-width: 90vw;
+  max-width: 75vw;
   padding: 2%;
   display: flex;
   flex-direction: column;
@@ -103,10 +101,6 @@ const StyledSubmit = styled.div`
     justify-content: space-between;
     margin: 10px 5px 0px 5px;
     padding: 20px 5px 0px 5px;
-  }
-
-  button {
-    margin-top: 20px;
   }
 `
 
@@ -169,6 +163,7 @@ const Button = styled.button`
   color: black;
   background: var(--yellow);
   min-width: 100px;
+  height: fit-content;
 
   &:hover {
     background: var(--honey);
@@ -228,7 +223,7 @@ const StyledCard = styled.article`
     .current-round {
       position: absolute;
       right: 0;
-      top: 0;
+      top: -3%;
     }
 
     .bottom-container {
@@ -329,6 +324,11 @@ const StyledContainer = styled.div`
 
     h1 {
       text-align: center;
+      padding-top: 2vh;
+    }
+
+    hr {
+      width: 100%;
     }
 `
 
@@ -381,6 +381,15 @@ const GraphSectionHeader = styled.div`
   }
 `;
 
+const Tag = styled.div`
+  background: gray;
+  border-radius: 5px;
+  padding: 5px;
+  color: white;
+  width: fit-content;
+`
+
 export { StyledMenuItem, StyledNavLink, StyledLink, StyledMain, StyledForm, 
   StyledSubmit, StyledDeleted, CardContainer, BorderGlow, Button, 
-  HexagonButton, StyledCard, StyledContainer, StyledAnalysis, PlotContainer, Alert, GraphSectionHeader }
+  HexagonButton, StyledCard, StyledContainer, StyledAnalysis, PlotContainer, 
+  Alert, GraphSectionHeader, Tag }

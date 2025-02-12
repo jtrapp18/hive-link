@@ -1,11 +1,17 @@
+import { useContext } from 'react';
 import styled from 'styled-components';
 
 const StyledHoney = styled.img`
-    position: fixed;
-    right: 5%;
+    position: absolute;
     top: 0;
-    width: 20vw;
+    right: calc(500px - 50vw);
+    width: 275px;
+    max-width: 20vw;
     animation: slideDown 4s ease-out forwards;
+
+    @media (max-width: 1000px) {
+        right: 0px;
+    }
 `
  
 const DrippingHoney = () => {

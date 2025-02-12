@@ -18,6 +18,7 @@ function Login({errMessage}) {
         <>
           {errMessage && <Error>{errMessage}</Error>}        
           <LoginForm setShowConfirm={setShowConfirm}/>
+          <hr />
           <p>Don't have an account?</p>
           <Button
             onClick={()=>setShowSignUp(true)}
@@ -29,6 +30,7 @@ function Login({errMessage}) {
       {showSignUp &&
         <>
           <AccountForm setShowConfirm={setShowConfirm}/>
+          <hr />
           <p>Already have an account?</p>
           <Button
             onClick={()=>setShowSignUp(false)}
