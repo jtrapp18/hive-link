@@ -41,6 +41,9 @@ def add_predicted_values(explanatory_variables, data, model, scaler=None):
         X_scaled_df = X
 
     data['avg_predicted'] = model.predict(X_scaled_df)
+
+    # Ensure positive values (ReLU effect)
+    data['avg_predicted'] = data['avg_predicted'].clip(lower=0)
     data['predicted'] = data['days']*data['avg_predicted']
 
     return data
