@@ -120,7 +120,7 @@ def treatment_dosages(mite_count, prev_treatment=None, prev_dosage=(0, 0, 0, 0),
 def calculate_weekly_honey(temp, varroa_mite_count, super_count, has_larvae, has_eggs, treatment_factor, pests):
 
     """Estimate weekly honey production based on key hive conditions, now factoring in pests."""
-    base_honey = random() * 5  # Base random production (e.g., 0-5 lbs per week)
+    base_honey = randint(0, 5)  # Base random production (e.g., 0-5 lbs per week)
 
     # Temperature effect: More honey in ideal temps (65-85°F)
     temp_factor = max(0.2, 1 - abs(temp - 25) / 15)  # Scales from 0 to 1

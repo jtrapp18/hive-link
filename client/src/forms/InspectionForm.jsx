@@ -100,7 +100,6 @@ const InspectionForm = ({ initObj, honeyPullId, viewInspection }) => {
     formicAcidDosage: Yup.number().min(0, "Formic acid dosage cannot be negative"),
     thymolDosage: Yup.number().min(0, "Thymol dosage cannot be negative"),
     apistanDosage: Yup.number().min(0, "Apistan dosage cannot be negative"),
-    fate: Yup.string().required("Fate is required").oneOf(["Dead", "Swarmed", "Split", "Active"]),
     varroaMiteCount: Yup.number().min(0, "Varroa mite count cannot be negative"),
     hasChalkbrood: Yup.boolean(),
     hasTwistedLarvae: Yup.boolean(),
@@ -132,7 +131,6 @@ const InspectionForm = ({ initObj, honeyPullId, viewInspection }) => {
         formicAcidDosage: initObj?.formicAcidDosage ?? 0,
         thymolDosage: initObj?.thymolDosage ?? 0,
         apistanDosage: initObj?.apistanDosage ?? 0,
-        fate: initObj?.fate || "",
         hasTwistedLarvae: initObj?.hasTwistedLarvae ?? false,
         hasChalkbrood: initObj?.hasChalkbrood ?? false,
         varroaMiteCount: initObj?.varroaMiteCount ?? 0,
@@ -441,25 +439,6 @@ const InspectionForm = ({ initObj, honeyPullId, viewInspection }) => {
         {step === 5 && (
           <>
             <h2>Outcomes</h2>
-            <div className="form-input">
-              <label htmlFor="fate">Fate</label>
-              <select
-                id="fate"
-                name="fate"
-                value={formik.values.fate}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              >
-                <option value="">Select Fate</option>
-                <option value="Dead">Dead</option>
-                <option value="Swarmed">Swarmed</option>
-                <option value="Split">Split</option>
-                <option value="Active">Active</option>
-              </select>
-              {formik.touched.fate && formik.errors.fate && (
-                <Error>{formik.errors.fate}</Error>
-              )}
-            </div>
             <div className="form-input">
               <label htmlFor="varroaMiteCount">Varroa Mite Count</label>
               <input

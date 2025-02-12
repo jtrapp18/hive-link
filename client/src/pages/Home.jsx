@@ -6,6 +6,9 @@ const StyledContainer = styled.div`
   padding: 0;
   margin: 0;
   width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   div {
     padding: 0%;
@@ -13,14 +16,17 @@ const StyledContainer = styled.div`
     flex-direction: column;
     align-items: center;
     text-align: center;
+    max-width: 95vw;
 
-    h1 {
-        font-size: clamp(4.5rem, 5.5vw, 6rem);
+    h1 { 
+        font-size: clamp(3rem, 10vw, 6rem);
         color: var(--honey);
       }
 
     h3 {
+      font-size: clamp(1.2rem, 1.8vw, 1.8rem);
       color: var(--yellow);
+      margin: 1%;
     }  
   }
 
@@ -42,7 +48,7 @@ function Home() {
           <h1>Hive Link</h1>
         </MotionWrapper>
         <MotionWrapper index={2}>
-          <h3>A Beekeeper Network Focused on Building Healthier Hives</h3>
+          <h3>Where Beekeepers come together to build healthier hives</h3>
         </MotionWrapper>
         <img
             src="/images/bee_analysis.jpeg" // Provide the relative or absolute path to the image

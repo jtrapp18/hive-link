@@ -2,8 +2,6 @@
 from lib.config import db, app
 from lib.models import Hive, Inspection, HoneyPull, User, Event, Signup, Forum, Message, Reply
 
-fake = Faker()
-
 with app.app_context():
 
     print("Deleting all records...")

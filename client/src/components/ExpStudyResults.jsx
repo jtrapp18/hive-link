@@ -4,7 +4,8 @@ import { getJSON, snakeToCamel, camelToProperCase, formattedTime } from '../help
 import { ClipLoader } from 'react-spinners';
 
 const FeaturesContainer = styled.div`
-    width: 85%;
+    // width: 85%;
+
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -14,9 +15,10 @@ const FeaturesContainer = styled.div`
     }
 
     ol {
-        width: 100%;
+        width: fit-content;
         column-count: 3;
-        column-gap: space-between;  
+        // column-gap: space-between;
+        // column-gap: 2%; 
     }
 
     small {

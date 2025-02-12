@@ -32,7 +32,7 @@ const LinkContainer = styled.div`
   transition: transform 0.3s ease-in-out; /* Smooth fold-out animation */
 
   a {
-    height: 8vh;
+    height: 9vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -61,35 +61,49 @@ const HamburgerButton = styled.button`
   background: transparent;
   border: none;
   cursor: pointer;
-  padding-right: 10vw;
-  transition: transform 1s ease;
   z-index: 1000;
-
-  &:hover {
-    background: None;
-  }
-
-  span {
-    font-size: clamp(2rem, 4vw, 3rem);
-    color: black;
-  }
+  position: absolute; /* Position it within the header */
+  right: 10vw; /* Adjust spacing from the right */
+  top: 50%;
+  transform: translateY(-50%); /* Center vertically */
+  width: 40px;
+  height: 30px;
 
   @media (max-width: 768px) {
     display: block;
   }
 
   &.open {
-    transform: rotate(45deg) translateY(30%);
+    span:first-child {
+      transform: rotate(45deg) translate(6px, 6px);
+      width: 30px;
+    }
+    
+    span:last-child {
+      transform: rotate(-45deg) translate(4px, -4px);
+      width: 30px;
+    }
   }
 
-  .icon {
-    display: inline-block;
-    transition: transform 0.3s ease; /* Smooth transition for icon scale */
+  span {
+    display: block;
+    height: 3px;
+    background-color: black;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    position: absolute;
+    right: 0; /* Align lines to the right */
+  }
 
-    /* Scale the icon to create a smooth change from ☰ to ✖ */
-    &.open {
-      transform: scale(1.1) rotate(45deg); /* Scale and rotate for the "X" */
-    }
+  span:first-child {
+    width: 30px; /* Longer top line */
+    top: 7px;
+  }
+
+  span:last-child {
+    width: 20px; /* Shorter bottom line */
+    top: 20px;
+  }
 `;
 
 // MobileNavBar Component
@@ -197,10 +211,10 @@ const MobileNavBar = () => {
       <HamburgerButton 
         className={isMenuOpen ? "open" : ""} 
         onClick={toggleMenu}
-        aria-label="Toggle Menu">
-        <span className={`icon ${isMenuOpen ? "open" : ""}`}>
-          {isMenuOpen ? "✕" : "☰"}
-        </span>
+        aria-label="Toggle Menu"
+      >
+        <span></span>
+        <span></span>
       </HamburgerButton>
     </StyledDiv>
   );

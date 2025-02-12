@@ -29,20 +29,15 @@ const StyledFooter = styled.footer`
         position: absolute;
         bottom: 0;
         color: white;
+        max-width: 60%;
 
         p {
             color: var(--honey);
             text-align: center;
+            text-shadow: 1px 1px 2px black;
         }
     }
 `
-
-// const Bees = styled.img`
-//   position: absolute;
-//   bottom: 0;
-//   left: 5%;
-//   width: 20vw;
-// `
 
 const Footer = () => {
 
@@ -61,7 +56,7 @@ const Footer = () => {
                 />
             </div>
             <section>
-                <p>This website was developed for the capstone project at FlatIron School</p>
+                <p><small>This website was developed for the capstone project at FlatIron School</small></p>
             </section>
         </StyledFooter>
     );

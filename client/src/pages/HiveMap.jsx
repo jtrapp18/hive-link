@@ -8,9 +8,9 @@ import styled from 'styled-components';
 import { StyledContainer } from '../MiscStyling';
 
 const StyledMap = styled(MapContainer)`
-  width: 80%;
+  width: 100%;
   height: 600px;
-  max-height: 70vh;
+  max-height: 60vh;
   border: 4px double var(--honey);
   z-index: 0;
 

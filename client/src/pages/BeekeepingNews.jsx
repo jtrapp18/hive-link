@@ -6,6 +6,9 @@ import { StyledContainer } from '../MiscStyling';
 import MotionWrapper from "../styles/MotionWrapper";
 
 const ArticleContainer = styled.div`
+  width: 100%;
+  box-sizing: border-box;
+
   a {
     color: var(--bright-blue);
   }

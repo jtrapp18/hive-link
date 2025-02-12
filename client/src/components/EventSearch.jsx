@@ -6,9 +6,10 @@ import { Button } from '../MiscStyling';
 import styled from 'styled-components';
 
 const SearchContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 90vw;
 
   p {
     margin: 0;
@@ -36,11 +37,11 @@ const SearchContainer = styled.div`
     }
 
     &#zipcode {
-      width: 100px;
+      width: 45px;
     }
 
     &#radius {
-      width: 50px;
+      width: 38px;
     }
   }
 `
@@ -73,17 +74,8 @@ const EventSearch = ({updateFilter}) => {
 
   return (
         <SearchContainer>
-          <p htmlFor='zipcode'>Search near Zipcode: 
-            <input
-              id='zipcode'
-              name='zipcode'
-              onChange={(event)=>setFilterZip(event.target.value)}
-              value={filterZip}
-            >
-            </input>
-
-            within
-
+          <p htmlFor='zipcode'>
+            Search within: 
             <input
               id='radius'
               type="number"
@@ -92,7 +84,14 @@ const EventSearch = ({updateFilter}) => {
               value={filterRadius}
             >
             </input>
-            miles
+            miles of Zipcode:
+            <input
+              id='zipcode'
+              name='zipcode'
+              onChange={(event)=>setFilterZip(event.target.value)}
+              value={filterZip}
+            >
+            </input>
           </p>
           {/* Manually click button to avoid making too many API calls */}
           <section>

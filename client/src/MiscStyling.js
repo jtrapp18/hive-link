@@ -33,10 +33,9 @@ const StyledLink = styled(Link)`
 `
 
 const StyledMain = styled.main`
-
   min-height: var(--size-body);
-  padding: 20px;
-  margin: 10px;
+  padding: ${(props) => props.isMobile ? '1%' : '20px'};
+  margin: ${(props) => props.isMobile ? '0' : '10px'};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -292,7 +291,6 @@ const StyledCard = styled.article`
 
 const PlotContainer = styled.div`
   display: grid;
-  width: 100%;
   height: 400px;
   max-height: 90vh;
   background: white;
@@ -320,12 +318,18 @@ const PlotContainer = styled.div`
 
 const StyledContainer = styled.div`
     width: 1000px;
-    max-width: 90vw;
+    max-width: 98vw;
+    margin: 0;
+    padding: 0% 5%;
 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    h1 {
+      text-align: center;
+    }
 `
 
 const StyledAnalysis = styled(StyledContainer)`

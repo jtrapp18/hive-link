@@ -49,7 +49,6 @@ class Inspection(db.Model, SerializerMixin):
     humidity = db.Column(db.Float, nullable=True)
 
 # outcomes
-    fate = db.Column(db.String(50), nullable=False)
     has_twisted_larvae = db.Column(db.Boolean, nullable=True)    
     has_chalkbrood = db.Column(db.Boolean, nullable=True)
     varroa_mite_count = db.Column(db.Float, nullable=True)
@@ -96,14 +95,6 @@ class Inspection(db.Model, SerializerMixin):
         except ValueError:
             valid_values = ', '.join([category.value for category in CountCategory])
             raise ValueError(f"{key} must be one of {valid_values}.")
-
-    @validates('fate')
-    def validate_fate(self, key, value):
-        """Validates the hive fate."""
-        valid_fates = ['Dead', 'Swarmed', 'Split', 'Active']
-        if value not in valid_fates:
-            raise ValueError(f"Fate must be one of {', '.join(valid_fates)}.")
-        return value
 
     @validates('weather_conditions')
     def validate_weather_conditions(self, key, value):

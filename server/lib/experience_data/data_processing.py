@@ -52,7 +52,7 @@ def normalize_data(hives_mod):
     df_normalized = df_normalized.rename(columns={'id': 'inspection_id'})
     df_normalized = df_normalized.replace({np.nan: None})
 
-    categorical_columns = ['fate', 'material', 'activity_surrounding_hive', 'stability_in_hive']
+    categorical_columns = ['material', 'activity_surrounding_hive', 'stability_in_hive']
     df_normalized = pd.get_dummies(df_normalized, columns=categorical_columns, drop_first=True)
 
     return df_normalized

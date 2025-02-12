@@ -120,7 +120,6 @@ with app.app_context():
         treatment = None
         dosage=(0, 0, 0, 0)
         treatment_streak=0
-        fate='Active'
 
         # keep track of honey per interval
         honey_accum = 0
@@ -151,7 +150,6 @@ with app.app_context():
                 num_pollen_patties=randint(0, 2),
                 num_sugar_syrup_frames=randint(0, 2),
                 **weather_data,  # Unpack the weather dictionary
-                fate=fate,
                 has_twisted_larvae=rc([True]*1 + [False]*10),
                 has_chalkbrood=rc([True]*1 + [False]*10),
                 varroa_mite_count=varroa_mite_count,
@@ -169,11 +167,6 @@ with app.app_context():
 
             inspection_date += relativedelta(weeks=1)
             hive_age_weeks += 1
-
-            if fate=='Active':
-                fate = rc(["Dead", "Swarmed", "Split"]*1 + ["Active"]*20)
-            else:
-                fate='Active'
 
             # Generate random temperature based on date
             weather_data = generate_weather_data(inspection_date)

@@ -8,7 +8,7 @@ const LoadingText = styled.div`
         font-size: clamp(1.4rem, 3.5vw, 2rem);
 
         strong {
-            font-size: clamp(4rem, 6vw, 7rem);
+            font-size: clamp(3rem, 6vw, 7rem);
         }
     }
 `

@@ -7,7 +7,7 @@ const StyledContainer = styled.div`
   margin: 0;
   padding: 20px;
   width: 800px;
-  max-width: 80vw;
+  max-width: 95vw;
   height: var(--size-body);
   position: relative;
 
@@ -19,7 +19,7 @@ const StyledContainer = styled.div`
 
   h1 {
     text-align: center;
-    font-size: clamp(4.5rem, 5.5vw, 6rem);
+    font-size: clamp(2.3rem, 10vw, 6rem);
     color: var(--honey);
     font-weight: bold;
     width: 100%;
@@ -27,6 +27,7 @@ const StyledContainer = styled.div`
   }
 
   h3 {
+    font-size: clamp(1rem, 1.8vw, 1.8rem);
     text-align: center;
     color: var(--yellow);
   }
