@@ -223,7 +223,7 @@ const InspectionForm = ({ initObj, honeyPullId, viewInspection }) => {
           <>
             <h3>Weather</h3>
             <div className="form-input">
-              <label htmlFor="temp">Temperature</label>
+              <label htmlFor="temp">Temperature (°C)</label>
               <input
                 type="number"
                 id="temp"

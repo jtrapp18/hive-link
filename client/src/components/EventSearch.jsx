@@ -1,5 +1,4 @@
 import { useContext, useState } from 'react';
-import {WindowWidthContext} from "../context/windowSize";
 import {UserContext} from '../context/userProvider'
 import { snakeToCamel, getNearbyZipcodes } from '../helper';
 import { Button } from '../MiscStyling';
@@ -10,6 +9,10 @@ const SearchContainer = styled.div`
   flex-direction: column;
   align-items: center;
   max-width: 90vw;
+
+  .zip-error {
+    color: red;
+  }
 
   p {
     margin: 0;
@@ -37,7 +40,7 @@ const SearchContainer = styled.div`
     }
 
     &#zipcode {
-      width: 45px;
+      width: 50px;
     }
 
     &#radius {
@@ -48,34 +51,50 @@ const SearchContainer = styled.div`
 
 const EventSearch = ({updateFilter}) => {
   const { user } = useContext(UserContext);
-  const { isMobile } = useContext(WindowWidthContext);
   const [filterZip, setFilterZip] = useState(!user ? '' : user.zipcode);
   const [filterRadius, setFilterRadius] = useState(5);
   const [isFiltered, setIsFiltered] = useState(false);
+  const [showError, setShowError] = useState(false);
 
-  function apiZipcodeCall() {
+  async function apiZipcodeCall() {
     if (filterZip) {
-      getNearbyZipcodes(filterZip, filterRadius).then((json) => {
-        const zipcodesTransformed = snakeToCamel(json);
-        const zipcodeList = zipcodesTransformed.zipCodes.map(z=>z.zipCode);
-        updateFilter(zipcodeList);
-        setIsFiltered(true);
-
-        console.log("Nearby Zipcodes:", zipcodeList)
-      });
+      try {
+        // Await the async call
+        const json = await getNearbyZipcodes(filterZip, filterRadius);
+        
+        // Check for error in response
+        if (json.error) {
+          console.error("Error fetching nearby zipcodes:", json.error);
+          setShowError(true);
+        } else {
+          const zipcodesTransformed = snakeToCamel(json);
+          const zipcodeList = zipcodesTransformed.zipCodes.map(z => z.zipCode);
+          
+          updateFilter(zipcodeList);
+          setIsFiltered(true);
+          setShowError(false);
+  
+          console.log("Nearby Zipcodes:", zipcodeList);
+        }
+      } catch (error) {
+        // Catch any errors that occur during the async call
+        console.error("Error fetching nearby zipcodes:", error);
+        setShowError(true);
+      }
     }
-  }
+  }  
 
   const clearFilters = () => {
     updateFilter([]);
     setIsFiltered(false);
     setFilterZip('');
+    setShowError(false);
   }
 
   return (
         <SearchContainer>
           <p htmlFor='zipcode'>
-            Search within: 
+            Within: 
             <input
               id='radius'
               type="number"
@@ -99,6 +118,7 @@ const EventSearch = ({updateFilter}) => {
             <Button onClick={clearFilters}>Clear</Button>
           </section>
           {isFiltered ? <span>{`Filtered on events within ${filterRadius} miles of ${filterZip}`}</span> : <span>No Filters Applied</span>}
+          {showError && <span className='zip-error'>{`Zipcode ${filterZip} not found`}</span>}
         </SearchContainer>
     );
   };

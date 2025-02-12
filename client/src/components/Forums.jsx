@@ -32,8 +32,8 @@ const Forums = ({ forums }) => {
         {forums.length === 0 ?
           <span>No forums to show</span> :
           (forums.map((forum, index) =>
-            <MotionWrapper index={index}>
-              <StyledArticle key={forum.title}> 
+            <MotionWrapper key={forum.id} index={index}>
+              <StyledArticle> 
                 <span>{forum.user.username} | {formattedTime(forum.createdAt)}</span>
                 <StyledNavLink
                   to={`${forum.id}`}

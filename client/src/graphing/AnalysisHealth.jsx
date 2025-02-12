@@ -36,6 +36,8 @@ const AnalysisHealth = ({graphData, label, filters}) => {
             <TempVsMites filteredData={filteredData}/>
             <br />
             <TreatmentImpacts filteredData={filteredData}/>
+            <br />
+            <br />
         </StyledAnalysis>
     );
 }

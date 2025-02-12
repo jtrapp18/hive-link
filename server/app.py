@@ -466,6 +466,7 @@ class NearbyZipcodes(Resource):
             return {'error': 'ZIP code is required'}, 400
 
         url = f'https://www.zipcodeapi.com/rest/{API_KEY}/radius.json/{zip_code}/{radius}/mile'
+        print(url)
 
         response = requests.get(url)
 

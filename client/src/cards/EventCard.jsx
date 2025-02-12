@@ -50,7 +50,7 @@ const EventCard = ({ event, btnLabel, handleEventBtn}) => {
             <div 
                 className="main-event"
             >
-                <span>{`${eventDate} | ${zipcode}`}</span>
+                <span>{`${eventDate} | zipcode: ${zipcode}`}</span>
                 <label>{title}</label>
                 <p>{descr}</p>
             </div>

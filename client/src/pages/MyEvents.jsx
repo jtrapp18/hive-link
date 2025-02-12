@@ -8,13 +8,11 @@ import EventForm from '../forms/EventForm'
 import usePopupForm from '../hooks/usePopupForm'
 import useCrudStateDB from '../hooks/useCrudStateDB';
 import Loading from './Loading';
-import styled from 'styled-components';
 import { StyledContainer } from '../MiscStyling';
 import EventSearch from '../components/EventSearch';
 
 const MyEvents = () => {
   const { user } = useContext(UserContext);
-  const { isMobile } = useContext(WindowWidthContext);
   const [events, setEvents] = useState([]);
   const [eventsHosting, setEventsHosting] = useState([]);
   const [eventsAttending, setEventsAttending] = useState([]);

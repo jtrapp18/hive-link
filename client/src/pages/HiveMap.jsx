@@ -50,11 +50,11 @@ const HiveMap = () => {
             position={[zip.lat, zip.lon]}
             icon={L.divIcon({
               html: `<span style="font-size: ${10 + zip.numberOfHives * 5}px; color: gold;">🐝</span>`,  // Bee emoji with size based on hive count
-              className: 'bee-icon', // Optional: You can add custom styles if needed
+              className: 'bee-icon',
             })}
           >
             <Popup>
-              <b>ZIP Code:</b> {zip.zip_code} <br />
+              <b>ZIP Code:</b> {zip.zipCode} <br />
               <b>Number of Hives:</b> {zip.numberOfHives}
             </Popup>
           </Marker>

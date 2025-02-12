@@ -48,6 +48,8 @@ const AnalysisHoney = ({graphData, label, filters}) => {
             <PestImpacts filteredData={filteredData}/>
             <br />
             <TempVsHoney filteredData={filteredData}/>
+            <br />
+            <br />
         </StyledAnalysis>
     );
 }
