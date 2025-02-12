@@ -7,6 +7,7 @@ import { UserContext } from '../context/userProvider';
 import { getJSON, snakeToCamel } from '../helper';
 import DrippingHoney from '../components/DrippingHoney';
 import HexagonDesign from '../components/HexagonDesign';
+import {WindowWidthContext} from '../context/windowSize'
 
 const AnalysisHoney = lazy(() => import('../graphing/AnalysisHoney'));
 const AnalysisHealth = lazy(() => import('../graphing/AnalysisHealth'));
@@ -16,12 +17,15 @@ const ExpStudyResults = lazy(() => import('../components/ExpStudyResults'));
 const ButtonContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 50px;
+  justify-content: center;
+  width: 100%;
+  flex-wrap: wrap;
+  padding: 20px 0;
 `
 
 const Analysis = () => {
     const { user } = useContext(UserContext);
+    const { isMobile } = useContext(WindowWidthContext);
     const { graphData, graphDataUser } = useOutletContext();
     const [activeTab, setActiveTab] = useState(!user ? 'honeyAll' : 'hivesUser');
     const [studyResults, setStudyResults] = useState({});
@@ -45,11 +49,11 @@ const Analysis = () => {
             {(activeTab==='healthUser' || activeTab==='healthAll') && <HexagonDesign/>}
             <h1>Hive Analysis</h1>
             <ButtonContainer>
-                {user && <HexagonButton isActive={activeTab==='hivesUser'} onClick={()=>setActiveTab('hivesUser')}>My Hives</HexagonButton>}
-                {user && <HexagonButton isActive={activeTab==='honeyUser'} onClick={()=>setActiveTab('honeyUser')}>Honey Stats</HexagonButton>}
-                {user && <HexagonButton isActive={activeTab==='healthUser'} onClick={()=>setActiveTab('healthUser')}>Hive Stats</HexagonButton>}                
-                <HexagonButton isActive={activeTab==='honeyAll'} onClick={()=>setActiveTab('honeyAll')}>Honey Trends</HexagonButton>
-                <HexagonButton isActive={activeTab==='healthAll'} onClick={()=>setActiveTab('healthAll')}>Hive Trends</HexagonButton>
+                {user && <HexagonButton isMobile={isMobile} isActive={activeTab==='hivesUser'} onClick={()=>setActiveTab('hivesUser')}>My Hives</HexagonButton>}
+                {user && <HexagonButton isMobile={isMobile} isActive={activeTab==='honeyUser'} onClick={()=>setActiveTab('honeyUser')}>Honey Stats</HexagonButton>}
+                {user && <HexagonButton isMobile={isMobile} isActive={activeTab==='healthUser'} onClick={()=>setActiveTab('healthUser')}>Hive Stats</HexagonButton>}                
+                <HexagonButton isMobile={isMobile} isActive={activeTab==='honeyAll'} onClick={()=>setActiveTab('honeyAll')}>Honey Trends</HexagonButton>
+                <HexagonButton isMobile={isMobile} isActive={activeTab==='healthAll'} onClick={()=>setActiveTab('healthAll')}>Hive Trends</HexagonButton>
             </ButtonContainer>
             {activeTab==='hivesUser' &&
                 <AnalysisUser />

@@ -177,20 +177,21 @@ const Button = styled.button`
 
 const HexagonButton = styled.button`
   position: relative;
-  width: 100px;
-  height: 58px;
+  width: ${props => props.isMobile ? '80px' : '100px'}; // Shrinks size on mobile
+  height: ${props => props.isMobile ? '46px' : '58px'}; // Adjust height proportionally
   border: none;
   cursor: pointer;
   outline: none;
-  font-size: 16px;
+  font-size: ${props => props.isMobile ? '12px' : '16px'}; // Smaller font on mobile
   text-align: center;
-  line-height: 58px;
+  line-height: ${props => props.isMobile ? '46px' : '58px'}; // Adjust line-height proportionally
   display: flex;
   justify-content: center;
   align-items: center;
   border-right: 1px solid black;
   border-left: 1px solid black;
   background-color:  ${props=> props.isActive ? 'var(--yellow)' : 'var(--honey)'};
+  margin: ${props => props.isMobile ? '15px 0' : '30px 0'};
 
   &:hover {
     font-weight: bold;
@@ -201,18 +202,18 @@ const HexagonButton = styled.button`
     content: '';
     position: absolute;
     width: 0;
-    border-left: 50px solid transparent;
-    border-right: 50px solid transparent;
+    border-left: ${props => props.isMobile ? '40px' : '50px'} solid transparent; // Shrinks the triangle size
+    border-right: ${props => props.isMobile ? '40px' : '50px'} solid transparent;
   }
 
   &:before {
-    top: -29px;
-    border-bottom: 29px solid ${props=> props.isActive ? 'var(--yellow)' : 'var(--honey)'};
+    top: ${props => props.isMobile ? '-23px' : '-29px'}; // Adjusts the position
+    border-bottom: ${props => props.isMobile ? '23px' : '29px'} solid ${props=> props.isActive ? 'var(--yellow)' : 'var(--honey)'};
   }
 
   &:after {
-    bottom: -29px;
-    border-top: 29px solid ${props=> props.isActive ? 'var(--yellow)' : 'var(--honey)'};
+    bottom: ${props => props.isMobile ? '-23px' : '-29px'}; // Adjusts the position
+    border-top: ${props => props.isMobile ? '23px' : '29px'} solid ${props=> props.isActive ? 'var(--yellow)' : 'var(--honey)'};
   }
 `;
 

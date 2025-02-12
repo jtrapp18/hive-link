@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import HiveCard from './HiveCard'
 import Error from '../styles/Error';
 import { formattedTime } from "../helper";
+import { useContext } from "react";
+import {WindowWidthContext} from '../context/windowSize'
 
 const StyledCard = styled.article`
     width: 100%;
@@ -37,6 +39,7 @@ const StyledCard = styled.article`
         }
 
         .inspection-row {
+            flex-direction: ${props => props.isMobile ? 'column' : 'row'};
 
             p {
                 margin: 0;
@@ -54,6 +57,11 @@ const StyledCard = styled.article`
                     }
                 }
             }
+            
+            .recommendation {
+                border-top: .5px dashed red;
+                border-bottom: .5px dashed red;
+            }
 
             &.at-risk {
                 p {
@@ -66,6 +74,7 @@ const StyledCard = styled.article`
 
 const AnalysisCard = ({ hive, prediction }) => {
 
+    const { isMobile } = useContext(WindowWidthContext);
     const { predictionData } = useOutletContext();
     const { honeyPulls } = hive;
 
@@ -86,7 +95,7 @@ const AnalysisCard = ({ hive, prediction }) => {
     const inspectionCount = honeyPulls.reduce((accum, honeyPull) => honeyPull.inspections.length + accum, 0)
 
     return (
-        <StyledCard>
+        <StyledCard isMobile={isMobile}>
             <div className='hive-summary'>
                 <section>
                     <span><strong>No. Honey Pulls: </strong>{honeyPulls.length}</span>
@@ -96,7 +105,7 @@ const AnalysisCard = ({ hive, prediction }) => {
                     </div>
                     <div className='inspection-row'>
                         <p><strong>Pull Date: </strong>{latestHoneyPull.datePulled ? latestHoneyPull.datePulled : 'n/a'}</p>
-                        </div>
+                    </div>
                     <div className='inspection-row'>
                         {latestHoneyPull.weight ?
                             <p><strong>Honey Pull Weight (lbs): </strong>{latestHoneyPull.weight.toFixed(4)}</p> :
@@ -110,7 +119,7 @@ const AnalysisCard = ({ hive, prediction }) => {
                 <small>{`*Based on MLP Regressor user experience study run ${formattedTime(modelRunDate)}, inspection data as of ${formattedTime(predRunDate)}, and pull date of today`}</small>
             }
             <hr />
-            <section>
+            <section className='latest-inspection'>
                 <span><strong>No. Inspections: </strong>{inspectionCount}</span>
                 <div>
                     <h3>Latest Inspection</h3>
@@ -122,14 +131,14 @@ const AnalysisCard = ({ hive, prediction }) => {
                         <strong>Twisted Larvae Seen: </strong>
                         {hasTwistedLarvae ? "Yes" : "No"}
                     </p>
-                    {hasTwistedLarvae && <p>⚠️ Possible European Foulbrood or viral infection. Inspect further and consider treatment.</p>}
+                    {hasTwistedLarvae && <p className='recommendation'>⚠️ Possible European Foulbrood or viral infection. Inspect further and consider treatment.</p>}
                 </div>
                 <div className={hasChalkbrood ? 'at-risk inspection-row' : 'inspection-row'}>
                     <p>
                         <strong>Chalkbrood Seen: </strong>
                         {hasChalkbrood ? "Yes" : "No"}
                     </p>
-                    {hasChalkbrood && <p>⚠️ Chalkbrood detected. Improve hive ventilation and consider requeening if persistent.</p>}
+                    {hasChalkbrood && <p className='recommendation'>⚠️ Chalkbrood detected. Improve hive ventilation and consider requeening if persistent.</p>}
                 </div>
                 <div className={varroaMiteCount < 3 ? 'inspection-row' : 'at-risk inspection-row'}>
                     <p>
@@ -144,7 +153,7 @@ const AnalysisCard = ({ hive, prediction }) => {
                         <strong>Brood in All Stages Count: </strong>
                         {bias}
                     </p>
-                    {bias < 3 && <p>⚠️ Low brood count. Check queen presence and colony health.</p>}
+                    {bias < 3 && <p className='recommendation'>⚠️ Low brood count. Check queen presence and colony health.</p>}
                 </div>
                 <div className={hasEggs ? 'inspection-row' : 'at-risk inspection-row'}>
                     <p>
@@ -152,15 +161,15 @@ const AnalysisCard = ({ hive, prediction }) => {
                         {hasEggs ? "Yes" : "No"}
                     </p>
                     {hasEggs 
-                        ? <p>✅ Eggs confirm the queen was active within the last 3 days.</p> 
-                        : <p>⚠️ No eggs detected. Check for queen presence or signs of a failing queen.</p>}
+                        ? <p className='recommendation'>✅ Eggs confirm the queen was active within the last 3 days.</p> 
+                        : <p className='recommendation'>⚠️ No eggs detected. Check for queen presence or signs of a failing queen.</p>}
                 </div>
                 <div className={hasLarvae ? 'inspection-row' : 'at-risk inspection-row'}>
                     <p>
                         <strong>Larvae Seen: </strong>
                         {hasLarvae ? "Yes" : "No"}
                     </p>
-                    {!hasLarvae && <p>⚠️ No larvae detected. If no eggs are seen either, consider requeening.</p>}
+                    {!hasLarvae && <p className='recommendation'>⚠️ No larvae detected. If no eggs are seen either, consider requeening.</p>}
                 </div>
             </section>
         </StyledCard>

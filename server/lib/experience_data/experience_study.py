@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 
-import os
 import joblib
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network import MLPRegressor
-from sklearn.linear_model import LinearRegression
 from datetime import datetime
 from lib.config import app, db
 from lib.models import ModelHistory
