@@ -15,14 +15,14 @@ const FeaturesContainer = styled.div`
     ol {
         width: fit-content;
         column-count: 2;
+
+        @media (min-width: 768px) {
+        column-count: 3;
+        }
     }
 
     small {
         font-style: italic;
-    }
-
-    @media (min-width: 768px) {
-      column-count: 2; /* For medium screen sizes, use 2 columns */
     }
 `
 

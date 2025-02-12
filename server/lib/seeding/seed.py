@@ -193,7 +193,6 @@ with app.app_context():
     db.session.add_all(inspections)
     db.session.commit()
 
-    # Creating events...
     print("Creating events...")
 
     events = []
@@ -204,7 +203,7 @@ with app.app_context():
             title=seed_event["title"],  # Fake name for the event
             event_date=seed_event["date"],  # Random date in the current year
             descr=seed_event["descr"],  # Fake description for the event
-            zipcode=user.zipcode  # Random location
+            zipcode=seed_event.get("zipcode", user.zipcode)
         )
         events.append(event)
 

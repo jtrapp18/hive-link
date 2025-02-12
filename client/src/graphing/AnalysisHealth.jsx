@@ -30,7 +30,7 @@ const AnalysisHealth = ({graphData, label, filters}) => {
             {isUserOnly &&
                 <>
                     <LinearHiveStats filteredData={filteredData}/>
-                    <br />    
+                    <br />
                 </>    
             }
             <TempVsMites filteredData={filteredData}/>

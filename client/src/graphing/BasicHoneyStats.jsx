@@ -1,6 +1,6 @@
 import PieChart from './PieChart';
 
-const TempVsHoney = ({filterLabel, graphData, pieSplit, selectedSlice, setSelectedSlice}) => {
+const BasicHoneyStats = ({filterLabel, graphData, pieSplit, selectedSlice, setSelectedSlice}) => {
 
     return (
         <div>
@@ -18,4 +18,4 @@ const TempVsHoney = ({filterLabel, graphData, pieSplit, selectedSlice, setSelect
     );
 }
 
-export default TempVsHoney;
+export default BasicHoneyStats;

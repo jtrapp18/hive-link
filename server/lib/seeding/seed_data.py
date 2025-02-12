@@ -6,22 +6,26 @@ seed_data = {
         {
             "title": "Spring Hive Inspection",
             "descr": "Join us for a thorough spring inspection to ensure all hives are ready for the upcoming season. We'll check for any signs of disease and prepare the hives for new colonies.",
-            "date": (datetime.now() + timedelta(days=45)).date()
+            "date": (datetime.now() + timedelta(days=45)).date(),
+            "zipcode": "06881"
         },
         {
             "title": "Hive Expansion Workshop",
             "descr": "Learn how to expand your hive setup with new supers, frames, and foundation. This hands-on workshop will guide you through the steps of hive expansion.",
-            "date": (datetime.now() + timedelta(days=60)).date()
+            "date": (datetime.now() + timedelta(days=60)).date(),
+            "zipcode": "06883"
         },
         {
             "title": "Mite Management Seminar",
             "descr": "A discussion on the latest techniques and treatments for managing varroa mites. Learn about different approaches and share your experiences with fellow beekeepers.",
-            "date": (datetime.now() + timedelta(days=75)).date()
+            "date": (datetime.now() + timedelta(days=75)).date(),
+            "zipcode": "06461"
         },
         {
             "title": "Honey Harvesting Day",
             "descr": "Come harvest honey from our shared apiary. We’ll demonstrate extraction techniques, from uncapping frames to bottling the sweet results.",
-            "date": (datetime.now() + timedelta(days=90)).date()
+            "date": (datetime.now() + timedelta(days=90)).date(),
+            "zipcode": "06606"
         },
         {
             "title": "Winter Hive Preparation",
