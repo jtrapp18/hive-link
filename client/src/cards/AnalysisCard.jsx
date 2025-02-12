@@ -26,6 +26,10 @@ const StyledCard = styled.article`
             zoom: .5;
         }
     }
+
+    .inspection-heading {
+        align-items: start;
+    }
     
     section {
 
@@ -59,7 +63,6 @@ const StyledCard = styled.article`
             }
             
             .recommendation {
-                border-top: .5px dashed red;
                 border-bottom: .5px dashed red;
             }
 
@@ -119,9 +122,9 @@ const AnalysisCard = ({ hive, prediction }) => {
                 <small>{`*Based on MLP Regressor user experience study run ${formattedTime(modelRunDate)}, inspection data as of ${formattedTime(predRunDate)}, and pull date of today`}</small>
             }
             <hr />
-            <section className='latest-inspection'>
+            <section>
                 <span><strong>No. Inspections: </strong>{inspectionCount}</span>
-                <div>
+                <div className='inspection-heading'>
                     <h3>Latest Inspection</h3>
                     {atRisk && <Error>At risk based on latest inspection</Error>}
                 </div>

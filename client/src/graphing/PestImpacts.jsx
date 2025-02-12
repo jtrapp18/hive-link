@@ -14,7 +14,7 @@ const PestImpacts = ({filteredData}) => {
                 <TrendChart
                     title={'Impact of Ants on Honey Production'}
                     x={{data: filteredData.antsPresent, label: 'Inspections with Ants Present'}}
-                    y={{data: filteredData.avg_30DayWeight, label: 'Honey Production (lbs)'}}
+                    y={{data: filteredData.avg_30DayWeight, label: 'Average 30-Day Honey Production (lbs)'}}
                     chartType='box'
                 />
                 <TrendChart

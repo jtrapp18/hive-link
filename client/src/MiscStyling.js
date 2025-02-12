@@ -217,6 +217,15 @@ const HexagonButton = styled.button`
   }
 `;
 
+const HexButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex-wrap: wrap;
+  padding: 20px 0;
+`
+
 const StyledCard = styled.article`
     width: 100%;
     max-width: clamp(300px, 100%, 600px);
@@ -313,6 +322,7 @@ const PlotContainer = styled.div`
     text-decoration: underline;
     font-weight: bold;
     color: white;
+    font-size: var(--default-size);
   }
 `;
 
@@ -354,19 +364,12 @@ const StyledAnalysis = styled(StyledContainer)`
         place-content: center;
         grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
         gap: 1%;
+
+        @media (max-width: 768px) {  /* Mobile screens */
+          grid-template-columns: repeat(auto-fit, minmax(90vw, 1fr)); /* Adjust grid items to take up 90% of the viewport width on mobile */
+        }
     }
 `
-
-const Alert = styled.span`
-  border: 1px solid red;
-  height: 30px;
-  width: 30px;
-  border-radius: 50%;
-  font-weight: bold;
-  display: grid;
-  place-content: center;
-  color: red;
-`;
 
 const GraphSectionHeader = styled.div`
   width: 100%;
@@ -396,5 +399,5 @@ const Tag = styled.div`
 
 export { StyledMenuItem, StyledNavLink, StyledLink, StyledMain, StyledForm, 
   StyledSubmit, StyledDeleted, CardContainer, BorderGlow, Button, 
-  HexagonButton, StyledCard, StyledContainer, StyledAnalysis, PlotContainer, 
-  Alert, GraphSectionHeader, Tag }
+  HexagonButton, HexButtonContainer, StyledCard, StyledContainer, StyledAnalysis, PlotContainer, 
+  GraphSectionHeader, Tag }

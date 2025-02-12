@@ -12,12 +12,12 @@ const PestImpacts = ({filteredData}) => {
             </GraphSectionHeader>
             <div className='graph-container'>
                 <TrendChart
-                    title={'Varroa Mite Count by Average Temperature'}
+                    title={'Temperature Impact on Mites'}
                     x={{data: filteredData.temp, label: 'Average Temperature'}}
                     y={{data: filteredData.varroaMiteCount, label: 'Varroa Mite Count'}}
                 />
                 <TrendChart
-                    title={'Varroa Mite Count by Average Humidity'}
+                    title={'Humidity Impact on Mites'}
                     x={{data: filteredData.humidity, label: 'Average Humidity'}}
                     y={{data: filteredData.varroaMiteCount, label: 'Varroa Mite Count'}}
                 />

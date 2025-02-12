@@ -1,24 +1,18 @@
-import { lazy, useState } from 'react';
+import { lazy, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import {useOutletContext} from "react-router-dom";
-import { HexagonButton, StyledContainer } from '../MiscStyling';
+import { HexagonButton, HexButtonContainer, StyledContainer } from '../MiscStyling';
 import Loading from './Loading';
 import styled from 'styled-components';
 import usePopupForm from '../hooks/usePopupForm';
 import BackButton from '../components/BackButton';
 import HiveCard from '../cards/HiveCard';
-import AnalyticsLink from '../components/AnalyticsLink'
+import AnalyticsLink from '../components/AnalyticsLink';
+import { WindowWidthContext } from '../context/windowSize';
 
 const HiveForm = lazy(() => import('../forms/HiveForm'));
 const HoneyPulls = lazy(() => import('../components/HoneyPulls'));
 const Inspections = lazy(() => import('../components/Inspections'));
-
-const ButtonContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 50px;
-`
 
 const HiveCardContainer = styled.article`
   display: flex;
@@ -32,6 +26,7 @@ const HiveCardContainer = styled.article`
 const HiveDetails = () => {
   const { id } = useParams(); // Get the ID from the URL
   const { hives } = useOutletContext();
+  const { isMobile } = useContext(WindowWidthContext);
   const hive = hives.find((hive) => hive.id === parseInt(id));
   const [activeTab, setActiveTab] = useState(null);
   const [shrinkCard, setShrinkCard] = useState(false);
@@ -59,11 +54,11 @@ const HiveDetails = () => {
           {...hive}
         />
       </HiveCardContainer>
-      <ButtonContainer>
-        <HexagonButton isActive={activeTab==='editDetails'} onClick={clickEdit}>Edit Details</HexagonButton>
-        <HexagonButton isActive={activeTab==='honeyPulls'} onClick={()=>clickOther('honeyPulls')}>Honey Pulls</HexagonButton>
-        <HexagonButton isActive={activeTab==='inspections'} onClick={()=>clickOther('inspections')}>Inspections</HexagonButton>
-      </ButtonContainer>
+      <HexButtonContainer>
+        <HexagonButton isMobile={isMobile} isActive={activeTab==='editDetails'} onClick={clickEdit}>Edit Details</HexagonButton>
+        <HexagonButton isMobile={isMobile} isActive={activeTab==='honeyPulls'} onClick={()=>clickOther('honeyPulls')}>Honey Pulls</HexagonButton>
+        <HexagonButton isMobile={isMobile} isActive={activeTab==='inspections'} onClick={()=>clickOther('inspections')}>Inspections</HexagonButton>
+      </HexButtonContainer>
       <HivePopup
         viewHive={setActiveHive}
       />

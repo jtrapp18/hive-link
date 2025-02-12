@@ -12,22 +12,22 @@ const TreatmentImpacts = ({filteredData}) => {
             </GraphSectionHeader>
             <div className='graph-container'>
                 <TrendChart
-                    title={'Varroa Mite Count by Oxalic Acid Dosage'}
+                    title={'Oxalic Acid Impact on Mites'}
                     x={{data: filteredData.oxalicAcidDosage, label: 'Oxalic Acid Dosage'}}
                     y={{data: filteredData.varroaMiteCount, label: 'Varroa Mite Count'}}
                 />
                 <TrendChart
-                    title={'Varroa Mite Count by Formic Acid Dosage'}
+                    title={'Formic Acid Dosage Impact on Mites'}
                     x={{data: filteredData.formicAcidDosage, label: 'Formic Acid Dosage'}}
                     y={{data: filteredData.varroaMiteCount, label: 'Varroa Mite Count'}}
                 />
                 <TrendChart
-                    title={'Varroa Mite Count by Thymol Dosage'}
+                    title={'Thymol Dosage Impact on Mites'}
                     x={{data: filteredData.thymolDosage, label: 'Thymol Dosage'}}
                     y={{data: filteredData.varroaMiteCount, label: 'Varroa Mite Count'}}
                 />
                 <TrendChart
-                    title={'Varroa Mite Count by Apistan Dosage'}
+                    title={'Apistan Dosage Impact on Mites'}
                     x={{data: filteredData.apistanDosage, label: 'Apistan Dosage'}}
                     y={{data: filteredData.varroaMiteCount, label: 'Varroa Mite Count'}}
                 />
