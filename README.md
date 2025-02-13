@@ -4,6 +4,12 @@
 
 **Hive Link** is a platform designed for beekeepers to track hive inspections, analyze hive health, and connect with other beekeepers. Users can log and review hive data, visualize trends through interactive graphs, and leverage predictive models to improve colony management. 
 
+## Demo
+
+See this gif for an example of how the app works.
+
+![demo](https://raw.githubusercontent.com/jtrapp18/hive-link/refs/heads/main/client/public/images/hive-link.gif)
+
 ## Features
 
 - **Hive Tracking**: Log hive inspections with details such as hive status, honey pulls, environmental factors, and hive health metrics.
@@ -66,7 +72,3 @@
 
 **Jacqueline Trapp**  
 GitHub: [JTrapp18](https://github.com/jtrapp18)
-
-## Demo
-
-![demo](https://your-demo-image-url.com)
