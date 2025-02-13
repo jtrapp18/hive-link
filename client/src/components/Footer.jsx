@@ -28,14 +28,30 @@ const StyledFooter = styled.footer`
     section {
         position: absolute;
         bottom: 0;
+        left: 0;
         color: white;
-        max-width: 60%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+
+        div {
+            max-width: 60%;
+            align-items: center;
+            justify-content: center;
+        }
 
         p {
             color: var(--honey);
             text-align: center;
             text-shadow: 1px 1px 2px black;
+            margin: 0;
+            padding: 0;
         }
+    }
+
+    #data-caveat {
+        color: white;
     }
 `
 
@@ -56,7 +72,10 @@ const Footer = () => {
                 />
             </div>
             <section>
-                <p><small>This website was developed for the capstone project at FlatIron School</small></p>
+                <div>
+                    <p><small>This website was developed for the capstone project at FlatIron School</small></p>
+                </div>
+                <p id='data-caveat'><small>All data displayed is purely hypothetical and does not represent actual beekeeper data</small></p>
             </section>
         </StyledFooter>
     );

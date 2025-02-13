@@ -16,7 +16,7 @@ function Login({errMessage}) {
     <StyledContainer>
       {!showSignUp &&
         <>
-          {errMessage && <Error>{errMessage}</Error>}        
+          {errMessage && <><br /><Error>{errMessage}</Error></>}        
           <LoginForm setShowConfirm={setShowConfirm}/>
           <hr />
           <p>Don't have an account?</p>

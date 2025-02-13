@@ -48,7 +48,7 @@ function Home() {
           <h1>Hive Link</h1>
         </MotionWrapper>
         <MotionWrapper index={2}>
-          <h3>Where Beekeepers come together to build healthier hives</h3>
+          <h3>Where Beekeepers work together to build healthier hives</h3>
         </MotionWrapper>
         <img
             src="/images/bee_analysis.jpeg" // Provide the relative or absolute path to the image
