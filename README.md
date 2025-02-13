@@ -1,55 +1,72 @@
-# J&N Cookies
+# Hive Link
 
 ## About this project
 
-**J&N Cookies** is an online cookie store that allows users to view the cookie menu and search and filter cookies. Users can also create and log into accounts using secure authorization, which will allow them to access additional features, such as managing their carts and account information.
+**Hive Link** is a platform designed for beekeepers to track hive inspections, analyze hive health, and connect with other beekeepers. Users can log and review hive data, visualize trends through interactive graphs, and leverage predictive models to improve colony management. 
+
+## Features
+
+- **Hive Tracking**: Log hive inspections with details such as hive status, honey pulls, environmental factors, and hive health metrics.
+- **Data Visualization**: View hive trends over time with scatter plots showing impacts on honey production and varroa mites, with clickable pie charts filtering other graphs.
+- **Predictive Analysis**: Utilize machine learning (MLP Regressor from sklearn) to predict honey production based on inspection data for each hive.
+- **Personalized Hive Recommendations**: Get tailored insights based on the latest inspection data to optimize hive health and honey yield.
+- **Beekeeper Networking**: Connect with other beekeepers, view nearby hives on a hive map, and share insights.
+- **Authentication & Accounts**: Secure user authentication with JWT for managing hive data and accessing personalized recommendations.
+- **Forum**: Discuss bee-related topics, treatments, and best practices with other beekeepers.
+- **Specialized News Search**: Uses a Google Search API to find latest beekeeping-related news articles.
+- **Beekeeping Events**: Sign up for or create events related to beekeeping and search for events within a certain radius of a specified ZIP code.
+
+## Technical Details
+
+- **Full-Stack Development**: Built with React on the frontend and Flask on the backend for a modern, responsive user experience.
+- **Full CRUD Actions**: Supports Create, Read, Update, and Delete functionality for hive data, users, and inspections.
+- **Machine Learning Integration**: Models stored using `joblib` to analyze hive health and predict honey production.
+- **RESTful API**: Flask-based backend providing structured API endpoints for seamless communication with the React frontend.
+- **SQLAlchemy ORM**: Manages database interactions efficiently with full support for relational data.
+- **Secure Authentication**: Implements JWT authentication for user login and session management.
+- **Data Cleaning & Processing**: Python scripts clean and structure beekeeping data for analysis.
+- **Graphing & Analytics**: Uses Plotly in React to visualize hive trends, with interactive features such as zooming and dynamic filtering.
+- **Docker Deployment**: The project is containerized for easy deployment using Docker.
+- **Cloud Hosting**: Deployed on Railway for scalability and efficient management.
+- **State Management**: Uses React Context API to handle global application state.
+
+## File Structure
+
+### Client (Frontend - React)
+
+- **`src/cards/`** - Contains JSX components for displaying hive-related information in card format.
+- **`src/components/`** - Reusable UI elements such as buttons, modals, and navbar.
+- **`src/context/`** - Manages global state, including user authentication and UI preferences.
+- **`src/forms/`** - Components for handling user input, such as adding inspections and registering accounts.
+- **`src/graphing/`** - Graphing components utilizing Plotly for data visualization.
+- **`src/hooks/`** - Custom React hooks for handling data fetching, in state management, etc.
+- **`src/pages/`** - Main route components such as `Dashboard`, `HiveDetails`, and `Profile`.
+- **`src/styles/`** - Reusable UI elements such as error messages, and modals.
+- **`App.jsx`** - Root component handling routing and global context providers.
+- **`helper.js`** - Utility functions used throughout the frontend.
+- **`routes.jsx`** - Defines frontend route structure.
+- **`index.css`** - Global styles.
+- **`main.jsx`** - Application entry point.
+- **`MiscStyling.js`** - Reusable styled components.
+
+### Server (Backend - Flask)
+
+- **`joblib/`** - Stores machine learning models for hive health and honey production predictions.
+- **`lib/experience_data/`** - Scripts for cleaning and structuring data for graphing and research.
+- **`lib/models/`** - SQLAlchemy models defining the database schema.
+- **`lib/seeding/`** - Scripts for database seeding, including data population and schema initialization.
+- **`lib/config.py`** - Configuration file for database and application settings.
+- **`lib/migrations/`** - Handles database schema migrations.
+- **`app.py`** - Main Flask application file handling API routes and business logic.
+- **`Dockerfile`** - Defines containerization setup for deployment.
+- **`requirements.txt`** - Lists dependencies for the backend.
+- **`run_study.ipynb`** - Jupyter Notebook for running hive health experience studies and analyzing the latest data.
 
 ## Contributors
 
 **Jacqueline Trapp**  
 GitHub: [JTrapp18](https://github.com/jtrapp18)
 
-**Nem Stankovic**  
-GitHub: [Nemswirls](https://github.com/nemswirls)
-
-## Features
-
-- **View Menu**: View cookie menu, search for cookies by name, and filter on one or more cookie attributes (maximum price, minimum rating, gluten-free, nut-free, frosted).
-- **Create User Account**: Log in or sign up to access full features of the cookie store.
-- **Manage Account Information**: View and edit user information.
-- **Manage Cart**: Add/remove cookies to/from the cart, and update the quantity of cookies.
-- **Order Cookies**: Place mock orders for cookies and view past orders.
-- **Review Cookies**: Users can leave reviews and ratings for cookies they have tried.
-
-## Technical
-
-- **Full CRUD Actions**: Supports complete Create, Read, Update, and Delete functionality for cookies, users, and orders.
-- **6 Models**: Implements 6 different models (e.g., User, Cookie, Order, CartItem, Favorite, Review) to manage data.
-- **Form Validation (Formik)**: Uses Formik for front-end form validation to ensure smooth user experience when creating accounts, managing the cart, etc.
-- **Backend Model Validation**: Ensures data integrity with model validation on the backend using Flask and SQLAlchemy.
-- **RESTful API**: The backend is built with Flask, providing a RESTful API for communication with the React frontend.
-- **SQLAlchemy**: Utilizes SQLAlchemy for ORM-based database interactions with full support for CRUD operations.
-- **Secure Authentication**: Implements user authentication with JWT tokens for secure login and session management.
-- **Responsive Frontend**: Built with React, providing a dynamic, responsive user interface.
-- **Database Integration**: Uses SQLite to store and manage user, cookie, and order data.
-- **Well-Organized Codebase**: Project is structured for maintainability, with clear separation of concerns, including dedicated modules for API routes, database models, and frontend components.
-
 ## Demo
 
-See this gif for an example of how the app works.
-
-![demo](https://raw.githubusercontent.com/jtrapp18/j-n-cookies/refs/heads/main/client/public/images/j-n-cookies.gif)
-
-## Description of Key Directories and Files
-
-- **`src/components/`**: Contains reusable React components, such as form elements, modals, and UI elements, as well as CRUD operations for managing data (e.g., `Cookie`, `Review`, `Order`, and `User` models).
-- **`src/context/`**: Contains context providers for managing global state, such as `UserProvider` for user authentication and `WindowSizeProvider` for handling window size changes.
-- **`src/pages/`**: Contains main route components, such as `Menu`, `Cart`, `Orders`, and `Account` pages.
-- **`App.jsx`**: Serves as the main application file, responsible for rendering the app, managing routes, and setting up context providers.
-- **`index.css`**: Global CSS file for styling the application.
-- **`main.jsx`**: Entry point for the React application, rendering the root component and applying global configurations.
-- **`MiscStyling.js`**: Contains additional styling configurations or helper functions for styling components.
-- **`routes.jsx`**: Defines the application's routing structure and maps paths to corresponding pages.
-- **`index.html`**: The base HTML file for the React application.
-- **`package.json`**: Defines the project's dependencies, scripts, and metadata for the React frontend.
-- **`Pipfile`**: Specifies dependencies and virtual environment setup for the Flask backend.
+![demo](https://your-demo-image-url.com)
