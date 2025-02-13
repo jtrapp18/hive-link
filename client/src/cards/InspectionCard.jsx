@@ -20,10 +20,6 @@ const InspectionCard = ({ inspection, setActiveInspection}) => {
                         <p>{dateChecked}</p>
                     </div>
                     <div>
-                        <label>Fate: </label>
-                        <p>{fate}</p>
-                    </div>
-                    <div>
                         <label>Twisted Larvae Seen: </label>
                         <p>{hasTwistedLarvae ? "Yes" : "No"}</p>
                     </div>
