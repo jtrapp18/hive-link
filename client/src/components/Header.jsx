@@ -48,10 +48,12 @@ const Header = () => {
             <Logo />
             {isMobile ? <MobileNavBar /> : <NavBar />}
           </StyledHeader>
-            <img 
+            {!isMobile &&
+              <img 
               id='honeycomb'
               src='images/honeycomb_side.png'
-            />
+            />          
+            }
             {user && !isMobile && <span id='logged-in'>{`Logged in as ${user.username}`}</span>}
         </StyledHeadRoom>
     );

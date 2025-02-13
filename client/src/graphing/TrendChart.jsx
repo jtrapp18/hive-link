@@ -12,7 +12,7 @@ const TrendChart = ({ title, x, y, chartType = 'scatter' }) => {
   const labelSize = isMobile ? 10 : 14;
 
   if (!x?.data?.length || !y?.data?.length) {
-    return <p>Loading chart...</p>;
+    return <PlotContainer>Loading chart...</PlotContainer>;
   }
 
   const trace = useMemo(() => ({

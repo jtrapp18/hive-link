@@ -2,9 +2,8 @@ import { useState, lazy } from 'react';
 import { StyledAnalysis } from '../MiscStyling';
 import Loading from '../pages/Loading';
 import { camelToProperCase } from '../helper';
-
 import BasicHoneyStats from './BasicHoneyStats'
-// const BasicHoneyStats = lazy(() => import('./BasicHoneyStats'));
+
 const PestImpacts = lazy(() => import('./PestImpacts'));
 const TempVsHoney = lazy(() => import('./TempVsHoney'));
 
@@ -24,7 +23,7 @@ const AnalysisHoney = ({graphData, label, filters}) => {
         .map((item, index) => item === selectedSlice.labelFilter ? index : -1)
         .filter(index => index !== -1);
 
-    const filterKeys = ["temp", "weight", "avg_30DayWeight", "humidity", "antsPresent", "slugsPresent", 
+    const filterKeys = ["datePulled", "temp", "weight", "avg_30DayWeight", "humidity", "antsPresent", "slugsPresent", 
         "hiveBeetlesPresent", "waxMothsPresent", "waspsHornetsPresent", "micePresent", "robberBeesPresent"];
 
     const filteredData = Object.fromEntries(
@@ -38,15 +37,14 @@ const AnalysisHoney = ({graphData, label, filters}) => {
         <StyledAnalysis>
             <h2>{label}{filterLabel ? ` for ${camelToProperCase(filterLabel)}` : ''}</h2>
             <BasicHoneyStats 
-                filterLabel={filterLabel} 
+                filterLabel={filterLabel}
+                filteredData={filteredData}
                 graphData={graphData} 
                 pieSplit={pieSplit}
                 selectedSlice={selectedSlice}
                 setSelectedSlice={setSelectedSlice}
             />
-            <br />
             <PestImpacts filteredData={filteredData}/>
-            <br />
             <TempVsHoney filteredData={filteredData}/>
             <br />
             <br />

@@ -1,7 +1,7 @@
 import TrendChart from './TrendChart';
 import { GraphSectionHeader } from '../MiscStyling'
 
-const PestImpacts = ({filteredData}) => {
+const TempVsMites = ({filteredData}) => {
 
     return (
         <div>
@@ -10,7 +10,6 @@ const PestImpacts = ({filteredData}) => {
                 <h3>Impact of Weather</h3>
                 <hr/>
             </GraphSectionHeader>
-            <br />
             <div className='graph-container'>
                 <TrendChart
                     title={'Temperature Impact on Varroa Mites'}
@@ -27,4 +26,4 @@ const PestImpacts = ({filteredData}) => {
     );
 }
 
-export default PestImpacts;
+export default TempVsMites;

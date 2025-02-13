@@ -1,6 +1,5 @@
 import { lazy } from 'react'
 import { StyledAnalysis } from '../MiscStyling';
-import styled from 'styled-components'
 import LinearHiveStats from './LinearHiveStats';
 
 const TreatmentImpacts = lazy(()=> import('./TreatmentImpacts'));
@@ -30,11 +29,9 @@ const AnalysisHealth = ({graphData, label, filters}) => {
             {isUserOnly &&
                 <>
                     <LinearHiveStats filteredData={filteredData}/>
-                    <br />
                 </>    
             }
             <TempVsMites filteredData={filteredData}/>
-            <br />
             <TreatmentImpacts filteredData={filteredData}/>
             <br />
             <br />

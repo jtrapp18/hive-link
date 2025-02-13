@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect, lazy } from 'react';
 import {useOutletContext} from "react-router-dom";
-import styled from 'styled-components';
 import Loading from './Loading'
 import { HexagonButton, HexButtonContainer, StyledContainer } from '../MiscStyling';
 import { UserContext } from '../context/userProvider';

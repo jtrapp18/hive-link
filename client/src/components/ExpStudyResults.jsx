@@ -7,9 +7,15 @@ const FeaturesContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    max-width: 100%;
 
     li, p {
         color: gray;
+    }
+
+    li {
+        column-width: 200px;
+        margin: 0% 1%;
     }
 
     ol {
@@ -17,7 +23,7 @@ const FeaturesContainer = styled.div`
         column-count: 2;
 
         @media (min-width: 768px) {
-        column-count: 3;
+            column-count: 3;
         }
     }
 
@@ -39,7 +45,7 @@ const ExpStudyResults = () => {
           });
       }, []);
 
-    if (!studyInfo) return <ClipLoader color='var(--bright-blue)'/>;
+    if (!studyInfo) return <FeaturesContainer><ClipLoader color='var(--bright-blue)'/></FeaturesContainer>;
 
     const { runDate, testMetrics, testResults } = studyInfo;
 

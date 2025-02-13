@@ -10,7 +10,6 @@ const TempVsHoney = ({filteredData}) => {
                 <h3>Impact of Weather</h3>
                 <hr/>
             </GraphSectionHeader>
-            <br />
             <div className='graph-container'>
                 <TrendChart
                     title={`Temperature Impact on Honey Production`}

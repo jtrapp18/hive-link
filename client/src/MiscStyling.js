@@ -305,6 +305,7 @@ const PlotContainer = styled.div`
   background: white;
   cursor: pointer;
   border: 3px solid var(--honey);
+  margin: 1%;
 
   p {
     color: black;
@@ -359,11 +360,11 @@ const StyledAnalysis = styled(StyledContainer)`
 
     .graph-container {
         display: grid;
+        height: auto;
         text-align: center;
         width: 90vw;
         place-content: center;
         grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-        gap: 1%;
 
         @media (max-width: 768px) {  /* Mobile screens */
           grid-template-columns: repeat(auto-fit, minmax(90vw, 1fr)); /* Adjust grid items to take up 90% of the viewport width on mobile */
@@ -373,6 +374,7 @@ const StyledAnalysis = styled(StyledContainer)`
 
 const GraphSectionHeader = styled.div`
   width: 100%;
+  align-items: center;
   place-items: center;
   display: grid;
 
@@ -385,7 +387,8 @@ const GraphSectionHeader = styled.div`
 
   h3 {
     color: var(--honey);
-    text-align: center;  
+    text-align: center;
+    margin: 0;
   }
 `;
 

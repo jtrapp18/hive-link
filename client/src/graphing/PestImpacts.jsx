@@ -10,7 +10,6 @@ const PestImpacts = ({filteredData}) => {
                 <h3>Impact of Pests</h3>
                 <hr/>
             </GraphSectionHeader>
-            <br />
             <div className='graph-container'>
                 <TrendChart
                     title={'Impact of Ants on Honey Production'}

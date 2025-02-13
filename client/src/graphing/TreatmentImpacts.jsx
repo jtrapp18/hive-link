@@ -10,7 +10,6 @@ const TreatmentImpacts = ({filteredData}) => {
                 <h3>Varroa Mite Treatments</h3>
                 <hr/>
             </GraphSectionHeader>
-            <br />
             <div className='graph-container'>
                 <TrendChart
                     title={'Oxalic Acid Impact on Varroa Mites'}
