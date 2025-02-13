@@ -295,7 +295,6 @@ class Inspections(Resource):
                 temp=data.get('temp'),
                 weather_conditions=data.get('weather_conditions'),
                 humidity=data.get('humidity'),
-                fate=data.get('fate'),
                 has_eggs=data.get('has_eggs', False),
                 has_larvae=data.get('has_larvae', False),
                 has_twisted_larvae=data.get('has_twisted_larvae', False),
