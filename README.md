@@ -1,4 +1,5 @@
 # Hive Link
+[Click to Navigate to Deployed Project](https://hive-link.up.railway.app/)
 
 ## About this project
 
