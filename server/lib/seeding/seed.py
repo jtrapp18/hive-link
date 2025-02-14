@@ -226,6 +226,9 @@ with app.app_context():
     print("Creating forums...")
 
     forums = []
+    messages = []
+    replies = []
+
     for seed_forum in seed_data["forums"]:
         user = rc(users)
         forum = Forum(
@@ -233,41 +236,31 @@ with app.app_context():
             title=seed_forum["title"],  # Fake name for the forum
             category=seed_forum["category"],  # Fake category for the forum (optional)
         )
+        db.session.add(forum)  # Commit after each forum to ensure forum.id is available
+        db.session.commit()  # Committing forum so forum.id is available for messages
         forums.append(forum)
 
-    db.session.add_all(forums)
-    db.session.commit()
-
-    print("Creating messages...")
-
-    messages = []
-    for forum in forums:
-        for user in users:
-            if random() > 0.1 and forum.user_id != user.id:
+        if "messages" in seed_forum:
+            for seed_message in seed_forum["messages"]:
+                user = rc(users)
                 message = Message(
                     user_id=user.id,
-                    forum_id=forum.id,
-                    message_text=fake.text(max_nb_chars=255),  # Fake message text for the message
+                    forum_id=forum.id,  # forum_id properly set here
+                    message_text=seed_message["content"],  # Fake message text for the message
                 )
+                db.session.add(message)  # Commit after each message to ensure message.id is available
+                db.session.commit()  # Committing message so message.id is available for replies
                 messages.append(message)
 
-    db.session.add_all(messages)
-    db.session.commit()
-
-    print("Creating replies...")
-
-    replies = []
-    for message in messages:
-        for user in users:
-            if random() > 0.4:
-                reply = Reply(
-                    user_id=user.id,
-                    message_id=message.id,
-                    reply_text=fake.text(max_nb_chars=255),  # Fake reply text for the reply
-                )
-                replies.append(reply)
-
-    db.session.add_all(replies)
-    db.session.commit()
+                if "replies" in seed_message:
+                    for seed_reply in seed_message["replies"]:
+                        user = rc(users)
+                        reply = Reply(
+                            user_id=user.id,
+                            message_id=message.id,  # message_id properly set here
+                            reply_text=seed_reply["content"],  # Fake reply text for the reply
+                        )
+                        db.session.add(reply)  # Add reply to session
+                    db.session.commit()  # Commit all replies for the current message
 
     print("Seeding Complete.")

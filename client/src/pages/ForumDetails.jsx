@@ -17,8 +17,6 @@ const ForumHeader = styled.div`
     max-width: 90vw;
     display: flex;
     flex-direction: column;
-    // justify-content: center;
-    // text-align: center;
 
     h2 {
         color: var(--yellow);
@@ -57,7 +55,7 @@ const ForumDetails = () => {
     const { id } = useParams();
     const { user } = useContext(UserContext);
     const [forum, setForum] = useState(null);
-    const [showNew, setShowNew] = useState(true);
+    const [showNew, setShowNew] = useState(false);
 
     useEffect(() => {
         getJSONById("forums", id)
@@ -90,14 +88,12 @@ const ForumDetails = () => {
                     <h2>{forum.title}</h2>
                     {/* <h3><strong>Category: </strong>{forum.category}</h3> */}
                 </ForumHeader>
-                <div>
-                    {forum.messages.map(message=>
-                        <MessageCard
-                            key={message.id}
-                            {...message} 
-                        />
-                    )}
-                </div>
+                {forum.messages.map(message=>
+                    <MessageCard
+                        key={message.id}
+                        {...message} 
+                    />
+                )}
                 <NewMessageContainer>
                 {showNew ?
                     <NewMessage

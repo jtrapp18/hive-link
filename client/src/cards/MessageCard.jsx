@@ -8,6 +8,8 @@ import NewMessage from '../forms/NewMessage';
 import useCrudStateDB from '../hooks/useCrudStateDB';
 
 const CardContainer = styled.div`
+    width: 100%;
+    
     .reply-container {
         display: flex;
 
