@@ -55,14 +55,14 @@ const MyForums = () => {
     setShowDeleted(true);
   };
 
-  if (!user) return <Login errMessage="Must be logged in to view forums"/>
+  if (!user) return <Login errMessage="Must be logged in to view forum"/>
   if (!Forums) return <Loading />
 
   return (
       <StyledContainer>
         { user &&
           <>
-            <h1>My Forums</h1>
+            <h1>My Threads</h1>
             <Button onClick={()=>setShowNewForm(true)}>Create a New forum</Button>
             <PopupForm
               addForum={addForum}
@@ -75,13 +75,13 @@ const MyForums = () => {
             <Forums
               forums={forumsStarted}
             />
-            <h3>My Active Forums</h3>
+            <h3>My Active Threads</h3>
             <Forums
               forums={forumsParticipated}
             />
           </>
         }
-        <h1>Other Forums</h1>
+        <h1>Other Threads</h1>
         <h3>. . . . . </h3>
         <Forums
           forums={forumsOther} 

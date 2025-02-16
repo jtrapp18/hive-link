@@ -52,7 +52,7 @@ function NavLinks({ handleClick, setIsMenuOpen }) {
         className="nav-link"
         onClick={handleClick}
       >
-        Forums
+        Forum
       </StyledNavLink>
       <StyledAccountIcon
         className="nav-link"

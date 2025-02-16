@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { useState, useEffect, lazy } from 'react';
 import "leaflet/dist/leaflet.css";
 import { getJSON, snakeToCamel } from '../helper';
 import Loading from './Loading';
 import L from "leaflet"; // Import Leaflet for using divIcon
 import styled from 'styled-components';
 import { StyledContainer } from '../MiscStyling';
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
 const StyledMap = styled(MapContainer)`
   width: 100%;

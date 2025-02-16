@@ -207,13 +207,13 @@ const HexagonButton = styled.button`
   }
 
   &:before {
-    top: ${props => props.isMobile ? '-23px' : '-29px'}; // Adjusts the position
-    border-bottom: ${props => props.isMobile ? '23px' : '29px'} solid ${props=> props.isActive ? 'var(--yellow)' : 'var(--honey)'};
+    top: calc(-1 * ${props => props.isMobile ? '23px' : '29px'} + 1px); /* Slight overlap */
+    border-bottom: ${props => props.isMobile ? '23px' : '29px'} solid ${props => props.isActive ? 'var(--yellow)' : 'var(--honey)'};
   }
 
   &:after {
-    bottom: ${props => props.isMobile ? '-23px' : '-29px'}; // Adjusts the position
-    border-top: ${props => props.isMobile ? '23px' : '29px'} solid ${props=> props.isActive ? 'var(--yellow)' : 'var(--honey)'};
+    bottom: calc(-1 * ${props => props.isMobile ? '23px' : '29px'} + 1px); /* Slight overlap */
+    border-top: ${props => props.isMobile ? '23px' : '29px'} solid ${props => props.isActive ? 'var(--yellow)' : 'var(--honey)'};
   }
 `;
 
